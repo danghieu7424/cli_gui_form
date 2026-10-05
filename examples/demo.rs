@@ -5,7 +5,7 @@ use cli_gui_form::{
     InputWidget, RadioWidget, TaskWidget,
 };
 use crossterm::{
-    event::{self, Event, KeyCode, KeyEventKind},
+    event::{self, Event, KeyCode, KeyEventKind, KeyModifiers},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
@@ -130,9 +130,12 @@ fn main() -> io::Result<()> {
         if event::poll(target_frame_duration)? {
             if let Event::Key(key) = event::read()? {
                 if key.kind == KeyEventKind::Press {
-                    if key.code == KeyCode::Esc {
+                    // Thoát khi nhấn Esc hoặc Ctrl + C
+                    let is_ctrl_c = key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('c');
+                    if key.code == KeyCode::Esc || is_ctrl_c {
                         break;
                     }
+
                     let res = form.handle_event(key);
                     if res == EventResult::Submitted {
                         submitted_values = Some(form.get_values());

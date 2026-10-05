@@ -1,4 +1,4 @@
-// --- PHÂN ĐOẠN: FORM MANAGER VỚI VIEWPORT SCROLL & DATA EXTRACTION ---
+// --- PHÂN ĐOẠN: FORM MANAGER HỖ TRỢ ĐIỀU HƯỚNG MŨI TÊN LÊN / XUỐNG ---
 
 use crate::traits::{EventResult, FormValue, FormWidget};
 use crossterm::event::{KeyCode, KeyEvent, KeyEventKind};
@@ -8,7 +8,7 @@ use std::collections::HashMap;
 pub struct FormManager {
     widgets: Vec<Box<dyn FormWidget>>,
     current_focus: usize,
-    scroll_offset: u16, // Vị trí dòng cuộn hiện tại của viewport
+    scroll_offset: u16,
 }
 
 impl FormManager {
@@ -29,7 +29,6 @@ impl FormManager {
         self.widgets.push(widget);
     }
 
-    /// Trích xuất toàn bộ dữ liệu hiện tại của Form theo dạng Map { id -> FormValue }
     pub fn get_values(&self) -> HashMap<String, FormValue> {
         let mut map = HashMap::new();
         for w in &self.widgets {
@@ -56,11 +55,9 @@ impl FormManager {
         self.widgets[self.current_focus].focus();
     }
 
-    /// Tự động cuộn theo con trỏ và render các widget nằm trong khung nhìn
     pub fn render(&mut self, area: Rect, frame: &mut Frame) {
         if self.widgets.is_empty() { return; }
 
-        // 1. Tính toán vị trí Y tương đối của từng widget
         let mut widget_positions: Vec<(u16, u16)> = Vec::new();
         let mut running_y: u16 = 0;
         for w in &self.widgets {
@@ -69,7 +66,6 @@ impl FormManager {
             running_y += h;
         }
 
-        // 2. Tự động điều chỉnh scroll_offset để giữ widget đang focus luôn hiển thị
         let (focus_y, focus_h) = widget_positions[self.current_focus];
         if focus_y < self.scroll_offset {
             self.scroll_offset = focus_y;
@@ -77,7 +73,6 @@ impl FormManager {
             self.scroll_offset = (focus_y + focus_h).saturating_sub(area.height);
         }
 
-        // 3. Render từng widget vào toạ độ đã trừ scroll_offset
         for (idx, widget) in self.widgets.iter().enumerate() {
             let (w_y, w_h) = widget_positions[idx];
             if w_y + w_h > self.scroll_offset && w_y < self.scroll_offset + area.height {
@@ -93,7 +88,6 @@ impl FormManager {
 
                 widget.render(widget_area, frame);
 
-                // Nếu widget đang focus có cursor và nằm trong viewport, hiển thị con trỏ
                 if widget.is_focused() {
                     if let Some((cx, cy)) = widget.cursor_position(widget_area) {
                         if cy < area.y + area.height {
@@ -110,12 +104,13 @@ impl FormManager {
             return EventResult::Ignored;
         }
 
+        // Ưu tiên điều hướng di chuyển form bằng Mũi tên Lên/Xuống hoặc Tab/Shift+Tab
         match key.code {
-            KeyCode::Tab => {
+            KeyCode::Down | KeyCode::Tab => {
                 self.focus_next();
                 EventResult::Consumed
             }
-            KeyCode::BackTab => {
+            KeyCode::Up | KeyCode::BackTab => {
                 self.focus_prev();
                 EventResult::Consumed
             }

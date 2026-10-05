@@ -1,4 +1,4 @@
-// --- PHÂN ĐOẠN: TASK WIDGET (CÂN BẰNG LỀ TRƯỚC VÀ SAU KHI CHUYỂN TRẠNG THÁI) ---
+// --- PHÂN ĐOẠN: TASK WIDGET TOÀN DIỆN (THAY THẾ HOÀN TOÀN CHO LOADING & PROGRESS) ---
 
 use crate::traits::{EventResult, FormWidget};
 use crossterm::event::KeyEvent;
@@ -29,6 +29,7 @@ pub enum TaskState {
 }
 
 pub struct TaskWidget {
+    pub id: String,
     pub label: String,
     pub state: TaskState,
     pub color: Color,
@@ -37,8 +38,15 @@ pub struct TaskWidget {
 }
 
 impl TaskWidget {
-    pub fn new_loading(label: impl Into<String>, message: impl Into<String>, color: Color) -> Self {
+    /// 1. Khởi tạo ở chế độ thuần Loading (thay thế hoàn toàn cho LoadingWidget)
+    pub fn new_loading(
+        id: impl Into<String>,
+        label: impl Into<String>,
+        message: impl Into<String>,
+        color: Color,
+    ) -> Self {
         Self {
+            id: id.into(),
             label: label.into(),
             state: TaskState::Loading {
                 message: message.into(),
@@ -52,6 +60,34 @@ impl TaskWidget {
         }
     }
 
+    /// 2. Khởi tạo ở chế độ thuần Progress (thay thế hoàn toàn cho ProgressWidget)
+    pub fn new_progress(
+        id: impl Into<String>,
+        label: impl Into<String>,
+        current: usize,
+        total: usize,
+        unit: impl Into<String>,
+        duration: impl Into<String>,
+        status: impl Into<String>,
+        color: Color,
+    ) -> Self {
+        Self {
+            id: id.into(),
+            label: label.into(),
+            state: TaskState::Running {
+                current,
+                total: total.max(1),
+                unit: unit.into(),
+                duration: duration.into(),
+                status: status.into(),
+            },
+            color,
+            bar_width: 25,
+            focused: false,
+        }
+    }
+
+    /// Chuyển đổi trạng thái từ Loading sang Running
     pub fn switch_to_progress(
         &mut self,
         label: impl Into<String>,
@@ -70,6 +106,7 @@ impl TaskWidget {
         };
     }
 
+    /// Cập nhật tiến trình khi đang ở pha Running
     pub fn update_progress(&mut self, current: usize, duration: impl Into<String>) {
         if let TaskState::Running {
             current: c,
@@ -83,6 +120,7 @@ impl TaskWidget {
         }
     }
 
+    /// Nhịp animation cho spinner ở pha Loading
     pub fn tick(&mut self) {
         if let TaskState::Loading {
             frame_idx,
@@ -112,6 +150,10 @@ impl TaskWidget {
 }
 
 impl FormWidget for TaskWidget {
+    fn id(&self) -> &str {
+        &self.id
+    }
+
     fn render(&self, area: Rect, frame: &mut Frame) {
         let label_style = if self.focused {
             Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD)
@@ -132,7 +174,6 @@ impl FormWidget for TaskWidget {
                 let active_len = block_size.min(self.bar_width.saturating_sub(left_empty));
                 let right_empty = self.bar_width.saturating_sub(left_empty + active_len);
 
-                // Ký tự spinner chiếm đúng 2 ký tự hiển thị: format!("{} ", spinner_char)
                 let line1 = Line::from(vec![
                     Span::styled(format!("{} ", spinner_char), Style::default().fg(self.color).add_modifier(Modifier::BOLD)),
                     Span::styled(format!("{}: ", self.label), label_style),
@@ -164,8 +205,7 @@ impl FormWidget for TaskWidget {
                 let metric_text = format!(" [{}/{} {} ({})]", current, total, unit, duration);
 
                 let line1 = Line::from(vec![
-                    // Thêm đúng 2 khoảng trắng "  " để bù vào vị trí của "⠹ " lúc loading
-                    Span::styled("  ", Style::default()),
+                    Span::styled("  ", Style::default()), // Căn lề chuẩn với ký tự spinner 2 cột
                     Span::styled(format!("{}: ", self.label), label_style),
                     Span::styled("━".repeat(filled_len), Style::default().fg(self.color).add_modifier(Modifier::BOLD)),
                     Span::styled("─".repeat(empty_len), Style::default().fg(Color::DarkGray)),
@@ -173,7 +213,6 @@ impl FormWidget for TaskWidget {
                     Span::styled(metric_text, Style::default().fg(Color::LightBlue)),
                 ]);
 
-                // Dòng 2 giữ nguyên tiền tố "  ↳ " không thay đổi
                 let line2 = Line::from(vec![
                     Span::styled("  ↳ ", Style::default().fg(Color::DarkGray)),
                     Span::styled(status, Style::default().fg(Color::Gray).add_modifier(Modifier::ITALIC)),
@@ -188,19 +227,8 @@ impl FormWidget for TaskWidget {
         EventResult::Ignored
     }
 
-    fn focus(&mut self) {
-        self.focused = true;
-    }
-
-    fn blur(&mut self) {
-        self.focused = false;
-    }
-
-    fn is_focused(&self) -> bool {
-        self.focused
-    }
-
-    fn preferred_height(&self) -> u16 {
-        3
-    }
+    fn focus(&mut self) { self.focused = true; }
+    fn blur(&mut self) { self.focused = false; }
+    fn is_focused(&self) -> bool { self.focused }
+    fn preferred_height(&self) -> u16 { 3 }
 }

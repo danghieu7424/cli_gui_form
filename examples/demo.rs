@@ -1,5 +1,6 @@
 use cli_gui_form::{
-    ButtonWidget, CheckboxWidget, EventResult, FormManager, InputMode, InputWidget, RadioWidget,
+    ButtonWidget, CheckboxWidget, EventResult, FormManager, InputMode, InputWidget,
+    ProgressWidget, RadioWidget,
 };
 use crossterm::{
     event::{self, Event, KeyCode, KeyEventKind},
@@ -24,6 +25,8 @@ fn main() -> io::Result<()> {
         "Environment",
         vec!["Dev".into(), "Staging".into(), "Prod".into()],
     )));
+    // Thêm Progress Bar với tiến độ khởi tạo 45% (0.45), màu Cyan
+    form.add_widget(Box::new(ProgressWidget::new("Loading", 0.45, Color::Cyan)));
     form.add_widget(Box::new(ButtonWidget::new("SUBMIT", Color::Blue, Color::White)));
 
     loop {
@@ -38,7 +41,6 @@ fn main() -> io::Result<()> {
 
             let result = form.handle_event(key);
             if result == EventResult::Submitted {
-                // Nhấn Enter tại nút SUBMIT
                 break;
             }
         }

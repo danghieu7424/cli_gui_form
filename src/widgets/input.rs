@@ -1,11 +1,11 @@
-// --- PHÂN ĐOẠN: TEXT & PASSWORD INPUT WIDGET (BO GÓC, KHÔNG NGOẶC VUÔNG) ---
+// --- PHÂN ĐOẠN: TEXT & PASSWORD INPUT WIDGET (HEADER ╭─ Label ─ VÀ PADDING NỘI DUNG) ---
 
 use crate::traits::{EventResult, FormWidget};
 use crossterm::event::{KeyCode, KeyEvent, KeyEventKind};
 use ratatui::{
     layout::Rect,
     style::{Color, Modifier, Style},
-    widgets::{Block, BorderType, Borders, Paragraph},
+    widgets::{Block, BorderType, Borders, Padding, Paragraph},
     Frame,
 };
 
@@ -46,14 +46,16 @@ impl FormWidget for InputWidget {
             Color::DarkGray
         };
 
-        // Sử dụng BorderType::Rounded để bo tròn 4 góc của khung
+        let title_formatted = format!("─ {} ─", self.label);
+
+        // Thêm padding ngang (1 cột) để text không dính sát viền đứng │
         let block = Block::default()
             .borders(Borders::ALL)
             .border_type(BorderType::Rounded)
             .border_style(Style::default().fg(border_color))
-            .title(format!(" {} ", self.label));
+            .padding(Padding::horizontal(1))
+            .title(title_formatted);
 
-        // Render trực tiếp chuỗi text mà không cần ký tự bao [ ]
         let paragraph = Paragraph::new(display_text)
             .block(block)
             .style(if self.focused {

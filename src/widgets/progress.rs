@@ -1,4 +1,4 @@
-// --- PHÂN ĐOẠN: DETAILED PROGRESS WIDGET VỚI METRICS & STATUS MESSAGE ---
+// --- PHÂN ĐOẠN: DETAILED TASK CARD (2 DÒNG + THỤT LỀ TRẠNG THÁI) ---
 
 use crate::traits::{EventResult, FormWidget};
 use crossterm::event::{KeyCode, KeyEvent, KeyEventKind};
@@ -14,16 +14,15 @@ pub struct ProgressWidget {
     pub label: String,
     pub current: usize,
     pub total: usize,
-    pub unit: String,             // Ví dụ: "chunks", "items", ""
-    pub duration: Option<String>, // Ví dụ: "2m", "0s"
-    pub status: Option<String>,   // Ví dụ: "MDX-Net Native Inference"
+    pub unit: String,
+    pub duration: Option<String>,
+    pub status: Option<String>,
     pub color: Color,
     pub bar_width: usize,
     focused: bool,
 }
 
 impl ProgressWidget {
-    /// Khởi tạo theo số lượng cụ thể (current / total)
     pub fn new(label: impl Into<String>, current: usize, total: usize, color: Color) -> Self {
         Self {
             label: label.into(),
@@ -68,7 +67,7 @@ impl FormWidget for ProgressWidget {
         let ratio = self.ratio();
         let percent = (ratio * 100.0).round() as u8;
 
-        // Tính thanh bar
+        // Tính độ dài vạch tiến độ
         let filled_len = ((self.bar_width as f32) * ratio).round() as usize;
         let empty_len = self.bar_width.saturating_sub(filled_len);
 
@@ -81,7 +80,7 @@ impl FormWidget for ProgressWidget {
             Style::default().fg(Color::White)
         };
 
-        // Chuỗi metric: "[90/134 chunks (2m)]"
+        // Gom các chỉ số: [90/134 chunks (2m)]
         let mut metric_parts = Vec::new();
         if self.unit.is_empty() {
             metric_parts.push(format!("{}/{}", self.current, self.total));
@@ -94,22 +93,27 @@ impl FormWidget for ProgressWidget {
         }
         let metric_text = format!(" [{}]", metric_parts.join(" "));
 
-        // Dòng 1: Label + Bar + % + Metrics
-        let mut line1_spans = vec![
+        // Dòng 1: Label + Progress Bar + % + Metrics
+        let line1 = Line::from(vec![
             Span::styled(format!("{}: ", self.label), label_style),
             Span::styled(filled_bar, Style::default().fg(self.color).add_modifier(Modifier::BOLD)),
             Span::styled(empty_bar, Style::default().fg(Color::DarkGray)),
             Span::styled(format!(" {:>3}%", percent), Style::default().fg(Color::White).add_modifier(Modifier::BOLD)),
             Span::styled(metric_text, Style::default().fg(Color::LightBlue)),
-        ];
+        ]);
 
-        // Nếu không có dòng phụ, nối trực tiếp status vào cuối dòng 1
-        let mut lines = Vec::new();
-        if let Some(status) = &self.status {
-            line1_spans.push(Span::styled(format!(" - {}", status), Style::default().fg(Color::Gray)));
-            lines.push(Line::from(line1_spans));
-        } else {
-            lines.push(Line::from(line1_spans));
+        let mut lines = vec![line1];
+
+        // Dòng 2: Subtitle / Status message nếu có cấu hình
+        if let Some(status_msg) = &self.status {
+            let line2 = Line::from(vec![
+                Span::styled("  ↳ ", Style::default().fg(Color::DarkGray)),
+                Span::styled(
+                    status_msg,
+                    Style::default().fg(Color::Gray).add_modifier(Modifier::ITALIC),
+                ),
+            ]);
+            lines.push(line2);
         }
 
         let paragraph = Paragraph::new(lines);
@@ -148,6 +152,10 @@ impl FormWidget for ProgressWidget {
     }
 
     fn preferred_height(&self) -> u16 {
-        2
+        if self.status.is_some() {
+            3 // 2 dòng nội dung + 1 dòng khoảng cách đệm
+        } else {
+            2
+        }
     }
 }

@@ -1,8 +1,6 @@
-// --- PHÂN ĐOẠN: DEMO RUNNER VỚI ĐÚNG THỨ TỰ FORM VÀ KHÔNG BỊ NÉN KHUNG ---
-
 use cli_gui_form::{
-    ButtonWidget, CheckboxWidget, EventResult, FormManager, InputMode, InputWidget,
-    LoadingWidget, ProgressWidget, RadioWidget,
+    ButtonWidget, CheckboxWidget, EventResult, FormManager, FormWidget, InputMode, InputWidget,
+    RadioWidget, TaskWidget,
 };
 use crossterm::{
     event::{self, Event, KeyCode, KeyEventKind},
@@ -24,66 +22,69 @@ fn main() -> io::Result<()> {
     let mut terminal = Terminal::new(backend)?;
 
     let mut form = FormManager::new();
-
-    // 1. Inputs
     form.add_widget(Box::new(InputWidget::new("Username", InputMode::Text)));
     form.add_widget(Box::new(InputWidget::new("Password", InputMode::Password)));
-
-    // 2. Checkbox & Radio
     form.add_widget(Box::new(CheckboxWidget::new("Remember Me", false)));
     form.add_widget(Box::new(RadioWidget::new(
         "Environment",
         vec!["Dev".into(), "Staging".into(), "Prod".into()],
     )));
 
-    // 3. Progress bars
-    form.add_widget(Box::new(
-        ProgressWidget::new("Separation", 90, 134, Color::Cyan)
-            .with_unit("chunks")
-            .with_duration("2m")
-            .with_status("MDX-Net Native Inference")
-            .with_bar_width(20),
-    ));
+    // Tạo TaskWidget bắt đầu bằng pha Loading (Nạp mô hình)
+    let task = Arc::new(Mutex::new(TaskWidget::new_loading(
+        "Processing",
+        "Đang nạp trọng số mô hình giọng nói...",
+        Color::Magenta,
+    )));
+    form.add_widget(Box::new(TaskShared(Arc::clone(&task))));
 
-    form.add_widget(Box::new(
-        ProgressWidget::new("TTS Generator", 667, 667, Color::Green)
-            .with_duration("0s")
-            .with_status("Hoàn tất sinh audio các câu thoại")
-            .with_bar_width(20),
-    ));
-
-    // 4. Loading Widget (Nằm TRƯỚC Button Submit)
-    let loading = Arc::new(Mutex::new(
-        LoadingWidget::new(
-            "Processing",
-            "Đang chạy inference mô hình giọng nói...",
-            Color::Magenta,
-        )
-        .with_bar_width(20),
-    ));
-    form.add_widget(Box::new(LoadingShared(Arc::clone(&loading))));
-
-    // 5. Submit Button (Nằm SAU Loading)
     form.add_widget(Box::new(ButtonWidget::new("SUBMIT", Color::Blue, Color::White)));
 
     let target_frame_duration = Duration::from_millis(16);
     let mut last_tick = Instant::now();
+    let start_time = Instant::now();
+    let mut switched = false;
+    let mut current_chunk = 0;
 
     loop {
         terminal.draw(|f| {
-            // Render toàn bộ form theo chiều cao tự tính, không cắt layout cứng
             form.render(f.area(), f);
         })?;
 
-        // Cập nhật frame xoay spinner
+        // 1. Cập nhật nhịp animation và logic mô phỏng tiến trình
         if last_tick.elapsed() >= Duration::from_millis(40) {
-            if let Ok(mut l) = loading.lock() {
-                l.tick();
+            let mut t = task.lock().unwrap();
+
+            // Giai đoạn 1: 0 -> 3 giây: Đang Loading (Nạp mô hình)
+            if start_time.elapsed() < Duration::from_secs(3) {
+                t.tick();
+            } 
+            // Giai đoạn 2: Sau 3 giây: Tự động chuyển sang chạy tiến trình
+            else {
+                if !switched {
+                    t.color = Color::Cyan;
+                    t.switch_to_progress(
+                        "Separation",
+                        134,
+                        "chunks",
+                        "0s",
+                        "MDX-Net Native Inference",
+                    );
+                    switched = true;
+                }
+
+                // Mô phỏng tăng chunk xử lý
+                if current_chunk < 134 {
+                    current_chunk += 1;
+                    let elapsed_sec = (start_time.elapsed().as_secs() - 3).max(1);
+                    t.update_progress(current_chunk, format!("{}s", elapsed_sec));
+                }
             }
+
             last_tick = Instant::now();
         }
 
-        // Non-blocking Poll
+        // 2. Bắt sự kiện bàn phím không chặn khung hình
         if event::poll(target_frame_duration)? {
             if let Event::Key(key) = event::read()? {
                 if key.kind == KeyEventKind::Press {
@@ -105,41 +106,41 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 
-// Wrapper nhỏ để FormManager có thể sở hữu LoadingWidget trong khi main loop vẫn gọi tick()
-struct LoadingShared(Arc<Mutex<LoadingWidget>>);
+// Wrapper chia sẻ con trỏ task giữa Main loop và FormManager
+struct TaskShared(Arc<Mutex<TaskWidget>>);
 
-impl cli_gui_form::FormWidget for LoadingShared {
+impl FormWidget for TaskShared {
     fn render(&self, area: ratatui::layout::Rect, frame: &mut ratatui::Frame) {
-        if let Ok(l) = self.0.lock() {
-            l.render(area, frame);
+        if let Ok(t) = self.0.lock() {
+            t.render(area, frame);
         }
     }
 
     fn handle_event(&mut self, key: crossterm::event::KeyEvent) -> EventResult {
-        if let Ok(mut l) = self.0.lock() {
-            l.handle_event(key)
+        if let Ok(mut t) = self.0.lock() {
+            t.handle_event(key)
         } else {
             EventResult::Ignored
         }
     }
 
     fn focus(&mut self) {
-        if let Ok(mut l) = self.0.lock() {
-            l.focus();
+        if let Ok(mut t) = self.0.lock() {
+            t.focus();
         }
     }
 
     fn blur(&mut self) {
-        if let Ok(mut l) = self.0.lock() {
-            l.blur();
+        if let Ok(mut t) = self.0.lock() {
+            t.blur();
         }
     }
 
     fn is_focused(&self) -> bool {
-        self.0.lock().map(|l| l.is_focused()).unwrap_or(false)
+        self.0.lock().map(|t| t.is_focused()).unwrap_or(false)
     }
 
     fn preferred_height(&self) -> u16 {
-        self.0.lock().map(|l| l.preferred_height()).unwrap_or(3)
+        self.0.lock().map(|t| t.preferred_height()).unwrap_or(3)
     }
 }

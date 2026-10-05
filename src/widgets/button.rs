@@ -1,10 +1,11 @@
-// --- PHÂN ĐOẠN: COLOR BUTTON WIDGET ---
+// --- PHÂN ĐOẠN: COLOR BUTTON WIDGET (HIGHLIGHT VỪA VẶN THEO TEXT) ---
 
 use crate::traits::{EventResult, FormWidget};
 use crossterm::event::{KeyCode, KeyEvent, KeyEventKind};
 use ratatui::{
     layout::Rect,
     style::{Color, Modifier, Style},
+    text::{Line, Span},
     widgets::Paragraph,
     Frame,
 };
@@ -30,15 +31,27 @@ impl ButtonWidget {
 impl FormWidget for ButtonWidget {
     fn render(&self, area: Rect, frame: &mut Frame) {
         let (bg, fg) = if self.focused {
+            // Khi focus: Đảo màu để làm nổi bật vị trí con trỏ
             (self.fg_color, self.bg_color)
         } else {
             (self.bg_color, self.fg_color)
         };
 
-        let label = format!(" [ {} ] ", self.title);
-        let paragraph = Paragraph::new(label)
-            .style(Style::default().bg(bg).fg(fg).add_modifier(Modifier::BOLD));
+        // Text nút bấm với padding 2 khoảng trắng 2 bên
+        let button_text = format!(" [ {} ] ", self.title);
 
+        // Chỉ áp dụng màu nền (bg) lên duy nhất Span chứa text nút
+        let content = Line::from(vec![
+            Span::styled(
+                button_text,
+                Style::default()
+                    .bg(bg)
+                    .fg(fg)
+                    .add_modifier(Modifier::BOLD),
+            ),
+        ]);
+
+        let paragraph = Paragraph::new(content);
         frame.render_widget(paragraph, area);
     }
 

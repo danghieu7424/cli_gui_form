@@ -25,8 +25,22 @@ fn main() -> io::Result<()> {
         "Environment",
         vec!["Dev".into(), "Staging".into(), "Prod".into()],
     )));
-    // Thêm Progress Bar với tiến độ khởi tạo 45% (0.45), màu Cyan
-    form.add_widget(Box::new(ProgressWidget::new("Loading", 0.45, Color::Cyan)));
+    // Ví dụ 1: 90/134 chunks (2m) MDX-Net Native Inference
+    form.add_widget(Box::new(
+        ProgressWidget::new("Separation", 90, 134, Color::Cyan)
+            .with_unit("chunks")
+            .with_duration("2m")
+            .with_status("MDX-Net Native Inference")
+            .with_bar_width(20),
+    ));
+
+    // Ví dụ 2: 667/667 (0s) Hoàn tất sinh audio các câu thoại
+    form.add_widget(Box::new(
+        ProgressWidget::new("TTS Generator", 667, 667, Color::Green)
+            .with_duration("0s")
+            .with_status("Hoàn tất sinh audio các câu thoại")
+            .with_bar_width(20),
+));
     form.add_widget(Box::new(ButtonWidget::new("SUBMIT", Color::Blue, Color::White)));
 
     loop {

@@ -122,7 +122,7 @@ For nested or less important containers, use a dimmed border with the same chara
 ```
   Name              Status    Time
   ─────────────────────────────────
-  deploy-api        ✓ Ready   2m ago
+  deploy-api        ✔ Ready   2m ago
   deploy-web        ▶ Build   just now
   deploy-docs       ✗ Error   5m ago
 ```
@@ -147,9 +147,9 @@ No outer border. Header separated by `─`. Dim separator line.
 ```
 ┌─ Deploy Status ──────────────┐
 │                               │
-│  Production    ✓ Ready        │
+│  Production    ✔ Ready        │
 │  Preview       ▶ Building     │
-│  Staging       ✓ Ready        │
+│  Staging       ✔ Ready        │
 │                               │
 └───────────────────────────────┘
 ```
@@ -169,7 +169,7 @@ Active tab: BOLD + Primary (`#ffffff`), mở thông vào thân Panel. Inactive t
 ### Status Bar
 
 ```
- main ─ 3 files changed ─ ✓ All checks passed         127.0.0.1:3000
+ main ─ 3 files changed ─ ✔ All checks passed         127.0.0.1:3000
 ```
 
 Single line at bottom. Left-aligned info, right-aligned status. Separated by ` ─ `.

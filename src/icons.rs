@@ -16,7 +16,7 @@ impl Icons {
     pub const SUCCESS: &'static str = "✔";       // U+2714
     pub const ERROR: &'static str = "✗";         // U+2716
     pub const WARNING: &'static str = "⚠";       // U+25B2 / U+26A0
-    pub const RUN: &'static str = "▶︎";           // U+25B6
+    pub const RUN: &'static str = "▶";           // U+25B6 (Single codepoint - không làm lệch khung ──────)
     pub const BUILD: &'static str = "⚙";         // U+2699
     pub const INFO: &'static str = "ℹ";          // U+2139
     pub const PAUSE: &'static str = "⏸";         // U+23F8
@@ -31,13 +31,13 @@ impl Icons {
     pub const CHECKBOX_OFF: &'static str = "☐";  // U+2610
     pub const RADIO_ON: &'static str = "●";      // U+25CF
     pub const RADIO_OFF: &'static str = "○";     // U+25CB
-    pub const   BULLET: &'static str = "▪";       // U+25AA
+    pub const BULLET: &'static str = "▪";        // U+25AA
 
     // Bộ chỉ hướng & tiến trình (Progress & Pointers)
     pub const POINTER: &'static str = "▹";       // U+25B8
     pub const ARROW_RIGHT: &'static str = "→";   // U+2192
     pub const BRANCH: &'static str = "⤷";        // U+21B3
-    pub const POWER: &'static str = "⚡︎";         // U+26A1 + U+FE0E
+    pub const POWER: &'static str = "⚡";         // U+26A1 (Single codepoint)
     pub const PROGRESS_FILLED: &'static str = "━"; // U+2501
     pub const PROGRESS_EMPTY: &'static str = "─";  // U+2500
 
@@ -98,7 +98,7 @@ mod tests {
         assert_eq!(Icons::SUCCESS, "✔");
         assert_eq!(Icons::ERROR, "✗");
         assert_eq!(Icons::WARNING, "⚠");
-        assert_eq!(Icons::RUN, "▶︎");
+        assert_eq!(Icons::RUN, "▶");
         assert_eq!(Icons::BUILD, "⚙");
         assert_eq!(Icons::INFO, "ℹ");
         assert_eq!(Icons::PAUSE, "⏸");
@@ -111,7 +111,7 @@ mod tests {
         assert_eq!(Icons::POINTER, "▹");
         assert_eq!(Icons::ARROW_RIGHT, "→");
         assert_eq!(Icons::BRANCH, "⤷");
-        assert_eq!(Icons::POWER, "⚡︎");
+        assert_eq!(Icons::POWER, "⚡");
         assert_eq!(Icons::PROGRESS_FILLED, "━");
         assert_eq!(Icons::PROGRESS_EMPTY, "─");
     }

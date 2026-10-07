@@ -10,7 +10,30 @@ use ratatui::{
     Frame,
 };
 
-const SPINNER_FRAMES: &[&str] = &["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+const SPINNER_FRAMES_DOTS: &[&str] = &["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+const SPINNER_FRAMES_PULSE: &[&str] = &["·", "•", "●", "•", "·", " "];
+
+/****
+ * Module: SpinnerType
+ * Chức năng: Định nghĩa kiểu hoạt họa spinner trong TaskState::Loading.
+ * - Dots: Vòng xoay Braille mặc định ("⠋"..."⠏")
+ * - Pulse: Hiệu ứng chấm nhịp đập / Thinking ("·", "•", "●", "•", "·", " ")
+ ****/
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum SpinnerType {
+    #[default]
+    Dots,
+    Pulse,
+}
+
+impl SpinnerType {
+    pub fn frames(&self) -> &'static [&'static str] {
+        match self {
+            SpinnerType::Dots => SPINNER_FRAMES_DOTS,
+            SpinnerType::Pulse => SPINNER_FRAMES_PULSE,
+        }
+    }
+}
 
 pub enum TaskState {
     Loading {
@@ -34,6 +57,7 @@ pub struct TaskWidget {
     pub state: TaskState,
     pub color: Color,
     pub bar_width: usize,
+    pub spinner_type: SpinnerType,
     focused: bool,
 }
 
@@ -56,6 +80,7 @@ impl TaskWidget {
             },
             color,
             bar_width: 25,
+            spinner_type: SpinnerType::Dots,
             focused: false,
         }
     }
@@ -83,8 +108,15 @@ impl TaskWidget {
             },
             color,
             bar_width: 25,
+            spinner_type: SpinnerType::Dots,
             focused: false,
         }
+    }
+
+    /// Cho phép cấu hình kiểu animation của spinner (Dots hoặc Pulse)
+    pub fn with_spinner_type(mut self, spinner_type: SpinnerType) -> Self {
+        self.spinner_type = spinner_type;
+        self
     }
 
     /// Chuyển đổi trạng thái từ Loading sang Running
@@ -122,6 +154,7 @@ impl TaskWidget {
 
     /// Nhịp animation cho spinner ở pha Loading
     pub fn tick(&mut self) {
+        let frames = self.spinner_type.frames();
         if let TaskState::Loading {
             frame_idx,
             bouncing_pos,
@@ -129,7 +162,7 @@ impl TaskWidget {
             ..
         } = &mut self.state
         {
-            *frame_idx = (*frame_idx + 1) % SPINNER_FRAMES.len();
+            *frame_idx = (*frame_idx + 1) % frames.len();
             let block_size = 5;
             if self.bar_width > block_size {
                 let max_pos = self.bar_width - block_size;
@@ -168,7 +201,8 @@ impl FormWidget for TaskWidget {
                 bouncing_pos,
                 ..
             } => {
-                let spinner_char = SPINNER_FRAMES[*frame_idx];
+                let frames = self.spinner_type.frames();
+                let spinner_char = frames[*frame_idx % frames.len()];
                 let block_size = 5;
                 let left_empty = *bouncing_pos;
                 let active_len = block_size.min(self.bar_width.saturating_sub(left_empty));
@@ -231,4 +265,31 @@ impl FormWidget for TaskWidget {
     fn blur(&mut self) { self.focused = false; }
     fn is_focused(&self) -> bool { self.focused }
     fn preferred_height(&self) -> u16 { 3 }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_spinner_type_frames() {
+        assert_eq!(SpinnerType::Dots.frames()[0], "⠋");
+        assert_eq!(SpinnerType::Pulse.frames(), &["·", "•", "●", "•", "·", " "]);
+    }
+
+    #[test]
+    fn test_task_loading_tick_with_pulse() {
+        let mut widget = TaskWidget::new_loading("task", "Thinking", "Please wait...", Color::Magenta)
+            .with_spinner_type(SpinnerType::Pulse);
+
+        assert_eq!(widget.spinner_type, SpinnerType::Pulse);
+        if let TaskState::Loading { frame_idx, .. } = widget.state {
+            assert_eq!(frame_idx, 0);
+        }
+
+        widget.tick();
+        if let TaskState::Loading { frame_idx, .. } = widget.state {
+            assert_eq!(frame_idx, 1);
+        }
+    }
 }

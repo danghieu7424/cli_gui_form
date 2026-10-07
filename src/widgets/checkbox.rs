@@ -39,9 +39,9 @@ impl FormWidget for CheckboxWidget {
 
     fn render(&self, area: Rect, frame: &mut Frame) {
         let (box_symbol, color) = if self.checked {
-            ("[✓]", Color::Green)
+            ("☑", Color::Green)
         } else {
-            ("[ ]", Color::DarkGray)
+            ("☐", Color::DarkGray)
         };
 
         let label_style = if self.focused {

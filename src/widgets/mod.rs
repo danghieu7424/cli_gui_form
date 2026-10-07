@@ -10,4 +10,4 @@ pub use checkbox::CheckboxWidget;
 pub use input::{InputMode, InputWidget};
 pub use radio::RadioWidget;
 pub use shimmer::ShimmerWidget;
-pub use task::{TaskState, TaskWidget};
+pub use task::{SpinnerType, TaskState, TaskWidget};

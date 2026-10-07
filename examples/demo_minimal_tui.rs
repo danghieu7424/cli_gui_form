@@ -144,10 +144,6 @@ fn main() -> io::Result<()> {
         terminal.draw(|f| {
             let full_area = f.area();
 
-            // Render background tổng thể theo Theme::BG (#0a0a0a)
-            let bg_block = Block::default().style(Style::default().bg(Theme::BG));
-            f.render_widget(bg_block, full_area);
-
             // Bố cục Layout: Top Header (H1), Main Container (Panel), Bottom Status Bar
             let chunks = Layout::default()
                 .direction(Direction::Vertical)

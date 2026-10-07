@@ -63,10 +63,10 @@ impl FormWidget for InputWidget {
 
         let title_formatted = format!(" {} ", self.label);
 
-        // Theo DESIGN.md: Single-line box drawing (┌─┐│└─┘), không dùng bo góc tròn
+        // Bo góc theo yêu cầu người dùng (BorderType::Rounded) kết hợp màu Theme
         let block = Block::default()
             .borders(Borders::ALL)
-            .border_type(BorderType::Plain)
+            .border_type(BorderType::Rounded)
             .border_style(Style::default().fg(border_color))
             .padding(Padding::horizontal(1))
             .title(title_formatted);

@@ -151,8 +151,9 @@ Single-line box drawing. Clean and lightweight.
 ```
 
 - Active: viền `Theme::BORDER_FOCUS` (`#0070f3`), con trỏ native hiển thị nhấp nháy
-- Inactive: viền `Theme::NEUTRAL_100` (`#2a2a2a`)
-- Password mode: tự động mã hóa ký tự dạng `••••••••`
+- Inactive: viền `Theme::MUTED` (`#555555`)
+- Placeholder: văn bản gợi ý mờ bằng `Theme::NEUTRAL_300` (`#666666`) khi ô chưa có dữ liệu
+- Password mode: tự động mã hóa ký tự dạng `••••••••` khi người dùng nhập dữ liệu
 
 ### Tables `[x]` (`demo_master.rs` / `demo_table.rs`)
 

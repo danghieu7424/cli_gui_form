@@ -17,7 +17,7 @@
   * Tự động tính toán Viewport và cuộn thông minh khi danh sách control vượt quá chiều cao màn hình terminal.
   * Hỗ trợ định vị con trỏ nhấp nháy native (`frame.set_cursor_position`).
 * 🧩 **Bộ Widget Đầy Đủ & Tinh Gọn**:
-  * `InputWidget`: Ô nhập văn bản dạng Text và Password với con trỏ inline và thao tác chỉnh sửa tức thì.
+  * `InputWidget`: Ô nhập văn bản dạng Text và Password với con trỏ inline, văn bản gợi ý mờ (`placeholder`) khi ô rỗng theo chuẩn `Theme::NEUTRAL_300` và thao tác chỉnh sửa tức thì.
   * `CheckboxWidget`: Hộp kiểm logic bật/tắt (`[✔]` / `[ ]`).
   * `RadioWidget`: Nhóm lựa chọn một giá trị duy nhất, điều hướng ngang độc lập (`Left`/`Right` thay đổi tùy chọn, `Up`/`Down` chuyển ô form mà không làm nhảy giá trị).
   * `ListWidget`: **Menu danh sách điều hướng cây phân cấp (Hierarchical Sub-items Tree Navigation)**, hỗ trợ đi sâu vào danh mục con bằng phím `Right` / `Enter`, quay lại danh mục cha bằng phím `Left` / `Esc`, và chọn giá trị mục lá.
@@ -84,8 +84,14 @@ fn main() -> io::Result<()> {
 
     // 2. Khởi tạo FormManager và đăng ký các widget
     let mut form = FormManager::new();
-    form.add_widget(Box::new(InputWidget::new("user", "Tên đăng nhập", InputMode::Text)));
-    form.add_widget(Box::new(InputWidget::new("pass", "Mật khẩu", InputMode::Password)));
+    form.add_widget(Box::new(
+        InputWidget::new("user", "Tên đăng nhập", InputMode::Text)
+            .with_placeholder("admin@company.com"),
+    ));
+    form.add_widget(Box::new(
+        InputWidget::new("pass", "Mật khẩu", InputMode::Password)
+            .with_placeholder("••••••••••••"),
+    ));
     form.add_widget(Box::new(CheckboxWidget::new("remember", "Ghi nhớ phiên đăng nhập", true)));
     
     // RadioWidget: Left/Right chọn nhanh, Up/Down chuyển ô

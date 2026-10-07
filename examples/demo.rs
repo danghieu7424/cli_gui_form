@@ -35,9 +35,15 @@ fn main() -> io::Result<()> {
 
     let mut form = FormManager::new();
 
-    // 1. Inputs (Hỗ trợ con trỏ nhấp nháy, chỉnh sửa inline)
-    form.add_widget(Box::new(InputWidget::new("user", "Username", InputMode::Text)));
-    form.add_widget(Box::new(InputWidget::new("pass", "Password", InputMode::Password)));
+    // 1. Inputs (Hỗ trợ con trỏ nhấp nháy, chỉnh sửa inline, placeholder mờ)
+    form.add_widget(Box::new(
+        InputWidget::new("user", "Username", InputMode::Text)
+            .with_placeholder("admin@linear.app"),
+    ));
+    form.add_widget(Box::new(
+        InputWidget::new("pass", "Password", InputMode::Password)
+            .with_placeholder("Nhập mật khẩu bí mật..."),
+    ));
 
     // 2. Checkbox & Radio
     form.add_widget(Box::new(CheckboxWidget::new("remember", "Remember Me", false)));

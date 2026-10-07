@@ -57,16 +57,14 @@ fn main() -> io::Result<()> {
 
     // 2. KHỞI TẠO FORM SUITE (TAB 1)
     let mut form = FormManager::new();
-    form.add_widget(Box::new(InputWidget::new(
-        "service_name",
-        "Service Name",
-        InputMode::Text,
-    )));
-    form.add_widget(Box::new(InputWidget::new(
-        "api_secret",
-        "API Secret Key",
-        InputMode::Password,
-    )));
+    form.add_widget(Box::new(
+        InputWidget::new("service_name", "Service Name", InputMode::Text)
+            .with_placeholder("e.g. acme-auth-gateway"),
+    ));
+    form.add_widget(Box::new(
+        InputWidget::new("api_secret", "API Secret Key", InputMode::Password)
+            .with_placeholder("Enter secret key or paste token..."),
+    ));
     form.add_widget(Box::new(CheckboxWidget::new(
         "enable_tls",
         "Enable Automatic TLS / SSL Certificate",

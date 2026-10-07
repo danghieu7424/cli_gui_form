@@ -19,21 +19,56 @@ pub struct InputWidget {
     pub id: String,
     pub label: String,
     pub value: String,
+    pub placeholder: String,
     pub mode: InputMode,
     cursor_idx: usize,
     focused: bool,
 }
 
 impl InputWidget {
+    /****
+     * Function: new
+     * Chức năng: Khởi tạo ô nhập liệu với id, nhãn và chế độ hiển thị (Text/Password).
+     * Ranh giới bảo vệ: Giá trị ban đầu rỗng, con trỏ tại vị trí 0, chưa kích hoạt focus.
+     ****/
     pub fn new(id: impl Into<String>, label: impl Into<String>, mode: InputMode) -> Self {
         Self {
             id: id.into(),
             label: label.into(),
             value: String::new(),
+            placeholder: String::new(),
             mode,
             cursor_idx: 0,
             focused: false,
         }
+    }
+
+    /****
+     * Function: with_placeholder
+     * Chức năng: Thiết lập chuỗi văn bản gợi ý khi ô chưa được điền thông tin.
+     * Ranh giới bảo vệ: Hiển thị mờ bằng Theme::NEUTRAL_300 (#666666) theo chuẩn DESIGN.md.
+     ****/
+    pub fn with_placeholder(mut self, placeholder: impl Into<String>) -> Self {
+        self.placeholder = placeholder.into();
+        self
+    }
+
+    /****
+     * Function: with_value
+     * Chức năng: Gán giá trị ban đầu và đưa con trỏ về cuối chuỗi.
+     ****/
+    pub fn with_value(mut self, value: impl Into<String>) -> Self {
+        self.value = value.into();
+        self.cursor_idx = self.value.len();
+        self
+    }
+
+    pub fn placeholder(&self) -> &str {
+        &self.placeholder
+    }
+
+    pub fn set_placeholder(&mut self, placeholder: impl Into<String>) {
+        self.placeholder = placeholder.into();
     }
 }
 
@@ -47,23 +82,38 @@ impl FormWidget for InputWidget {
     }
 
     fn render(&self, area: Rect, frame: &mut Frame) {
-        let display_text = match self.mode {
-            InputMode::Text => self.value.clone(),
-            InputMode::Password => "*".repeat(self.value.len()),
+        // Theo chuẩn DESIGN.md:
+        // - Khi ô rỗng và có placeholder: hiển thị placeholder với Theme::NEUTRAL_300 (#666666)
+        // - Khi đã có dữ liệu: hiển thị text hoặc ký tự '*' nếu Password, màu Primary BOLD khi focus
+        let (display_text, text_style) = if self.value.is_empty() && !self.placeholder.is_empty() {
+            (
+                self.placeholder.clone(),
+                Style::default().fg(crate::Theme::NEUTRAL_300),
+            )
+        } else {
+            let text = match self.mode {
+                InputMode::Text => self.value.clone(),
+                InputMode::Password => "*".repeat(self.value.len()),
+            };
+            let style = if self.focused {
+                Style::default().fg(crate::Theme::PRIMARY).add_modifier(Modifier::BOLD)
+            } else {
+                Style::default().fg(crate::Theme::FG)
+            };
+            (text, style)
         };
 
-        // Theo DESIGN.md:
-        // - Active/Focused: Accent color border (#0070f3)
+        // - Active/Focused: BORDER_FOCUS (#0070f3)
         // - Inactive: Muted color border (#555555 / Neutral 100)
         let border_color = if self.focused {
-            crate::Theme::ACCENT
+            crate::Theme::BORDER_FOCUS
         } else {
             crate::Theme::MUTED
         };
 
         let title_formatted = format!("─ {} ─", self.label);
 
-        // Bo góc theo yêu cầu người dùng (BorderType::Rounded) kết hợp format ╭─ Label ─
+        // Bo góc theo chuẩn Minimal (BorderType::Rounded) kết hợp format ╭─ Label ─
         let block = Block::default()
             .borders(Borders::ALL)
             .border_type(BorderType::Rounded)
@@ -73,11 +123,7 @@ impl FormWidget for InputWidget {
 
         let paragraph = Paragraph::new(display_text)
             .block(block)
-            .style(if self.focused {
-                Style::default().fg(crate::Theme::PRIMARY).add_modifier(Modifier::BOLD)
-            } else {
-                Style::default().fg(crate::Theme::FG)
-            });
+            .style(text_style);
 
         frame.render_widget(paragraph, area);
     }
@@ -155,5 +201,43 @@ impl FormWidget for InputWidget {
         } else {
             None
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_input_placeholder_builder() {
+        let input = InputWidget::new("host", "Hostname", InputMode::Text)
+            .with_placeholder("127.0.0.1:8080");
+
+        assert_eq!(input.placeholder(), "127.0.0.1:8080");
+        assert_eq!(input.value(), FormValue::Text(String::new()));
+    }
+
+    #[test]
+    fn test_input_typing_and_backspace() {
+        let mut input = InputWidget::new("db", "Database", InputMode::Text)
+            .with_placeholder("postgres");
+
+        assert_eq!(input.value, "");
+
+        // Nhập 'a', 'b', 'c'
+        let _ = input.handle_event(KeyEvent::from(KeyCode::Char('a')));
+        let _ = input.handle_event(KeyEvent::from(KeyCode::Char('b')));
+        let _ = input.handle_event(KeyEvent::from(KeyCode::Char('c')));
+        assert_eq!(input.value, "abc");
+        assert_eq!(input.value(), FormValue::Text("abc".to_string()));
+
+        // Backspace
+        let _ = input.handle_event(KeyEvent::from(KeyCode::Backspace));
+        assert_eq!(input.value, "ab");
+
+        // Cursor Left và nhập chèn ở giữa
+        let _ = input.handle_event(KeyEvent::from(KeyCode::Left));
+        let _ = input.handle_event(KeyEvent::from(KeyCode::Char('x')));
+        assert_eq!(input.value, "axb");
     }
 }

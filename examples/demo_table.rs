@@ -96,6 +96,7 @@ fn main() -> io::Result<()> {
     let mut is_rounded = false;       // Bật / tắt bo góc (BorderType::Rounded vs Plain)
     let mut show_horizontal_lines = false; // Bật / tắt đường kẻ ngang giữa các hàng
     let mut show_column_borders = false;   // Bật / tắt đường kẻ dọc phân cách cột
+    let mut dash_mode: usize = 0;          // 0: Nét liền '─', 1: Hai nét '╌', 2: Ba nét '┄', 3: Bốn nét '┈'
 
     let mut needs_render = true;
 
@@ -121,7 +122,7 @@ fn main() -> io::Result<()> {
                 .style(Style::default().bg(Theme::BG));
                 f.render_widget(header_widget, chunks[0]);
 
-                // 2. Main Container Panel (Màu viền và màu tiêu đề đồng bộ bằng Theme::NEUTRAL_100 / Theme::SECONDARY)
+                // 2. Main Container Panel
                 let panel_border_type = if is_rounded {
                     BorderType::Rounded
                 } else {
@@ -142,12 +143,10 @@ fn main() -> io::Result<()> {
                 let inner_area = panel_block.inner(chunks[1]);
                 f.render_widget(panel_block, chunks[1]);
 
-                // 3. XÂY DỰNG TABLE GRID CHUẨN XÁC TỪ MỤC 4 DESIGN.MD
-                // Bảng độ rộng thực tế của 5 cột dữ liệu:
+                // 3. XÂY DỰNG TABLE GRID CHUẨN XÁC
                 let widths = [22, 16, 18, 14, 12];
                 let total_width: usize = widths.iter().sum::<usize>() + if show_column_borders { 4 } else { 0 };
 
-                // Các ký tự box drawing
                 let (c_top_left, c_top_right, c_bot_left, c_bot_right) = if is_rounded {
                     ("╭", "╮", "╰", "╯")
                 } else {
@@ -161,21 +160,37 @@ fn main() -> io::Result<()> {
                 let c_horiz = "─";
                 let c_vert = "│";
 
-                // Hàm tạo đường kẻ ngang phân cách nối chính xác với viền cột
-                let make_divider = |l: &str, m: &str, r: &str| -> String {
-                    let parts: Vec<String> = widths.iter().map(|&w| c_horiz.repeat(w)).collect();
+                // Ký tự ngăn dòng dữ liệu (Dashed chars: ─, ╌, ┄, ┈)
+                let c_dash = match dash_mode {
+                    1 => "╌",
+                    2 => "┄",
+                    3 => "┈",
+                    _ => "─",
+                };
+
+                // Hàm tạo đường kẻ ngang
+                let make_divider = |l: &str, m: &str, r: &str, fill: &str| -> String {
+                    let parts: Vec<String> = widths.iter().map(|&w| fill.repeat(w)).collect();
                     if show_column_borders {
-                        format!("{}{}{}", l, parts.join(m), r)
+                        if l.is_empty() && r.is_empty() {
+                            parts.join(m)
+                        } else {
+                            format!("{}{}{}", l, parts.join(m), r)
+                        }
                     } else {
-                        format!("{}{}{}", l, c_horiz.repeat(total_width), r)
+                        if l.is_empty() && r.is_empty() {
+                            fill.repeat(total_width)
+                        } else {
+                            format!("{}{}{}", l, fill.repeat(total_width), r)
+                        }
                     }
                 };
 
                 let mut lines: Vec<Line> = Vec::new();
 
-                // 1. Viền đỉnh của bảng (Top border) nếu có kẻ
+                // 1. Viền đỉnh của bảng (Top border) nếu có H-Line
                 if show_horizontal_lines {
-                    let top_line = make_divider(c_top_left, c_tee_down, c_top_right);
+                    let top_line = make_divider(c_top_left, c_tee_down, c_top_right, c_horiz);
                     lines.push(Line::from(Span::styled(top_line, Style::default().fg(Theme::NEUTRAL_100))));
                 }
 
@@ -184,8 +199,6 @@ fn main() -> io::Result<()> {
                 let mut header_spans: Vec<Span> = Vec::new();
                 if show_horizontal_lines {
                     header_spans.push(Span::styled(c_vert, Style::default().fg(Theme::NEUTRAL_100)));
-                } else {
-                    header_spans.push(Span::styled(" ", Style::default()));
                 }
 
                 for (i, &title) in h_cells.iter().enumerate() {
@@ -203,28 +216,25 @@ fn main() -> io::Result<()> {
                 }
                 lines.push(Line::from(header_spans));
 
-                // 3. Đường phân cách Header (Header Separator: ├─┬─┤ hoặc ├─┼─┤)
-                let header_sep = make_divider(
-                    if show_horizontal_lines { c_tee_right } else { "" },
-                    if show_column_borders { c_cross } else { c_horiz },
-                    if show_horizontal_lines { c_tee_left } else { "" },
-                );
+                // 3. Đường phân cách Header (Header Separator: chuẩn luôn luôn khít cả khi H-Line off)
+                let header_sep = if show_horizontal_lines {
+                    make_divider(c_tee_right, if show_column_borders { c_cross } else { c_horiz }, c_tee_left, c_horiz)
+                } else {
+                    make_divider("", if show_column_borders { c_tee_down } else { c_horiz }, "", c_horiz)
+                };
                 lines.push(Line::from(Span::styled(header_sep, Style::default().fg(Theme::NEUTRAL_100))));
 
                 // 4. Các hàng dữ liệu (Data Rows)
                 for (idx, item) in items.iter().enumerate() {
                     let is_selected = table_state.selected() == Some(idx);
                     let mut row_spans: Vec<Span> = Vec::new();
-
                     let row_border_style = Style::default().fg(Theme::NEUTRAL_100);
 
                     if show_horizontal_lines {
                         row_spans.push(Span::styled(c_vert, row_border_style));
-                    } else {
-                        row_spans.push(Span::styled(" ", Style::default()));
                     }
 
-                    // Cột 1: Name (có ▸ khi selected)
+                    // Cột 1: Name
                     let prefix = if is_selected { "▸ " } else { "  " };
                     let name_str = format!("{}{}", prefix, item.name);
                     let name_style = if is_selected {
@@ -269,7 +279,7 @@ fn main() -> io::Result<()> {
                         row_spans.push(Span::styled(c_vert, row_border_style));
                     }
 
-                    // Cột 5: Time (Right-align theo DESIGN.md)
+                    // Cột 5: Time (Right-align)
                     row_spans.push(Span::styled(
                         format!("{:>width$}", item.time, width = widths[4]),
                         Style::default().fg(Theme::SECONDARY),
@@ -286,23 +296,29 @@ fn main() -> io::Result<()> {
                     };
                     lines.push(row_line);
 
-                    // Đường kẻ ngang giữa các hàng dữ liệu (H-Line: ├─┼─┤)
+                    // Đường kẻ ngang giữa các hàng dữ liệu (H-Line: áp dụng nét đứt ╌, ┄, ┈ hoặc ─)
                     if show_horizontal_lines && idx + 1 < items.len() {
-                        let mid_sep = make_divider(c_tee_right, c_cross, c_tee_left);
+                        let mid_sep = make_divider(c_tee_right, c_cross, c_tee_left, c_dash);
                         lines.push(Line::from(Span::styled(mid_sep, Style::default().fg(Theme::NEUTRAL_100))));
                     }
                 }
 
-                // 5. Viền đáy của bảng (Bottom border: └─┴─┘)
+                // 5. Viền đáy của bảng
                 if show_horizontal_lines {
-                    let bot_line = make_divider(c_bot_left, c_tee_up, c_bot_right);
+                    let bot_line = make_divider(c_bot_left, c_tee_up, c_bot_right, c_horiz);
                     lines.push(Line::from(Span::styled(bot_line, Style::default().fg(Theme::NEUTRAL_100))));
                 }
 
                 let paragraph = Paragraph::new(lines).style(Style::default().bg(Theme::BG));
                 f.render_widget(paragraph, inner_area);
 
-                // 5. Status Bar hiển thị phím tắt toggles
+                // 6. Status Bar
+                let dash_label = match dash_mode {
+                    1 => "2-Dash (╌)",
+                    2 => "3-Dash (┄)",
+                    3 => "4-Dash (┈)",
+                    _ => "Solid (─)",
+                };
                 let status_line = Line::from(vec![
                     Span::styled(" [B] ", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
                     Span::styled(format!("Border:{} ", if is_rounded { "Rounded" } else { "Plain" }), Style::default().fg(Theme::SECONDARY)),
@@ -312,6 +328,9 @@ fn main() -> io::Result<()> {
                     Span::styled("─", Style::default().fg(Theme::MUTED)),
                     Span::styled(" [V] ", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
                     Span::styled(format!("V-Line:{} ", if show_column_borders { "ON" } else { "OFF" }), Style::default().fg(Theme::SECONDARY)),
+                    Span::styled("─", Style::default().fg(Theme::MUTED)),
+                    Span::styled(" [D] ", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                    Span::styled(format!("Style:{} ", dash_label), Style::default().fg(Theme::SECONDARY)),
                     Span::styled("─", Style::default().fg(Theme::MUTED)),
                     Span::styled(" ↑/↓: Navigate ", Style::default().fg(Theme::SECONDARY)),
                     Span::styled("─", Style::default().fg(Theme::MUTED)),
@@ -346,18 +365,20 @@ fn main() -> io::Result<()> {
                             needs_render = true;
                         }
                         KeyCode::Char('b') | KeyCode::Char('B') => {
-                            // Toggle bo góc khung ngoài: Rounded <-> Plain
                             is_rounded = !is_rounded;
                             needs_render = true;
                         }
                         KeyCode::Char('h') | KeyCode::Char('H') => {
-                            // Toggle đường kẻ ngang giữa các dòng
                             show_horizontal_lines = !show_horizontal_lines;
                             needs_render = true;
                         }
                         KeyCode::Char('v') | KeyCode::Char('V') => {
-                            // Toggle đường kẻ dọc
                             show_column_borders = !show_column_borders;
+                            needs_render = true;
+                        }
+                        KeyCode::Char('d') | KeyCode::Char('D') => {
+                            // Chuyển đổi giữa 4 kiểu nét phân cách: ─ -> ╌ -> ┄ -> ┈
+                            dash_mode = (dash_mode + 1) % 4;
                             needs_render = true;
                         }
                         _ => {}

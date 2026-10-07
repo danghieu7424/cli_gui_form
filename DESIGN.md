@@ -2,6 +2,29 @@
 
 > Clean, focused, zero noise. Inspired by Vercel and Linear's terminal aesthetics.
 
+---
+
+## 📌 Implementation Checklist & Component Status
+
+| Phân hệ / Component | Module thực thi | Trạng thái | Ghi chú kiến trúc |
+| :--- | :--- | :---: | :--- |
+| **Color Palette & Theme** | `src/theme.rs` | `[x]` Hoàn thành | Semantic roles, Neutral scale, Multi-role Extended Palette |
+| **Typography & Hierarchy** | `src/theme.rs` | `[x]` Hoàn thành | BOLD + Primary, Dim/Muted fallback, No italic |
+| **Borders & Box Drawing** | `card.rs`, `tabs.rs` | `[x]` Hoàn thành | Bo góc (`╭╮╯╰`), nối chữ T (`┬┴├┤`), nắp gập liền panel |
+| **Buttons / Actions** | `src/widgets/button.rs` | `[x]` Hoàn thành | Focused invert/reverse, tiền tố `▸`, phím Enter submit |
+| **Input Fields** | `src/widgets/input.rs` | `[x]` Hoàn thành | Text/Password, con trỏ nhấp nháy inline, viền focus `#0070f3` |
+| **Checkbox Widget** | `src/widgets/checkbox.rs`| `[x]` Hoàn thành | Toggle logic `[✔]` / `[ ]`, phím Space/Enter |
+| **Radio Groups** | `src/widgets/radio.rs` | `[x]` Hoàn thành | `Left`/`Right` chọn nhanh, `Up`/`Down` chuyển ô form an toàn |
+| **Lists / Menus** | `src/widgets/list.rs` | `[x]` Hoàn thành | Điều hướng cây phân cấp: `→` vào mục con, `←` thoát ra, `Enter` chọn |
+| **Panels / Cards** | `src/widgets/card.rs` | `[x]` Hoàn thành | Tiêu đề nhúng nắp trên, tùy chọn viền vuông / viền bo tròn |
+| **Tables** | `demo_master.rs` | `[x]` Hoàn thành | Header tách biệt gạch ngang `─`, cột canh lề tỉ mỉ, không viền ngoài |
+| **Tabs & Container** | `src/widgets/tabs.rs` | `[x]` Hoàn thành | Nắp bo góc mở thông panel, lăn chuột & bàn phím cuộn, sticky log |
+| **Status Bar** | `src/widgets/status_bar.rs` | `[x]` Hoàn thành | Thanh đáy chia 2 cụm trái - phải, ngăn cách ` ─ ` |
+| **Icons & Indicators** | `src/icons.rs` | `[x]` Hoàn thành | 22 glyph Unicode 2-cell, chuẩn hóa `▶ `, tự động lọc BOLD |
+| **Spinners & Animation** | `task.rs`, `shimmer.rs` | `[x]` Hoàn thành | Pulse 150ms, Braille dots 80ms, Shimmer gradient 60 FPS |
+
+---
+
 ## 1. Theme Overview
 
 - **Mood**: Minimal, professional, calm
@@ -9,7 +32,9 @@
 - **Target**: Developer tools, CLI utilities, AI agent interfaces
 - **Terminal**: 256-color minimum, TrueColor recommended
 
-## 2. Color Palette
+---
+
+## 2. Color Palette `[x]`
 
 ### Semantic Roles
 
@@ -26,7 +51,22 @@
 | Muted | `#555555` | `240` | `bright black` | Disabled, hints |
 | Surface | `#1a1a1a` | `234` | `black` | Panels, cards |
 
-### Neutral Scale
+### Multi-Role Extended Palette (Đã triển khai trong `Theme`) `[x]`
+
+| Constant | Hex | RGB | Phân bổ nghiệp vụ chuyên sâu |
+| :--- | :--- | :--- | :--- |
+| `Theme::CYAN` | `#50E3C2` | `(80, 227, 194)` | Network, API Latency, Endpoints, Edge Nodes |
+| `Theme::PURPLE` | `#7928CA` | `(121, 40, 202)` | AI Engine, Neural Layers, GraphQL, Transformers |
+| `Theme::MAGENTA` | `#F81CE5` | `(248, 28, 229)` | Auth Tokens, Webhooks, Security Keys, Secrets |
+| `Theme::ORANGE` | `#FF8800` | `(255, 136, 0)` | Queues, Background Workers, Build Pipelines |
+| `Theme::INDIGO` | `#5E6AD2` | `(94, 106, 210)` | Branches, PR Reviews, Linear Task References |
+| `Theme::EMERALD` | `#10B981` | `(16, 185, 129)` | Healthy Uptime, In-Memory DBs, Memory Safe |
+| `Theme::SKY` | `#38BDF8` | `(56, 189, 248)` | Cloud Infra, Docker Containers, Kubernetes Pods |
+| `Theme::CRITICAL` | `#FF0055` | `(255, 0, 85)` | Fatal Panics, Kernel Faults, Immediate Alerts |
+| `Theme::SURFACE_ELEVATED` | `#222222` | `(34, 34, 34)` | Background cho card và popover |
+| `Theme::BORDER_FOCUS` | `#0070F3` | `(0, 112, 243)` | Viền khi ô form được kích hoạt con trỏ |
+
+### Neutral Scale `[x]`
 
 | Step | Hex | Usage |
 |------|-----|-------|
@@ -37,7 +77,9 @@
 | 400 | `#888888` | Secondary text |
 | 500 | `#ededed` | Body text |
 
-## 3. Typography & ASCII Art
+---
+
+## 3. Typography & ASCII Art `[x]`
 
 - **Header font**: `small` (figlet) — compact, not flashy
 - **Body text**: plain terminal font
@@ -48,14 +90,16 @@
 
 | Level | Style | Example Usage |
 |-------|-------|---------------|
-| H1 | figlet `small` + Primary | App title |
-| H2 | BOLD + Foreground | Section headers |
-| H3 | BOLD + Secondary | Subsection headers |
-| Body | Foreground | Content text |
-| Caption | Muted + dim | Help text, timestamps |
+| H1 | BOLD + Primary (`#ffffff`) | App title, Header |
+| H2 | BOLD + Foreground (`#ededed`) | Section headers |
+| H3 | BOLD + Secondary (`#888888`) | Subsection headers |
+| Body | Foreground (`#ededed`) | Content text |
+| Caption | Muted (`#555555`) | Help text, timestamps |
 | Label | BOLD + Secondary | Form labels |
 
-## 4. Borders & Box Drawing
+---
+
+## 4. Borders & Box Drawing `[x]`
 
 ### Primary Border
 
@@ -71,10 +115,10 @@ Single-line box drawing. Clean and lightweight.
 
 | Part | Character | Usage |
 |------|-----------|-------|
-| top_left | `┌` | Panel corners |
-| top_right | `┐` | |
-| bottom_left | `└` | |
-| bottom_right | `┘` | |
+| top_left | `┌` / `╭` | Panel corners (vuông hoặc bo tròn) |
+| top_right | `┐` / `╮` | |
+| bottom_left | `└` / `╰` | |
+| bottom_right | `┘` / `╯` | |
 | horizontal | `─` | Horizontal lines |
 | vertical | `│` | Vertical lines |
 | cross | `┼` | Table intersections |
@@ -83,18 +127,11 @@ Single-line box drawing. Clean and lightweight.
 | tee_right | `├` | Left junction |
 | tee_left | `┤` | Right junction |
 
-### Secondary Border
+---
 
-For nested or less important containers, use a dimmed border with the same characters but `Muted` color.
+## 5. Components `[x]`
 
-### Dividers
-
-- Horizontal: `────────────────────`
-- Section break: `── · ──`
-
-## 5. Components
-
-### Buttons / Actions
+### Buttons / Actions `[x]` (`ButtonWidget`)
 
 ```
  ▸ Submit    Cancel    Help
@@ -102,47 +139,58 @@ For nested or less important containers, use a dimmed border with the same chara
  focused   unfocused  muted
 ```
 
-- Focused: `reverse` (white bg, black fg) with `▸` prefix
+- Focused: `reverse` (white bg, black fg) với prefix `▸`
 - Unfocused: plain Foreground text
 - Disabled: Muted + dim
 
-### Input Fields
+### Input Fields `[x]` (`InputWidget`)
 
 ```
   Email: │user@example.com        │
          └────────────────────────┘
 ```
 
-- Active: `Accent` color border, cursor visible
-- Inactive: `Muted` color border
-- Error: `Error` color border, error message below in Error color
+- Active: viền `Theme::BORDER_FOCUS` (`#0070f3`), con trỏ native hiển thị nhấp nháy
+- Inactive: viền `Theme::NEUTRAL_100` (`#2a2a2a`)
+- Password mode: tự động mã hóa ký tự dạng `••••••••`
 
-### Tables
-
-```
-  Name              Status    Time
-  ─────────────────────────────────
-  deploy-api        ✔ Ready   2m ago
-  deploy-web        ▶ Build   just now
-  deploy-docs       ✗ Error   5m ago
-```
-
-No outer border. Header separated by `─`. Dim separator line.
-
-### Lists / Menus
+### Tables `[x]` (`demo_master.rs` / `demo_table.rs`)
 
 ```
-    api/routes.ts
-  ▸ api/handler.ts
-    lib/utils.ts
-    config.json
+  NAME              STATUS         BRANCH     COMMIT    LATENCY    TIME
+  ─────────────────────────────────────────────────────────────────────────────
+  deploy-api        ✔ Ready        main       7f8a91c   12ms       2m ago
+  worker-engine     ▶ Building     staging    3c4d5e1   45ms       just now
 ```
 
-- Selected: `▸` prefix + BOLD + Primary
-- Normal: 4-space indent + Foreground
-- Disabled: 4-space indent + Muted + dim
+- Không viền bao ngoài, header phân cách bằng đường kẻ mờ `─` (`Theme::NEUTRAL_100`).
+- Cột số liệu và thời gian canh lề rõ ràng.
 
-### Panels / Cards
+### Lists / Menus `[x]` (`ListWidget`)
+
+Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
+
+```
+  Root Menu:
+    General Settings
+  ▸ Deployments
+    ↳ Production (AWS us-east-1)
+    ↳ Preview (Vercel Edge)
+    ↳ Staging (Docker Local)
+    Integrations
+```
+
+- **Điều hướng phím**:
+  - `Up` / `Down`: Di chuyển con trỏ giữa các mục cùng cấp.
+  - `Right` (hoặc `Enter` vào mục cha có mục con): Mở rộng và đi vào danh mục con.
+  - `Left` (hoặc `Esc`): Thoát khỏi danh mục con, quay về danh mục cha.
+  - `Enter` tại mục lá: Kích hoạt lựa chọn (`FormValue::Select(idx, text)`).
+- **Trực quan hóa**:
+  - Mục được chọn: tiền tố `▸ ` + `Modifier::BOLD` + `Theme::PRIMARY`.
+  - Mục con: thụt lề cấp 2 với tiền tố nhánh rẽ `↳ ` (`Icons::BRANCH`).
+  - Mục cha có thể mở rộng: biểu tượng `...` ở mép phải.
+
+### Panels / Cards `[x]` (`CardWidget`)
 
 ```
 ┌─ Deploy Status ──────────────┐
@@ -154,9 +202,11 @@ No outer border. Header separated by `─`. Dim separator line.
 └──────────────────────────────┘
 ```
 
-Title embedded in top border. 1-space padding inside.
+- Tiêu đề nhúng trực tiếp vào nắp viền trên.
+- Hỗ trợ cả viền vuông (`┌─┐`) lẫn viền bo tròn (`╭─╮`).
+- Hiển thị danh sách trạng thái kèm icon và nhãn màu.
 
-### Tabs
+### Tabs & Container `[x]` (`TabsWidget`)
 
 ```
 ╭──────────┬──────┬──────────┬─────────────╮
@@ -164,115 +214,92 @@ Title embedded in top border. 1-space padding inside.
 ├──────────╯      ╰──────────┴─────────────┴───────────────╮
 ```
 
-Active tab: BOLD + Primary (`#ffffff`), mở thông vào thân Panel. Inactive tab: Secondary (`#888888`), đóng khung bởi nắp trên và các góc nối bo tròn `╰` / `╯` / `┴` / `├` / `│`.
+- **Thiết kế**: Nối liền 1-1 giữa tab bar bo góc phía trên và thân panel phía dưới. Active tab mở thông đáy vào nội dung, Inactive tab đóng kín đáy.
+- **Cuộn trang & Điều hướng**:
+  - Bắt trọn con lăn chuột (`MouseEventKind::ScrollUp` / `ScrollDown`).
+  - Phím cuộn: `Up`/`Down`, `PageUp`/`PageDown`, `Home` (lên đầu), `End` (xuống đáy).
+  - Tích hợp thanh cuộn tinh tế `█` ở mép phải khi nội dung vượt quá chiều cao viewport.
+  - Chế độ **Sticky Follow**: Tự động bám đáy khi có log mới truyền về, tự động tạm dừng khi người dùng chủ động cuộn ngược lên đọc log cũ.
+  - Các tab tài liệu/bảng/danh mục khởi đầu an toàn tại dòng đầu tiên (`scroll_offset = 0`), không bị nhảy xuống đáy.
 
-### Status Bar
+### Status Bar `[x]` (`StatusBarWidget`)
 
 ```
- main ─ 3 files changed ─ ✔ All checks passed         127.0.0.1:3000
+ main ─ 3 files changed ─ ✔ Ready                     Tab [1/5] ─ Esc: Exit
 ```
 
-Single line at bottom. Left-aligned info, right-aligned status. Separated by ` ─ `.
+- Thanh đơn giản ở đáy terminal. Phân chia 2 cụm thông tin bên trái và bên phải, ngăn cách thanh lịch bởi ` ─ `.
 
-## 6. Layout & Spacing
+---
+
+## 6. Layout & Spacing `[x]`
 
 - **Min terminal width**: `80`
 - **Ideal terminal width**: `120`
 - **Padding inside panels**: 1 line top/bottom, 1 char left/right
 - **Gap between components**: 1 empty line
 - **Indent level**: 2 spaces
+- **Overflow Guard**: Cơ chế cắt tỉa an toàn bảo vệ cạnh viền phải không bao giờ bị xô lệch khi văn bản bên trong quá dài.
 
-### Alignment Principles
+---
 
-- Left-align all content
-- Right-align timestamps and numeric values in tables
-- Center only splash screen / logo
+## 7. Icons & Indicators `[x]` (`src/icons.rs`)
 
-## 7. Icons & Indicators
+| Purpose | Constant | Glyph | Unicode | Fallback |
+| :--- | :--- | :---: | :---: | :---: |
+| Success | `Icons::SUCCESS` | `✔ ` | `U+2714` | `+` |
+| Error / Fail | `Icons::ERROR` | `✗ ` | `U+2716` | `x` |
+| Warning | `Icons::WARNING` | `⚠ ` | `U+26A0` | `!` |
+| Info | `Icons::INFO` | `ℹ ` | `U+2139` | `i` |
+| Running / Exec | `Icons::RUN` | `▶ ` | `U+25B6` | `>` |
+| Build / Work | `Icons::BUILD` | `⚙ ` | `U+2699` | `*` |
+| Stop | `Icons::STOP` | `■ ` | `U+25A0` | `[#]` |
+| Pause | `Icons::PAUSE` | `⏸ ` | `U+23F8` | `\|\|` |
+| Checkbox on | `Icons::CHECKBOX_ON` | `☑ ` | `U+2611` | `[x]` |
+| Checkbox off | `Icons::CHECKBOX_OFF` | `☐ ` | `U+2610` | `[ ]` |
+| Radio on | `Icons::RADIO_ON` | `● ` | `U+25CF` | `(•)` |
+| Radio off | `Icons::RADIO_OFF` | `○ ` | `U+25CB` | `( )` |
+| Sparkle Filled | `Icons::SPARKLE_FILLED` | `✦ ` | `U+2726` | `*` |
+| Star Outline | `Icons::STAR_OUTLINE` | `⚝ ` | `U+269D` | `*` |
+| Diamond Empty | `Icons::DIAMOND_EMPTY` | `◇ ` | `U+25C7` | `<>` |
+| Snowflake | `Icons::SNOWFLAKE` | `❅ ` | `U+2745` | `*` |
+| Pointer / Arrow | `Icons::POINTER` | `▹ ` | `U+25B8` | `>` |
+| Arrow Right | `Icons::ARROW_RIGHT` | `→ ` | `U+2192` | `->` |
+| Branch Sub-level | `Icons::BRANCH` | `⤷ ` | `U+21B3` | `\_` |
 
-| Purpose | Icon | Unicode | Fallback (ASCII) |
-|---------|------|---------|-------------------|
-| Success | `✔` | `U+2714` | `+` |
-| Error / Fail | `✗` | `U+2716` | `x` |
-| Warning | `⚠` | `U+26A0` | `!` |
-| Info | `ℹ` | `U+2139` | `i` |
-| Running / Exec | `▶` | `U+25B6` | `>` |
-| Build / Work | `⚙` | `U+2699` | `*` |
-| Stop | `■` | `U+25A0` | `[#]` |
-| Pause | `⏸` | `U+23F8` | `||` |
-| Thinking Pulse | `·,•,●,•,·, ` | `U+00B7...` | `o` |
-| Braille Spinner | `⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏` | `U+280B...` | `\|/-` |
-| Arrow Right | `→` | `U+2192` | `->` |
-| Arrow Up | `▲` | `U+25B2` | `^` |
-| Branch | `⤷` | `U+21B3` | `\_` |
-| Bullet | `▪` | `U+25AA` | `-` |
-| Selected | `▹` / `▸` | `U+25B8` | `>` |
-| Checkbox on | `☑` | `U+2611` | `[x]` |
-| Checkbox off | `☐` | `U+2610` | `[ ]` |
-| Radio on | `●` | `U+25CF` | `(•)` |
-| Radio off | `○` | `U+25CB` | `( )` |
-| Sparkle Filled | `✦` | `U+2726` | `*` |
-| Sparkle Empty | `✧` | `U+2727` | `*` |
-| Star Outline | `⚝` | `U+269D` | `*` |
-| Diamond | `◇` | `U+25C7` | `<>` |
-| Snowflake | `❅` | `U+2745` | `*` |
+> **Bảo vệ thị giác (Visual Protection)**:
+> 1. Toàn bộ icon được chuẩn hóa đúng 2 cell hiển thị (1 ký tự glyph + 1 khoảng trắng đệm) để tránh phân mảnh heap và thẳng hàng tuyệt đối.
+> 2. `Icons::span()` và `Icons::line()` tự động triệt tiêu cờ `Modifier::BOLD` riêng cho ký tự icon, ngăn chặn hiện tượng co rút 1 cell trên Windows Terminal / conhost.
 
-Keep icons to single-width characters (or 2-cell standard with trailing space). No emoji.
+---
 
-## 8. Animation & Motion
+## 8. Animation & Motion `[x]`
 
-### Spinners
+### Spinners `[x]` (`TaskWidget`)
 
-- Default: `⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏` at 80ms — braille dots, smooth rotation
-- Thinking/AI: `·` → `•` → `●` → `•` → `·` → ` ` at 150ms
+- **Pulse Spinner (Thinking/AI)**: Chu kỳ 150ms qua các trạng thái `· ` → `• ` → `● ` → `• ` → `· `.
+- **Braille Spinner (Docker/Build)**: Chu kỳ 80ms qua các khung hình `⠋`, `⠙`, `⠹`, `⠸`, `⠼`, `⠴`, `⠦`, `⠧`, `⠇`, `⠏`.
 
-### Transitions
-
-- No animated transitions. State changes are instant.
-- Loading states use spinners only, no progress simulation.
-
-### Progress
+### Progress Bars `[x]` (`TaskWidget`)
 
 ```
-  ━━━━━━━━━━────────── 50%
+  ━━━━━━━━━━────────── 50% [250/500 units] ─ 12s
 ```
 
-- Filled: `━`, Empty: `─`,( Caps: `▕` `▏` )
-- Show percentage, no ETA
-- Accent color for filled portion
+- Thanh đo lường tiến trình chính xác, hỗ trợ chuyển đổi mượt mà từ Spinner bất định sang Progress có đo lường.
 
-## 9. Agent Prompt Guide
-
-### Quick Reference
+### Shimmer Bar `[x]` (`ShimmerWidget`)
 
 ```
-Background: #0a0a0a  (ANSI 232)
-Foreground: #ededed  (ANSI 255)
-Accent:     #0070f3  (ANSI 33)
-Border:     ┌─┐│└─┘  (single line)
-Style:      minimal, monochrome with blue accent, generous spacing
+  Linear Sync Engine ─ Background Delta Syncing...
 ```
 
-### Example Prompts
+- Hiệu ứng quét sáng sóng gradient tuyến tính 60 FPS, mô phỏng tải nền kiểu Linear.
 
-- "Build a status dashboard: single-line borders, white text on near-black bg, blue accent for active items, ✓/✗ status icons, no emoji"
-- "Create a file picker: ▸ selector, dim unselected items, bold selected item, single-line box panel, embedded title in top border"
-- "Design a form: bottom-bordered inputs, blue highlight on focus, red on error, reverse-video submit button, 2-space indent"
+---
 
-## Do's and Don'ts
+## 9. Nguyên tắc cốt lõi (Core Principles)
 
-### Do
-
-- Use the neutral scale for text hierarchy — avoid coloring body text
-- Leave generous whitespace — let the terminal breathe
-- Use single-line box drawing for all borders
-- Keep status indicators to 1 character width
-- Test at 80 columns minimum
-
-### Don't
-
-- Don't use emoji — inconsistent widths break alignment
-- Don't use more than 1 accent color per view
-- Don't use double-line or heavy borders — they fight the minimal aesthetic
-- Don't use background colors for emphasis — use bold or reverse sparingly
-- Don't animate anything except spinners and progress bars
+- **Đơn giản, chuẩn xác**: Không màu mè quá mức, dùng màu sắc phục vụ đúng ngữ cảnh nghiệp vụ.
+- **Không dùng Emoji**: Emoji có bề rộng không cố định ở các terminal khác nhau gây vỡ layout. Chỉ dùng Unicode Text Symbols.
+- **Tập trung vào hiệu suất**: Zero-heap allocation trong vòng lặp render, tối ưu hóa triệt để tài nguyên terminal.

@@ -302,7 +302,7 @@ fn main() -> io::Result<()> {
                     let mut form_lines = Vec::new();
                     form_lines.push(Line::from(vec![
                         Span::styled("  Form Inputs & Keyboard Navigation", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
-                        Span::styled(" (Press Tab / Up / Down to focus, Enter to submit)", Style::default().fg(Theme::MUTED)),
+                        Span::styled(" (Tab/↑/↓: Form Focus ─ Lists: → to enter, ← to exit ─ Radios: ←/→)", Style::default().fg(Theme::MUTED)),
                     ]));
                     form_lines.push(Line::from(""));
                     tabs.render_container(main_chunks[1], form_lines, f);

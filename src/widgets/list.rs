@@ -1,4 +1,4 @@
-// --- PHÂN ĐOẠN: LIST / MENU WIDGET CHUẨN DESIGN.MD MỤC 5 ---
+// --- PHÂN ĐOẠN: LIST / MENU WIDGET CHUẨN DESIGN.MD MỤC 5 VỚI SUB-LEVEL NAVIGATION ---
 
 use crate::{
     theme::Theme,
@@ -46,7 +46,11 @@ impl ListItem {
  *            - Selected: `▸` prefix + BOLD + Primary
  *            - Normal: 4-space indent + Foreground
  *            - Disabled: 4-space indent + Muted + dim
- * Ranh giới bảo vệ: Tự động bỏ qua các mục disabled khi di chuyển con trỏ qua Up/Down/j/k.
+ * Ranh giới bảo vệ:
+ *            - Hỗ trợ cơ chế Nested Sub-level Navigation:
+ *              + Khi Focus: Mặc định ở chế độ Passive (Up/Down nhường cho Form chuyển widget).
+ *              + Nhấn Right (→) hoặc Enter: Đi sâu vào bên trong danh sách (Active mode), Up/Down chọn item.
+ *              + Nhấn Left (←) hoặc Esc: Thoát khỏi danh sách về lại cấp độ Form.
  ****/
 pub struct ListWidget {
     pub id: String,
@@ -54,6 +58,7 @@ pub struct ListWidget {
     pub items: Vec<ListItem>,
     pub selected: usize,
     focused: bool,
+    active: bool,
 }
 
 impl ListWidget {
@@ -64,6 +69,7 @@ impl ListWidget {
             items: Vec::new(),
             selected: 0,
             focused: false,
+            active: false,
         }
     }
 
@@ -94,6 +100,14 @@ impl ListWidget {
 
     pub fn selected(&self) -> usize {
         self.selected
+    }
+
+    pub fn is_active(&self) -> bool {
+        self.active
+    }
+
+    pub fn set_active(&mut self, active: bool) {
+        self.active = active;
     }
 
     pub fn selected_item(&self) -> Option<&ListItem> {
@@ -153,14 +167,34 @@ impl FormWidget for ListWidget {
     fn render(&self, area: Rect, frame: &mut Frame) {
         let mut lines = Vec::new();
 
-        // 1. Render nhãn tiêu đề (nếu có)
+        // 1. Render nhãn tiêu đề cùng gợi ý phím điều hướng phân cấp
         if let Some(ref lbl) = self.label {
-            let label_style = if self.focused {
-                Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)
+            let mut label_spans = Vec::new();
+            if self.focused && self.active {
+                label_spans.push(Span::styled(
+                    format!("  {} ", lbl),
+                    Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD),
+                ));
+                label_spans.push(Span::styled(
+                    "[Active: Use ↑/↓ to choose, ← to exit]",
+                    Style::default().fg(Theme::ACCENT).add_modifier(Modifier::BOLD),
+                ));
+            } else if self.focused {
+                label_spans.push(Span::styled(
+                    format!("  {} ", lbl),
+                    Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD),
+                ));
+                label_spans.push(Span::styled(
+                    "(Press → to enter list)",
+                    Style::default().fg(Theme::MUTED),
+                ));
             } else {
-                Style::default().fg(Theme::SECONDARY).add_modifier(Modifier::BOLD)
-            };
-            lines.push(Line::from(vec![Span::styled(format!("  {}", lbl), label_style)]));
+                label_spans.push(Span::styled(
+                    format!("  {}", lbl),
+                    Style::default().fg(Theme::SECONDARY).add_modifier(Modifier::BOLD),
+                ));
+            }
+            lines.push(Line::from(label_spans));
         }
 
         // 2. Render các mục trong danh sách theo chuẩn DESIGN.md mục 5
@@ -176,8 +210,15 @@ impl FormWidget for ListWidget {
                         .add_modifier(Modifier::DIM),
                 )
             } else if is_sel {
-                // Selected: `▸` prefix + BOLD + Primary
-                let style = Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD);
+                // Selected: `▸` prefix + BOLD + Primary (Sáng rực khi Active)
+                let color = if self.active {
+                    Theme::PRIMARY
+                } else if self.focused {
+                    Theme::ACCENT
+                } else {
+                    Theme::SECONDARY
+                };
+                let style = Style::default().fg(color).add_modifier(Modifier::BOLD);
                 ("  ▸ ", style)
             } else {
                 // Normal: 4-space indent + Foreground
@@ -185,13 +226,16 @@ impl FormWidget for ListWidget {
             };
 
             let prefix_span = if is_sel && !item.disabled {
+                let prefix_color = if self.active {
+                    Theme::PRIMARY
+                } else if self.focused {
+                    Theme::ACCENT
+                } else {
+                    Theme::SECONDARY
+                };
                 Span::styled(
                     prefix,
-                    if self.focused {
-                        Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)
-                    } else {
-                        Style::default().fg(Theme::SECONDARY).add_modifier(Modifier::BOLD)
-                    },
+                    Style::default().fg(prefix_color).add_modifier(Modifier::BOLD),
                 )
             } else {
                 Span::raw(prefix)
@@ -211,46 +255,62 @@ impl FormWidget for ListWidget {
             return EventResult::Ignored;
         }
 
-        match key.code {
-            KeyCode::Down | KeyCode::Char('j') => {
-                self.select_next();
-                EventResult::Consumed
-            }
-            KeyCode::Up | KeyCode::Char('k') => {
-                self.select_prev();
-                EventResult::Consumed
-            }
-            KeyCode::Home => {
-                // Chọn item đầu tiên không bị disable
-                for (idx, it) in self.items.iter().enumerate() {
-                    if !it.disabled {
-                        self.selected = idx;
-                        break;
-                    }
+        if !self.active {
+            // Khi chưa kích hoạt sâu vào trong list:
+            match key.code {
+                KeyCode::Right | KeyCode::Enter | KeyCode::Char(' ') | KeyCode::Char('l') => {
+                    self.active = true;
+                    EventResult::Consumed
                 }
-                EventResult::Consumed
+                // Nhường Up/Down cho FormManager chuyển widget khác
+                _ => EventResult::Ignored,
             }
-            KeyCode::End => {
-                // Chọn item cuối cùng không bị disable
-                for (idx, it) in self.items.iter().enumerate().rev() {
-                    if !it.disabled {
-                        self.selected = idx;
-                        break;
-                    }
+        } else {
+            // Khi đang ở chế độ Active điều hướng các item con:
+            match key.code {
+                KeyCode::Down | KeyCode::Char('j') => {
+                    self.select_next();
+                    EventResult::Consumed
                 }
-                EventResult::Consumed
+                KeyCode::Up | KeyCode::Char('k') => {
+                    self.select_prev();
+                    EventResult::Consumed
+                }
+                KeyCode::Home => {
+                    for (idx, it) in self.items.iter().enumerate() {
+                        if !it.disabled {
+                            self.selected = idx;
+                            break;
+                        }
+                    }
+                    EventResult::Consumed
+                }
+                KeyCode::End => {
+                    for (idx, it) in self.items.iter().enumerate().rev() {
+                        if !it.disabled {
+                            self.selected = idx;
+                            break;
+                        }
+                    }
+                    EventResult::Consumed
+                }
+                KeyCode::Left | KeyCode::Esc | KeyCode::Enter | KeyCode::Char('h') => {
+                    self.active = false;
+                    EventResult::Consumed
+                }
+                _ => EventResult::Ignored,
             }
-            KeyCode::Enter => EventResult::Submitted,
-            _ => EventResult::Ignored,
         }
     }
 
     fn focus(&mut self) {
         self.focused = true;
+        self.active = false;
     }
 
     fn blur(&mut self) {
         self.focused = false;
+        self.active = false;
     }
 
     fn is_focused(&self) -> bool {
@@ -267,24 +327,35 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_list_widget_navigation_and_disabled_skip() {
+    fn test_list_widget_sub_level_navigation() {
         let mut list = ListWidget::new("routes")
             .with_item("api/routes.ts")
             .with_disabled_item("api/handler.ts (locked)")
             .with_item("lib/utils.ts")
             .with_item("config.json");
 
-        assert_eq!(list.selected(), 0);
-        assert_eq!(list.selected_item().unwrap().text, "api/routes.ts");
+        list.focus();
+        assert!(list.is_focused());
+        assert!(!list.is_active());
 
-        // Di chuyển xuống -> phải nhảy qua disabled item (index 1) tới index 2
-        list.select_next();
+        // Khi chưa active, bấm Down phải bị Ignored để FormManager di chuyển
+        let down_event = KeyEvent::new(KeyCode::Down, crossterm::event::KeyModifiers::NONE);
+        assert_eq!(list.handle_event(down_event), EventResult::Ignored);
+
+        // Bấm Right -> Active = true
+        let right_event = KeyEvent::new(KeyCode::Right, crossterm::event::KeyModifiers::NONE);
+        assert_eq!(list.handle_event(right_event), EventResult::Consumed);
+        assert!(list.is_active());
+
+        // Khi đã active, bấm Down sẽ di chuyển chọn item trong list (nhảy qua disabled)
+        assert_eq!(list.handle_event(down_event), EventResult::Consumed);
         assert_eq!(list.selected(), 2);
         assert_eq!(list.selected_item().unwrap().text, "lib/utils.ts");
 
-        // Di chuyển lùi lại -> phải quay lại index 0
-        list.select_prev();
-        assert_eq!(list.selected(), 0);
+        // Bấm Left -> Thoát chế độ Active
+        let left_event = KeyEvent::new(KeyCode::Left, crossterm::event::KeyModifiers::NONE);
+        assert_eq!(list.handle_event(left_event), EventResult::Consumed);
+        assert!(!list.is_active());
     }
 
     #[test]

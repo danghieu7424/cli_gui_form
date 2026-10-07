@@ -126,7 +126,15 @@ impl FormManager {
             return EventResult::Ignored;
         }
 
-        // Ưu tiên điều hướng di chuyển form bằng Mũi tên Lên/Xuống hoặc Tab/Shift+Tab
+        // 1. Cho phép widget đang focus xử lý trước (Widget-First Event Delegation)
+        if let Some(widget) = self.widgets.get_mut(self.current_focus) {
+            let res = widget.handle_event(key);
+            if res != EventResult::Ignored {
+                return res;
+            }
+        }
+
+        // 2. Nếu widget không tiêu thụ phím, FormManager thực hiện điều hướng chuyển focus form
         match key.code {
             KeyCode::Down | KeyCode::Tab => {
                 self.focus_next();
@@ -136,13 +144,7 @@ impl FormManager {
                 self.focus_prev();
                 EventResult::Consumed
             }
-            _ => {
-                if let Some(widget) = self.widgets.get_mut(self.current_focus) {
-                    widget.handle_event(key)
-                } else {
-                    EventResult::Ignored
-                }
-            }
+            _ => EventResult::Ignored,
         }
     }
 }

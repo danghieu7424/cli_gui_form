@@ -116,7 +116,7 @@ impl TabsWidget {
         self.scroll_offset = 0;
     }
     /// Vẽ toàn bộ Khung Tab Container hoàn chỉnh bo góc (Border Radius) nối liền nội dung chuẩn log.md
-    pub fn render_container(&self, area: Rect, content: Vec<Line<'static>>, frame: &mut Frame) {
+    pub fn render_container(&mut self, area: Rect, content: Vec<Line<'static>>, frame: &mut Frame) {
         if self.titles.is_empty() || area.width < 10 || area.height < 4 {
             return;
         }
@@ -222,7 +222,14 @@ impl TabsWidget {
         let max_inner_w = width.saturating_sub(3); // 2 ký tự mép trái ("│ ") + 1 mép phải ("│")
         let total_lines = content.len();
         let max_scroll = total_lines.saturating_sub(body_height);
+
+        // Tự động kích hoạt lại Sticky nếu vị trí cuộn đã chạm tới hoặc vượt qua dòng cuối
+        if self.scroll_offset >= max_scroll {
+            self.auto_scroll = true;
+        }
+
         let active_scroll = if self.auto_scroll {
+            self.scroll_offset = max_scroll;
             max_scroll
         } else {
             self.scroll_offset.min(max_scroll)
@@ -494,7 +501,13 @@ mod tests {
         tabs.scroll_up(3);
         assert!(!tabs.is_auto_scroll());
 
-        // Khi người dùng nhấn End hoặc cuộn chạm đáy -> Bật lại sticky follow
+        // Khi người dùng cuộn xuống chạm tới dòng cuối cùng -> Tự động bật lại Sticky (không cần nhấn End)
+        tabs.scroll_down(50, 50, 10);
+        assert!(tabs.is_auto_scroll());
+
+        // Kiểm tra cuộn lên rồi dùng scroll_to_bottom
+        tabs.scroll_up(5);
+        assert!(!tabs.is_auto_scroll());
         tabs.scroll_to_bottom();
         assert!(tabs.is_auto_scroll());
     }

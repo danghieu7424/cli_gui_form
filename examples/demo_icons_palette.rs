@@ -214,7 +214,7 @@ fn main() -> io::Result<()> {
                     ]),
                     Line::from(vec![
                         Span::styled(format!("   {} ", Icons::STOP), Style::default().fg(Icons::color_stop()).add_modifier(Modifier::BOLD)),
-                        Span::styled("Stop (■)         ", Style::default().fg(Theme::FG)),
+                        Span::styled("Stop (■)          ", Style::default().fg(Theme::FG)),
                         Span::styled(format!("{} ", Icons::PAUSE), Style::default().fg(Icons::color_pending()).add_modifier(Modifier::BOLD)),
                         Span::styled("Pause (⏸)", Style::default().fg(Theme::FG)),
                     ]),

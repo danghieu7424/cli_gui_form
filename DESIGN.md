@@ -189,24 +189,34 @@ Single line at bottom. Left-aligned info, right-aligned status. Separated by ` �
 
 ## 7. Icons & Indicators
 
-| Purpose | Icon | Fallback (ASCII) |
-|---------|------|-------------------|
-| Success | `✓` | `+` |
-| Error | `✗` | `x` |
-| Warning | `⚠` | `!` |
-| Info | `ℹ` | `i` |
-| Pending | `·,•,●,•,·, ` | `o` |
-| Running | `▶` | `>` |
-| Spinner | `⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏` | `\|/-` |
-| Arrow | `→` | `->` |
-| Bullet | `·` | `-` |
-| Selected | `▸` | `>` |
-| Checkbox on | `☑` | `[x]` |
-| Checkbox off | `☐` | `[ ]` |
-| Radio on | `●` | `(•)` |
-| Radio off | `○` | `( )` |
+| Purpose | Icon | Unicode | Fallback (ASCII) |
+|---------|------|---------|-------------------|
+| Success | `✔` | `U+2714` | `+` |
+| Error / Fail | `✗` | `U+2716` | `x` |
+| Warning | `⚠` | `U+26A0` | `!` |
+| Info | `ℹ` | `U+2139` | `i` |
+| Running / Exec | `▶` | `U+25B6` | `>` |
+| Build / Work | `⚙` | `U+2699` | `*` |
+| Stop | `■` | `U+25A0` | `[#]` |
+| Pause | `⏸` | `U+23F8` | `||` |
+| Thinking Pulse | `·,•,●,•,·, ` | `U+00B7...` | `o` |
+| Braille Spinner | `⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏` | `U+280B...` | `\|/-` |
+| Arrow Right | `→` | `U+2192` | `->` |
+| Arrow Up | `▲` | `U+25B2` | `^` |
+| Branch | `⤷` | `U+21B3` | `\_` |
+| Bullet | `▪` | `U+25AA` | `-` |
+| Selected | `▹` / `▸` | `U+25B8` | `>` |
+| Checkbox on | `☑` | `U+2611` | `[x]` |
+| Checkbox off | `☐` | `U+2610` | `[ ]` |
+| Radio on | `●` | `U+25CF` | `(•)` |
+| Radio off | `○` | `U+25CB` | `( )` |
+| Sparkle Filled | `✦` | `U+2726` | `*` |
+| Sparkle Empty | `✧` | `U+2727` | `*` |
+| Star Outline | `⚝` | `U+269D` | `*` |
+| Diamond | `◇` | `U+25C7` | `<>` |
+| Snowflake | `❅` | `U+2745` | `*` |
 
-Keep icons to single-width characters. No emoji.
+Keep icons to single-width characters (or 2-cell standard with trailing space). No emoji.
 
 ## 8. Animation & Motion
 

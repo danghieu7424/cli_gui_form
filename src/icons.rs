@@ -22,8 +22,7 @@ impl Icons {
     pub const PAUSE: &'static str = "⏸ ";         // U+23F8 + space
     pub const STOP: &'static str = "■ ";          // U+25A0 + space
 
-    // Chuỗi nhịp đập Pending / Thinking (Giữ nguyên không space để ghép nhịp)
-    pub const PULSE_FRAMES: &'static [&'static str] = &["·", "•", "●", "•"];
+    // Chuỗi nhịp đập Thinking / Loading (Giữ nguyên không space để ghép nhịp)
     pub const THINKING_FRAMES: &'static [&'static str] = &["·", "•", "●", "•", "·", " "];
 
     // Form Controls (Checkbox & Radio) - Đã bao gồm 1 space chuẩn
@@ -126,7 +125,6 @@ mod tests {
 
     #[test]
     fn test_pulse_and_thinking_frames() {
-        assert_eq!(Icons::PULSE_FRAMES, &["·", "•", "●", "•"]);
         assert_eq!(Icons::THINKING_FRAMES, &["·", "•", "●", "•", "·", " "]);
     }
 

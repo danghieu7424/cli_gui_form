@@ -26,7 +26,6 @@ fn main() -> io::Result<()> {
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
 
-    let mut pulse_idx = 0;
     let mut think_idx = 0;
     let mut braille_idx = 0;
     let mut last_tick_150ms = Instant::now();
@@ -43,9 +42,8 @@ fn main() -> io::Result<()> {
             needs_render = true;
         }
 
-        // Nhịp nháy Pulse / Thinking chuẩn 150ms theo DESIGN.md Mục 8
+        // Nhịp nháy Thinking Pulse chuẩn 150ms theo DESIGN.md Mục 8
         if last_tick_150ms.elapsed() >= Duration::from_millis(150) {
-            pulse_idx = (pulse_idx + 1) % Icons::PULSE_FRAMES.len();
             think_idx = (think_idx + 1) % Icons::THINKING_FRAMES.len();
             last_tick_150ms = Instant::now();
             needs_render = true;
@@ -187,7 +185,6 @@ fn main() -> io::Result<()> {
                     ]))
                     .style(Style::default().bg(Theme::BG));
 
-                let cur_pulse = Icons::PULSE_FRAMES[pulse_idx];
                 let cur_think = Icons::THINKING_FRAMES[think_idx];
                 let cur_braille = BRAILLE_SPINNER[braille_idx];
 
@@ -269,10 +266,6 @@ fn main() -> io::Result<()> {
                     Line::from(vec![
                         Span::styled(format!("   {} ", cur_braille), Style::default().fg(Theme::ACCENT).add_modifier(Modifier::BOLD)),
                         Span::styled("Braille Spinner (80ms)", Style::default().fg(Theme::FG)),
-                    ]),
-                    Line::from(vec![
-                        Span::styled(format!("   {} ", cur_pulse), Style::default().fg(Theme::ACCENT).add_modifier(Modifier::BOLD)),
-                        Span::styled("Pulse Dot (150ms)", Style::default().fg(Theme::FG)),
                     ]),
                     Line::from(vec![
                         Span::styled(format!("   {} ", cur_think), Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),

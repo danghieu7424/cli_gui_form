@@ -82,7 +82,7 @@ impl FormWidget for TabsWidget {
             return;
         }
 
-        // Hàng 1: Tiêu đề các Tab
+        // Hàng 1: Tiêu đề các Tab (Theo DESIGN.md: Active tab là BOLD + Primary, không có tiền tố tam giác)
         let mut title_spans: Vec<Span> = Vec::new();
         title_spans.push(Span::raw("  "));
 
@@ -96,8 +96,7 @@ impl FormWidget for TabsWidget {
                 Style::default().fg(Theme::SECONDARY)
             };
 
-            let prefix = if is_active && self.focused { "▸ " } else { "  " };
-            title_spans.push(Span::styled(format!("{}{}", prefix, title), style));
+            title_spans.push(Span::styled(title.as_str(), style));
 
             if idx < self.titles.len() - 1 {
                 title_spans.push(Span::styled(" │ ", Style::default().fg(Theme::NEUTRAL_100)));
@@ -106,36 +105,34 @@ impl FormWidget for TabsWidget {
 
         let line_titles = Line::from(title_spans);
 
-        // Hàng 2: Đường phân cách đáy chuẩn DESIGN.md (─────────┘      └─────────)
+        // Hàng 2: Đường viền đáy nối chính xác 1-1 từng cột (─────────┘      └─────────)
         let mut bottom_spans: Vec<Span> = Vec::new();
         bottom_spans.push(Span::raw("  "));
 
         for (idx, title) in self.titles.iter().enumerate() {
             let is_active = idx == self.selected;
-            let tab_width = title.len() + 2; // Gồm padding
+            let tab_len = title.chars().count();
 
             if is_active {
-                // Active tab để trống đáy
-                bottom_spans.push(Span::styled(" ".repeat(tab_width), Style::default().fg(Theme::NEUTRAL_100)));
+                // Active tab để trống đáy hoàn toàn
+                bottom_spans.push(Span::styled(" ".repeat(tab_len), Style::default().fg(Theme::NEUTRAL_100)));
             } else {
-                // Inactive tab có gạch ngang
-                bottom_spans.push(Span::styled("─".repeat(tab_width), Style::default().fg(Theme::NEUTRAL_100)));
+                // Inactive tab gạch ngang bằng độ dài chữ
+                bottom_spans.push(Span::styled("─".repeat(tab_len), Style::default().fg(Theme::NEUTRAL_100)));
             }
 
             if idx < self.titles.len() - 1 {
-                let sep = if idx == self.selected {
-                    "└─"
-                } else if idx + 1 == self.selected {
-                    "─┘"
-                } else {
-                    "───"
+                let sep = match (idx == self.selected, idx + 1 == self.selected) {
+                    (true, false) => " └─", // Active bên trái: Khoảng trắng -> Góc └ (dưới │) -> Gạch ─
+                    (false, true) => "─┘ ", // Active bên phải: Gạch ─ -> Góc ┘ (dưới │) -> Khoảng trắng
+                    _ => "───",             // Cả 2 đều Inactive: Nối thẳng
                 };
                 bottom_spans.push(Span::styled(sep, Style::default().fg(Theme::NEUTRAL_100)));
             }
         }
 
         let line_bottom = Line::from(bottom_spans);
-        let paragraph = Paragraph::new(vec![line_titles, line_bottom]);
+        let paragraph = Paragraph::new(vec![line_titles, line_bottom]).style(Style::default().bg(Theme::BG));
         frame.render_widget(paragraph, area);
     }
 

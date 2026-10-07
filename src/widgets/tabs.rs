@@ -62,6 +62,117 @@ impl TabsWidget {
             }
         }
     }
+    /// Vẽ toàn bộ Khung Tab Container hoàn chỉnh bo góc (Border Radius) nối liền nội dung
+    pub fn render_container(&self, area: Rect, content: Vec<Line<'static>>, frame: &mut Frame) {
+        if self.titles.is_empty() || area.width < 10 || area.height < 4 {
+            return;
+        }
+
+        let width = area.width as usize;
+        let border_style = Style::default().fg(Theme::NEUTRAL_100);
+
+        // Hàng 0: Tab Titles
+        let mut title_spans: Vec<Span> = Vec::new();
+        title_spans.push(Span::styled("  ", Style::default().fg(Theme::NEUTRAL_100)));
+
+        for (idx, title) in self.titles.iter().enumerate() {
+            let is_active = idx == self.selected;
+            let style = if is_active {
+                Style::default()
+                    .fg(Theme::PRIMARY)
+                    .add_modifier(Modifier::BOLD)
+            } else {
+                Style::default().fg(Theme::SECONDARY)
+            };
+
+            title_spans.push(Span::styled(title.as_str(), style));
+
+            if idx < self.titles.len() - 1 {
+                title_spans.push(Span::styled(" │ ", Style::default().fg(Theme::NEUTRAL_100)));
+            }
+        }
+
+        let line_titles = Line::from(title_spans);
+
+        // Hàng 1: Khung viền trên nối liền bo góc (╭───╯    ╰──────╮)
+        let mut top_border_spans: Vec<Span> = Vec::new();
+        let mut drawn_cols: usize = 0;
+
+        // Góc trên cùng bên trái
+        top_border_spans.push(Span::styled("╭─", border_style));
+        drawn_cols += 2;
+
+        for (idx, title) in self.titles.iter().enumerate() {
+            let is_active = idx == self.selected;
+            let tab_len = title.chars().count();
+
+            if is_active {
+                top_border_spans.push(Span::styled(" ".repeat(tab_len), border_style));
+            } else {
+                top_border_spans.push(Span::styled("─".repeat(tab_len), border_style));
+            }
+            drawn_cols += tab_len;
+
+            if idx < self.titles.len() - 1 {
+                let sep = match (idx == self.selected, idx + 1 == self.selected) {
+                    (true, false) => " ╰─", // Nối góc ╰ từ active sang inactive
+                    (false, true) => "─╯ ", // Nối góc ╯ từ inactive sang active
+                    _ => "───",
+                };
+                top_border_spans.push(Span::styled(sep, border_style));
+                drawn_cols += 3;
+            }
+        }
+
+        // Lấp đầy phần còn lại của viền trên và đóng góc ╮
+        if width > drawn_cols + 1 {
+            top_border_spans.push(Span::styled("─".repeat(width - drawn_cols - 1), border_style));
+            top_border_spans.push(Span::styled("╮", border_style));
+        } else {
+            top_border_spans.push(Span::styled("╮", border_style));
+        }
+
+        let line_top_border = Line::from(top_border_spans);
+
+        // Hàng 2 đến N-2: Thân Panel chứa nội dung
+        let body_height = (area.height as usize).saturating_sub(3);
+        let mut body_lines: Vec<Line> = Vec::new();
+        body_lines.push(line_titles);
+        body_lines.push(line_top_border);
+
+        for row in 0..body_height {
+            let content_line = content.get(row);
+            let mut line_spans: Vec<Span> = Vec::new();
+            line_spans.push(Span::styled("│ ", border_style));
+
+            let mut inner_len = 0;
+            if let Some(cl) = content_line {
+                for s in &cl.spans {
+                    line_spans.push(s.clone());
+                    inner_len += s.content.chars().count();
+                }
+            }
+
+            let remain = width.saturating_sub(inner_len + 3);
+            if remain > 0 {
+                line_spans.push(Span::raw(" ".repeat(remain)));
+            }
+            line_spans.push(Span::styled("│", border_style));
+            body_lines.push(Line::from(line_spans));
+        }
+
+        // Hàng cuối: Viền đáy bo góc (╰───────────────╯)
+        let mut bottom_spans: Vec<Span> = Vec::new();
+        bottom_spans.push(Span::styled("╰", border_style));
+        if width > 2 {
+            bottom_spans.push(Span::styled("─".repeat(width - 2), border_style));
+        }
+        bottom_spans.push(Span::styled("╯", border_style));
+        body_lines.push(Line::from(bottom_spans));
+
+        let paragraph = Paragraph::new(body_lines).style(Style::default().bg(Theme::BG));
+        frame.render_widget(paragraph, area);
+    }
 }
 
 impl FormWidget for TabsWidget {
@@ -123,8 +234,8 @@ impl FormWidget for TabsWidget {
 
             if idx < self.titles.len() - 1 {
                 let sep = match (idx == self.selected, idx + 1 == self.selected) {
-                    (true, false) => " └─", // Active bên trái: Khoảng trắng -> Góc └ (dưới │) -> Gạch ─
-                    (false, true) => "─┘ ", // Active bên phải: Gạch ─ -> Góc ┘ (dưới │) -> Khoảng trắng
+                    (true, false) => " ╰─", // Nối góc ╰ từ active sang inactive
+                    (false, true) => "─╯ ", // Nối góc ╯ từ inactive sang active
                     _ => "───",             // Cả 2 đều Inactive: Nối thẳng
                 };
                 bottom_spans.push(Span::styled(sep, Style::default().fg(Theme::NEUTRAL_100)));

@@ -80,7 +80,8 @@ impl FormWidget for RadioWidget {
         }
 
         match key.code {
-            KeyCode::Left | KeyCode::Up => {
+            // Chỉ dùng Left/Right (hoặc h/l) để chuyển option Radio theo hàng ngang
+            KeyCode::Left | KeyCode::Char('h') => {
                 if self.selected_index > 0 {
                     self.selected_index -= 1;
                     EventResult::Consumed
@@ -88,7 +89,7 @@ impl FormWidget for RadioWidget {
                     EventResult::Ignored
                 }
             }
-            KeyCode::Right | KeyCode::Down => {
+            KeyCode::Right | KeyCode::Char('l') => {
                 if self.selected_index + 1 < self.options.len() {
                     self.selected_index += 1;
                     EventResult::Consumed
@@ -96,6 +97,7 @@ impl FormWidget for RadioWidget {
                     EventResult::Ignored
                 }
             }
+            // Up/Down hoàn toàn bỏ qua để FormManager chuyển lên/xuống widget khác trong form
             _ => EventResult::Ignored,
         }
     }
@@ -104,4 +106,37 @@ impl FormWidget for RadioWidget {
     fn blur(&mut self) { self.focused = false; }
     fn is_focused(&self) -> bool { self.focused }
     fn preferred_height(&self) -> u16 { 2 }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_radio_horizontal_selection_and_up_down_ignored() {
+        let mut radio = RadioWidget::new(
+            "env",
+            "Environment",
+            vec!["Prod".into(), "Staging".into(), "Dev".into()],
+        );
+
+        assert_eq!(radio.selected_index, 0);
+
+        // Right -> chuyển sang Staging
+        let right_ev = KeyEvent::new(KeyCode::Right, crossterm::event::KeyModifiers::NONE);
+        assert_eq!(radio.handle_event(right_ev), EventResult::Consumed);
+        assert_eq!(radio.selected_index, 1);
+
+        // Up & Down -> phải bị Ignored để FormManager di chuyển widget
+        let down_ev = KeyEvent::new(KeyCode::Down, crossterm::event::KeyModifiers::NONE);
+        assert_eq!(radio.handle_event(down_ev), EventResult::Ignored);
+
+        let up_ev = KeyEvent::new(KeyCode::Up, crossterm::event::KeyModifiers::NONE);
+        assert_eq!(radio.handle_event(up_ev), EventResult::Ignored);
+
+        // Left -> chuyển lùi về Prod
+        let left_ev = KeyEvent::new(KeyCode::Left, crossterm::event::KeyModifiers::NONE);
+        assert_eq!(radio.handle_event(left_ev), EventResult::Consumed);
+        assert_eq!(radio.selected_index, 0);
+    }
 }

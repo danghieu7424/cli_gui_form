@@ -123,7 +123,7 @@ fn main() -> io::Result<()> {
             name: "deploy-web",
             status_icon: Icons::RUN,
             status_text: "Build",
-            status_color: Theme::ACCENT,
+            status_color: Theme::ORANGE,
             branch: "feat/tui",
             commit: "ffe5daf",
             latency: "45ms",
@@ -143,7 +143,7 @@ fn main() -> io::Result<()> {
             name: "deploy-docs",
             status_icon: Icons::ERROR,
             status_text: "Failed",
-            status_color: Theme::ERROR,
+            status_color: Theme::CRITICAL,
             branch: "docs/v2",
             commit: "c381d09",
             latency: "---",
@@ -174,16 +174,16 @@ fn main() -> io::Result<()> {
     // Card 1: Plain border Deploy Status theo đúng chuẩn DESIGN.md mục 5
     let deploy_card = CardWidget::new("card_deploy", "Deploy Status")
         .with_item("Production", Some(Icons::SUCCESS), "Ready", Theme::SUCCESS)
-        .with_item("Preview", Some(Icons::RUN), "Building", Theme::ACCENT)
+        .with_item("Preview", Some(Icons::RUN), "Building", Theme::CYAN)
         .with_item("Staging", Some(Icons::SUCCESS), "Ready", Theme::SUCCESS);
 
-    // Card 2: Rounded border Infrastructure Metrics
+    // Card 2: Rounded border Infrastructure Metrics (Màu sắc đa dạng sắc nét)
     let infra_card = CardWidget::new("card_infra", "Infrastructure")
         .with_rounded(true)
-        .with_title_color(Theme::PRIMARY)
-        .with_item("PostgreSQL", Some(Icons::SUCCESS), "Healthy", Theme::SUCCESS)
-        .with_item("Redis Cluster", Some(Icons::WARNING), "Degraded", Theme::WARNING)
-        .with_item("Edge Router", Some(Icons::RUN), "Active", Theme::ACCENT);
+        .with_title_color(Theme::PURPLE)
+        .with_item("PostgreSQL", Some(Icons::SUCCESS), "Healthy", Theme::EMERALD)
+        .with_item("Redis Cluster", Some(Icons::WARNING), "Degraded", Theme::ORANGE)
+        .with_item("Edge Router", Some(Icons::RUN), "Active", Theme::SKY);
 
     // 4. TASKS & ANIMATIONS (TAB 3)
     let mut pulse_task = TaskWidget::new_loading(
@@ -454,6 +454,36 @@ fn main() -> io::Result<()> {
                             Span::styled(format!("{:<22} ", const_name), Style::default().fg(Theme::FG)),
                             Span::styled(format!("{:<15} ", unicode_char), Style::default().fg(Theme::SECONDARY)),
                             Span::styled(color_name, Style::default().fg(color)),
+                        ]));
+                    }
+
+                    // Bảng màu mở rộng Extended Palette Swatches
+                    lines.push(Line::from(""));
+                    lines.push(Line::from(vec![
+                        Span::styled("  Extended Palette Swatches (Multi-Role System)", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                    ]));
+                    lines.push(Line::from(vec![
+                        Span::styled("  ─────────────────────────────────────────────────────────────────────────────", Style::default().fg(Theme::NEUTRAL_100)),
+                    ]));
+                    lines.push(Line::from(""));
+
+                    let swatches = [
+                        ("Theme::CYAN", "■ #50E3C2", Theme::CYAN, "Network, API Latency, Endpoints"),
+                        ("Theme::PURPLE", "■ #7928CA", Theme::PURPLE, "AI Engine, Neural, GraphQL"),
+                        ("Theme::MAGENTA", "■ #F81CE5", Theme::MAGENTA, "Auth Tokens, Webhooks, Secrets"),
+                        ("Theme::ORANGE", "■ #FF8800", Theme::ORANGE, "Queues, Build Pipelines, Workers"),
+                        ("Theme::INDIGO", "■ #5E6AD2", Theme::INDIGO, "Branches, PRs, Linear Tasks"),
+                        ("Theme::EMERALD", "■ #10B981", Theme::EMERALD, "Healthy Uptime, In-Memory DBs"),
+                        ("Theme::SKY", "■ #38BDF8", Theme::SKY, "Cloud Infra, Docker, Kubernetes"),
+                        ("Theme::CRITICAL", "■ #FF0055", Theme::CRITICAL, "Fatal Panics, Immediate Alerts"),
+                    ];
+
+                    for (name, block, color, desc) in swatches {
+                        lines.push(Line::from(vec![
+                            Span::raw("    "),
+                            Span::styled(format!("{:<12} ", block), Style::default().fg(color)),
+                            Span::styled(format!("{:<18} ", name), Style::default().fg(Theme::FG)),
+                            Span::styled(desc, Style::default().fg(Theme::SECONDARY)),
                         ]));
                     }
 

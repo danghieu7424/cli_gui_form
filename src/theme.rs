@@ -46,7 +46,41 @@ impl Theme {
     pub const SURFACE: Color = Color::Rgb(0x1a, 0x1a, 0x1a);
 
     // ----------------------------------------------------
-    // 2. NEUTRAL SCALE (Bảng thang độ xám)
+    // 2. EXTENDED ACCENT & SYSTEM PALETTE (Tránh lặp màu đơn điệu)
+    // ----------------------------------------------------
+
+    // Cyan / Teal: #50e3c2 (Vercel Cyan - Network, Latency, API Endpoints)
+    pub const CYAN: Color = Color::Rgb(0x50, 0xe3, 0xc2);
+
+    // Purple / Violet: #7928ca (Linear Violet - AI Inference, GraphQL, Plugins)
+    pub const PURPLE: Color = Color::Rgb(0x79, 0x28, 0xca);
+
+    // Magenta / Pink: #f81ce5 (Electric Pink - Auth, Secrets, Webhooks)
+    pub const MAGENTA: Color = Color::Rgb(0xf8, 0x1c, 0xe5);
+
+    // Orange / Amber: #ff8800 (Warm Amber - Pipelines, Queues, Workers)
+    pub const ORANGE: Color = Color::Rgb(0xff, 0x88, 0x00);
+
+    // Indigo: #5e6ad2 (Linear Indigo - Branches, Commits, Tasks)
+    pub const INDIGO: Color = Color::Rgb(0x5e, 0x6a, 0xd2);
+
+    // Emerald: #10b981 (Soft Green - Healthy Uptime, In-Memory DBs)
+    pub const EMERALD: Color = Color::Rgb(0x10, 0xb9, 0x81);
+
+    // Sky Blue: #38bdf8 (Cloud Infrastructure, Docker, K8s)
+    pub const SKY: Color = Color::Rgb(0x38, 0xbd, 0xf8);
+
+    // Critical: #ff0055 (Crimson Red - Fatal, Panic, Immediate Alert)
+    pub const CRITICAL: Color = Color::Rgb(0xff, 0x00, 0x55);
+
+    // Surface Elevated: #222222 (Card Header, Highlighted Row Background)
+    pub const SURFACE_ELEVATED: Color = Color::Rgb(0x22, 0x22, 0x22);
+
+    // Border Focus: #0070f3 (Viền khi ô form được kích hoạt)
+    pub const BORDER_FOCUS: Color = Color::Rgb(0x00, 0x70, 0xf3);
+
+    // ----------------------------------------------------
+    // 3. NEUTRAL SCALE (Bảng thang độ xám)
     // ----------------------------------------------------
     pub const NEUTRAL_50: Color = Color::Rgb(0x1a, 0x1a, 0x1a);
     pub const NEUTRAL_100: Color = Color::Rgb(0x2a, 0x2a, 0x2a); // Borders, dividers
@@ -65,5 +99,9 @@ mod tests {
         assert_eq!(Theme::BG, Color::Rgb(10, 10, 10));
         assert_eq!(Theme::ACCENT, Color::Rgb(0, 112, 243));
         assert_eq!(Theme::SUCCESS, Color::Rgb(0, 200, 83));
+        assert_eq!(Theme::CYAN, Color::Rgb(0x50, 0xe3, 0xc2));
+        assert_eq!(Theme::PURPLE, Color::Rgb(0x79, 0x28, 0xca));
+        assert_eq!(Theme::ORANGE, Color::Rgb(0xff, 0x88, 0x00));
+        assert_eq!(Theme::INDIGO, Color::Rgb(0x5e, 0x6a, 0xd2));
     }
 }

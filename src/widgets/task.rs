@@ -218,9 +218,9 @@ impl FormWidget for TaskWidget {
                     Span::styled("─".repeat(right_empty), Style::default().fg(crate::Theme::MUTED)),
                 ]);
 
-                // DESIGN.md: Tránh italic, dùng Muted / Secondary
+                // DESIGN.md: Tránh italic, dùng Muted / Secondary với Icons::BRANCH (thụt lề 2 spaces + 2-cell branch icon)
                 let line2 = Line::from(vec![
-                    Span::styled("    ↳ ", Style::default().fg(crate::Theme::MUTED)),
+                    Span::styled(format!("  {}", crate::Icons::BRANCH), Style::default().fg(crate::Theme::MUTED)),
                     Span::styled(message, Style::default().fg(crate::Theme::SECONDARY)),
                 ]);
 
@@ -252,7 +252,7 @@ impl FormWidget for TaskWidget {
                 ]);
 
                 let line2 = Line::from(vec![
-                    Span::styled("    ↳ ", Style::default().fg(crate::Theme::MUTED)),
+                    Span::styled(format!("  {}", crate::Icons::BRANCH), Style::default().fg(crate::Theme::MUTED)),
                     Span::styled(status, Style::default().fg(crate::Theme::SECONDARY)),
                 ]);
 

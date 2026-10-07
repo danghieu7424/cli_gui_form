@@ -32,6 +32,9 @@ impl Icons {
     pub const RADIO_ON: &'static str = "● ";      // U+25CF + space
     pub const RADIO_OFF: &'static str = "○ ";     // U+25CB + space
     pub const BULLET: &'static str = "▪ ";        // U+25AA + space
+    pub const SPARKLE_FILLED: &'static str = "✦ "; // U+2726 + space (Black Four Pointed Star)
+    pub const SPARKLE_EMPTY: &'static str = "✧ ";  // U+2727 + space (White Four Pointed Star)
+    pub const STAR_OUTLINE: &'static str = "⚝ ";   // U+269D + space (Outlined White Star)
 
     // Bộ chỉ hướng & tiến trình (Progress & Pointers)
     pub const POINTER: &'static str = "▹ ";       // U+25B8 + space
@@ -112,6 +115,9 @@ mod tests {
         assert_eq!(Icons::RADIO_ON, "● ");
         assert_eq!(Icons::RADIO_OFF, "○ ");
         assert_eq!(Icons::BULLET, "▪ ");
+        assert_eq!(Icons::SPARKLE_FILLED, "✦ ");
+        assert_eq!(Icons::SPARKLE_EMPTY, "✧ ");
+        assert_eq!(Icons::STAR_OUTLINE, "⚝ ");
         assert_eq!(Icons::POINTER, "▹ ");
         assert_eq!(Icons::ARROW_RIGHT, "→ ");
         assert_eq!(Icons::BRANCH, "⤷ ");

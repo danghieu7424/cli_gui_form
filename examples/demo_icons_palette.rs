@@ -254,8 +254,17 @@ fn main() -> io::Result<()> {
                     ]),
                     Line::from(vec![
                         Span::raw("   "),
+                        Span::styled(Icons::SPARKLE_FILLED, Style::default().fg(Theme::WARNING)),
+                        Span::styled("Sparkle           ", Style::default().fg(Theme::FG)),
+                        Span::styled(Icons::SPARKLE_EMPTY, Style::default().fg(Theme::MUTED)),
+                        Span::styled("Sparkle Empty", Style::default().fg(Theme::FG)),
+                    ]),
+                    Line::from(vec![
+                        Span::raw("   "),
+                        Span::styled(Icons::STAR_OUTLINE, Style::default().fg(Theme::PRIMARY)),
+                        Span::styled("Star Outline      ", Style::default().fg(Theme::FG)),
                         Span::styled(Icons::BULLET, Style::default().fg(Theme::SECONDARY)),
-                        Span::styled("Bullet            ", Style::default().fg(Theme::FG)),
+                        Span::styled("Bullet", Style::default().fg(Theme::FG)),
                     ]),
                     Line::from(""),
                     Line::from(Span::styled("  Motion & Spinners (Mục 8):", Style::default().fg(Theme::SECONDARY).add_modifier(Modifier::BOLD))),

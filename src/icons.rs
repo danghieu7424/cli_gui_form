@@ -38,7 +38,10 @@ impl Icons {
     // Bộ chỉ hướng & tiến trình (Progress & Pointers)
     pub const POINTER: &'static str = "▹ ";       // U+25B8 + space
     pub const ARROW_RIGHT: &'static str = "→ ";   // U+2192 + space
+    pub const ARROW_UP: &'static str = "▲ ";      // U+25B2 + space (Black Up-Pointing Triangle)
     pub const BRANCH: &'static str = "⤷ ";        // U+21B3 + space
+    pub const DIAMOND_EMPTY: &'static str = "◇ "; // U+25C7 + space (White Diamond)
+    pub const SNOWFLAKE: &'static str = "❅ ";     // U+2745 + space (Snowflake)
     pub const PROGRESS_FILLED: &'static str = "━"; // U+2501 (Không space để nối thanh bar)
     pub const PROGRESS_EMPTY: &'static str = "─";  // U+2500 (Không space để nối thanh bar)
 
@@ -118,7 +121,10 @@ mod tests {
         assert_eq!(Icons::STAR_OUTLINE, "⚝ ");
         assert_eq!(Icons::POINTER, "▹ ");
         assert_eq!(Icons::ARROW_RIGHT, "→ ");
+        assert_eq!(Icons::ARROW_UP, "▲ ");
         assert_eq!(Icons::BRANCH, "⤷ ");
+        assert_eq!(Icons::DIAMOND_EMPTY, "◇ ");
+        assert_eq!(Icons::SNOWFLAKE, "❅ ");
         assert_eq!(Icons::PROGRESS_FILLED, "━");
         assert_eq!(Icons::PROGRESS_EMPTY, "─");
     }

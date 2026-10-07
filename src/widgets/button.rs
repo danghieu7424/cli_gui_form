@@ -44,18 +44,32 @@ impl FormWidget for ButtonWidget {
     }
 
     fn render(&self, area: Rect, frame: &mut Frame) {
-        let (bg, fg) = if self.focused {
-            (self.fg_color, self.bg_color)
+        let (prefix, style) = if self.focused {
+            // Theo DESIGN.md: Focused là reverse (white bg, black fg) với "▸" prefix
+            (
+                "▸ ",
+                Style::default()
+                    .bg(crate::Theme::PRIMARY)
+                    .fg(crate::Theme::BG)
+                    .add_modifier(Modifier::BOLD | Modifier::REVERSED),
+            )
         } else {
-            (self.bg_color, self.fg_color)
+            // Unfocused: plain Foreground text
+            (
+                "  ",
+                Style::default()
+                    .fg(crate::Theme::FG)
+                    .bg(crate::Theme::BG),
+            )
         };
 
-        let button_text = match &self.icon {
-            Some(ic) => format!(" [ {} {} ] ", ic, self.title),
-            None => format!(" [ {} ] ", self.title),
+        let label = match &self.icon {
+            Some(ic) => format!("{}{} {}", prefix, ic, self.title),
+            None => format!("{}{}", prefix, self.title),
         };
+
         let content = Line::from(vec![
-            Span::styled(button_text, Style::default().bg(bg).fg(fg).add_modifier(Modifier::BOLD)),
+            Span::styled(format!("  {}  ", label), style),
         ]);
 
         frame.render_widget(Paragraph::new(content), area);

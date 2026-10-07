@@ -4,7 +4,7 @@ use crate::traits::{EventResult, FormValue, FormWidget};
 use crossterm::event::{KeyCode, KeyEvent, KeyEventKind};
 use ratatui::{
     layout::Rect,
-    style::{Color, Modifier, Style},
+    style::{Modifier, Style},
     text::{Line, Span},
     widgets::Paragraph,
     Frame,
@@ -39,18 +39,20 @@ impl FormWidget for CheckboxWidget {
 
     fn render(&self, area: Rect, frame: &mut Frame) {
         let (box_symbol, color) = if self.checked {
-            (crate::Icons::CHECKBOX_ON, crate::Icons::color_success())
+            (crate::Icons::CHECKBOX_ON, crate::Theme::SUCCESS)
         } else {
-            (crate::Icons::CHECKBOX_OFF, crate::Icons::color_pending())
+            (crate::Icons::CHECKBOX_OFF, crate::Theme::MUTED)
         };
 
         let label_style = if self.focused {
-            Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD)
+            Style::default().fg(crate::Theme::PRIMARY).add_modifier(Modifier::BOLD)
         } else {
-            Style::default().fg(Color::White)
+            Style::default().fg(crate::Theme::FG)
         };
 
+        // Theo DESIGN.md mục 6: 2-space indent
         let content = Line::from(vec![
+            Span::styled("  ", Style::default()),
             Span::styled(format!("{} ", box_symbol), Style::default().fg(color).add_modifier(Modifier::BOLD)),
             Span::styled(&self.label, label_style),
         ]);

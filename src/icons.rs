@@ -39,45 +39,45 @@ impl Icons {
     pub const PROGRESS_FILLED: &'static str = "━"; // U+2501
     pub const PROGRESS_EMPTY: &'static str = "─";  // U+2500
 
-    /// Màu sắc khuyến nghị tương ứng từng trạng thái
+    /// Màu sắc khuyến nghị tương ứng từng trạng thái theo chuẩn DESIGN.md & Theme
     #[inline]
     pub const fn color_success() -> Color {
-        Color::Green
+        crate::theme::Theme::SUCCESS
     }
 
     #[inline]
     pub const fn color_error() -> Color {
-        Color::Red
+        crate::theme::Theme::ERROR
     }
 
     #[inline]
     pub const fn color_warning() -> Color {
-        Color::Yellow
+        crate::theme::Theme::WARNING
     }
 
     #[inline]
     pub const fn color_run() -> Color {
-        Color::Cyan
+        crate::theme::Theme::ACCENT
     }
 
     #[inline]
     pub const fn color_build() -> Color {
-        Color::Magenta
+        crate::theme::Theme::PRIMARY
     }
 
     #[inline]
     pub const fn color_info() -> Color {
-        Color::Blue
+        crate::theme::Theme::ACCENT
     }
 
     #[inline]
     pub const fn color_pending() -> Color {
-        Color::DarkGray
+        crate::theme::Theme::MUTED
     }
 
     #[inline]
     pub const fn color_stop() -> Color {
-        Color::White
+        crate::theme::Theme::ERROR
     }
 }
 

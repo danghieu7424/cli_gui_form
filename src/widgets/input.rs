@@ -4,7 +4,7 @@ use crate::traits::{EventResult, FormValue, FormWidget};
 use crossterm::event::{KeyCode, KeyEvent, KeyEventKind};
 use ratatui::{
     layout::Rect,
-    style::{Color, Modifier, Style},
+    style::{Modifier, Style},
     widgets::{Block, BorderType, Borders, Padding, Paragraph},
     Frame,
 };
@@ -52,17 +52,21 @@ impl FormWidget for InputWidget {
             InputMode::Password => "*".repeat(self.value.len()),
         };
 
+        // Theo DESIGN.md:
+        // - Active/Focused: Accent color border (#0070f3)
+        // - Inactive: Muted color border (#555555 / Neutral 100)
         let border_color = if self.focused {
-            Color::Yellow
+            crate::Theme::ACCENT
         } else {
-            Color::DarkGray
+            crate::Theme::MUTED
         };
 
-        let title_formatted = format!("─ {} ─", self.label);
+        let title_formatted = format!(" {} ", self.label);
 
+        // Theo DESIGN.md: Single-line box drawing (┌─┐│└─┘), không dùng bo góc tròn
         let block = Block::default()
             .borders(Borders::ALL)
-            .border_type(BorderType::Rounded)
+            .border_type(BorderType::Plain)
             .border_style(Style::default().fg(border_color))
             .padding(Padding::horizontal(1))
             .title(title_formatted);
@@ -70,9 +74,9 @@ impl FormWidget for InputWidget {
         let paragraph = Paragraph::new(display_text)
             .block(block)
             .style(if self.focused {
-                Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD)
+                Style::default().fg(crate::Theme::PRIMARY).add_modifier(Modifier::BOLD)
             } else {
-                Style::default().fg(Color::White)
+                Style::default().fg(crate::Theme::FG)
             });
 
         frame.render_widget(paragraph, area);

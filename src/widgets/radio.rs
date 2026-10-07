@@ -4,7 +4,7 @@ use crate::traits::{EventResult, FormValue, FormWidget};
 use crossterm::event::{KeyCode, KeyEvent, KeyEventKind};
 use ratatui::{
     layout::Rect,
-    style::{Color, Modifier, Style},
+    style::{Modifier, Style},
     text::{Line, Span},
     widgets::Paragraph,
     Frame,
@@ -41,26 +41,37 @@ impl FormWidget for RadioWidget {
     }
 
     fn render(&self, area: Rect, frame: &mut Frame) {
-        let mut spans = vec![Span::styled(format!("{}: ", self.label), Style::default().fg(Color::Gray))];
+        // Theo DESIGN.md mục 3: Label là BOLD + Secondary, 2-space indent
+        let mut spans = vec![
+            Span::styled("  ", Style::default()),
+            Span::styled(
+                format!("{}: ", self.label),
+                if self.focused {
+                    Style::default().fg(crate::Theme::PRIMARY).add_modifier(Modifier::BOLD)
+                } else {
+                    Style::default().fg(crate::Theme::SECONDARY)
+                },
+            ),
+        ];
 
         for (idx, opt) in self.options.iter().enumerate() {
             let is_selected = idx == self.selected_index;
             let (symbol, opt_color) = if is_selected {
-                (crate::Icons::RADIO_ON, Color::LightCyan)
+                (crate::Icons::RADIO_ON, crate::Theme::ACCENT)
             } else {
-                (crate::Icons::RADIO_OFF, crate::Icons::color_pending())
+                (crate::Icons::RADIO_OFF, crate::Theme::MUTED)
             };
 
-            spans.push(Span::styled(format!("{} {}  ", symbol, opt), Style::default().fg(opt_color)));
+            let opt_style = if is_selected && self.focused {
+                Style::default().fg(opt_color).add_modifier(Modifier::BOLD)
+            } else {
+                Style::default().fg(opt_color)
+            };
+
+            spans.push(Span::styled(format!("{} {}  ", symbol, opt), opt_style));
         }
 
-        let block_style = if self.focused {
-            Style::default().add_modifier(Modifier::UNDERLINED)
-        } else {
-            Style::default()
-        };
-
-        frame.render_widget(Paragraph::new(Line::from(spans)).style(block_style), area);
+        frame.render_widget(Paragraph::new(Line::from(spans)), area);
     }
 
     fn handle_event(&mut self, key: KeyEvent) -> EventResult {

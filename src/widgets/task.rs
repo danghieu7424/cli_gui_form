@@ -189,9 +189,9 @@ impl FormWidget for TaskWidget {
 
     fn render(&self, area: Rect, frame: &mut Frame) {
         let label_style = if self.focused {
-            Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD)
+            Style::default().fg(crate::Theme::PRIMARY).add_modifier(Modifier::BOLD)
         } else {
-            Style::default().fg(Color::White)
+            Style::default().fg(crate::Theme::SECONDARY)
         };
 
         match &self.state {
@@ -208,17 +208,20 @@ impl FormWidget for TaskWidget {
                 let active_len = block_size.min(self.bar_width.saturating_sub(left_empty));
                 let right_empty = self.bar_width.saturating_sub(left_empty + active_len);
 
+                // Theo DESIGN.md mục 6: 2-space indent, Accent/Primary cho tiến trình, Muted cho nét trống
                 let line1 = Line::from(vec![
+                    Span::styled("  ", Style::default()),
                     Span::styled(format!("{} ", spinner_char), Style::default().fg(self.color).add_modifier(Modifier::BOLD)),
                     Span::styled(format!("{}: ", self.label), label_style),
-                    Span::styled("─".repeat(left_empty), Style::default().fg(Color::DarkGray)),
+                    Span::styled("─".repeat(left_empty), Style::default().fg(crate::Theme::MUTED)),
                     Span::styled("━".repeat(active_len), Style::default().fg(self.color).add_modifier(Modifier::BOLD)),
-                    Span::styled("─".repeat(right_empty), Style::default().fg(Color::DarkGray)),
+                    Span::styled("─".repeat(right_empty), Style::default().fg(crate::Theme::MUTED)),
                 ]);
 
+                // DESIGN.md: Tránh italic, dùng Muted / Secondary
                 let line2 = Line::from(vec![
-                    Span::styled("  ↳ ", Style::default().fg(Color::DarkGray)),
-                    Span::styled(message, Style::default().fg(Color::Gray).add_modifier(Modifier::ITALIC)),
+                    Span::styled("    ↳ ", Style::default().fg(crate::Theme::MUTED)),
+                    Span::styled(message, Style::default().fg(crate::Theme::SECONDARY)),
                 ]);
 
                 frame.render_widget(Paragraph::new(vec![line1, line2]), area);
@@ -238,18 +241,19 @@ impl FormWidget for TaskWidget {
 
                 let metric_text = format!(" [{}/{} {} ({})]", current, total, unit, duration);
 
+                // DESIGN.md mục 8: Progress bar dùng Accent (#0070f3) cho filled '━', empty '─' Muted
                 let line1 = Line::from(vec![
-                    Span::styled("  ", Style::default()), // Căn lề chuẩn với ký tự spinner 2 cột
+                    Span::styled("    ", Style::default()), // Căn lề thụt đầu dòng 4 spaces (2 indent + 2 icon width)
                     Span::styled(format!("{}: ", self.label), label_style),
-                    Span::styled("━".repeat(filled_len), Style::default().fg(self.color).add_modifier(Modifier::BOLD)),
-                    Span::styled("─".repeat(empty_len), Style::default().fg(Color::DarkGray)),
-                    Span::styled(format!(" {:>3}%", percent), Style::default().fg(Color::White).add_modifier(Modifier::BOLD)),
-                    Span::styled(metric_text, Style::default().fg(Color::LightBlue)),
+                    Span::styled("━".repeat(filled_len), Style::default().fg(crate::Theme::ACCENT).add_modifier(Modifier::BOLD)),
+                    Span::styled("─".repeat(empty_len), Style::default().fg(crate::Theme::MUTED)),
+                    Span::styled(format!(" {:>3}%", percent), Style::default().fg(crate::Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                    Span::styled(metric_text, Style::default().fg(crate::Theme::SECONDARY)),
                 ]);
 
                 let line2 = Line::from(vec![
-                    Span::styled("  ↳ ", Style::default().fg(Color::DarkGray)),
-                    Span::styled(status, Style::default().fg(Color::Gray).add_modifier(Modifier::ITALIC)),
+                    Span::styled("    ↳ ", Style::default().fg(crate::Theme::MUTED)),
+                    Span::styled(status, Style::default().fg(crate::Theme::SECONDARY)),
                 ]);
 
                 frame.render_widget(Paragraph::new(vec![line1, line2]), area);

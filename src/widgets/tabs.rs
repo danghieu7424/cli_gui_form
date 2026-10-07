@@ -4,7 +4,7 @@ use crate::{
     theme::Theme,
     traits::{EventResult, FormValue, FormWidget},
 };
-use crossterm::event::{KeyCode, KeyEvent, KeyEventKind};
+use crossterm::event::{KeyCode, KeyEvent, KeyEventKind, MouseEvent, MouseEventKind};
 use ratatui::{
     layout::Rect,
     style::{Modifier, Style},
@@ -26,6 +26,7 @@ pub struct TabsWidget {
     focused: bool,
     scroll_offset: usize,
     auto_scroll: bool,
+    max_scroll: usize,
 }
 
 impl TabsWidget {
@@ -37,6 +38,7 @@ impl TabsWidget {
             focused: false,
             scroll_offset: 0,
             auto_scroll: true, // Mặc định bật chế độ Sticky Follow (tự động bám đáy khi có log mới)
+            max_scroll: 0,
         }
     }
 
@@ -122,6 +124,51 @@ impl TabsWidget {
     pub fn scroll_to_top(&mut self) {
         self.auto_scroll = false;
         self.scroll_offset = 0;
+    }
+
+    /****
+     * Function: max_scroll
+     * Chức năng: Trả về giới hạn cuộn tối đa hiện tại của nội dung container.
+     * Ranh giới bảo vệ: Phục vụ xác định biên an toàn khi cuộn viewport.
+     ****/
+    pub fn max_scroll(&self) -> usize {
+        self.max_scroll
+    }
+
+    /****
+     * Function: scroll_down_step
+     * Chức năng: Cuộn xuống nội dung theo số bước chỉ định, chặn trên bởi max_scroll.
+     * Ranh giới bảo vệ: Tự động kích hoạt lại sticky follow khi chạm đáy danh sách.
+     ****/
+    pub fn scroll_down_step(&mut self, amount: usize) {
+        if self.max_scroll > 0 {
+            let new_offset = (self.scroll_offset + amount).min(self.max_scroll);
+            self.scroll_offset = new_offset;
+            if self.scroll_offset >= self.max_scroll {
+                self.auto_scroll = true; // Bật lại sticky khi chạm đáy
+            }
+        } else {
+            self.scroll_offset = self.scroll_offset.saturating_add(amount);
+        }
+    }
+
+    /****
+     * Function: handle_mouse_event
+     * Chức năng: Bắt sự kiện lăn chuột (ScrollUp / ScrollDown) để cuộn nội dung mượt mà.
+     * Ranh giới bảo vệ: Cuộn 2 dòng mỗi nhịp lăn, không làm tràn biên max_scroll.
+     ****/
+    pub fn handle_mouse_event(&mut self, mouse: MouseEvent) -> bool {
+        match mouse.kind {
+            MouseEventKind::ScrollUp => {
+                self.scroll_up(2); // Cuộn lên 2 dòng mỗi nhịp lăn chuột
+                true
+            }
+            MouseEventKind::ScrollDown => {
+                self.scroll_down_step(2); // Cuộn xuống 2 dòng mỗi nhịp lăn chuột
+                true
+            }
+            _ => false,
+        }
     }
     /// Vẽ toàn bộ Khung Tab Container hoàn chỉnh bo góc (Border Radius) nối liền nội dung chuẩn log.md
     pub fn render_container(&mut self, area: Rect, content: Vec<Line<'static>>, frame: &mut Frame) {
@@ -230,9 +277,10 @@ impl TabsWidget {
         let max_inner_w = width.saturating_sub(3); // 2 ký tự mép trái ("│ ") + 1 mép phải ("│")
         let total_lines = content.len();
         let max_scroll = total_lines.saturating_sub(body_height);
+        self.max_scroll = max_scroll;
 
         // Tự động kích hoạt lại Sticky nếu vị trí cuộn đã chạm tới hoặc vượt qua dòng cuối
-        if self.scroll_offset >= max_scroll {
+        if max_scroll > 0 && self.scroll_offset >= max_scroll {
             self.auto_scroll = true;
         }
 
@@ -240,7 +288,8 @@ impl TabsWidget {
             self.scroll_offset = max_scroll;
             max_scroll
         } else {
-            self.scroll_offset.min(max_scroll)
+            self.scroll_offset = self.scroll_offset.min(max_scroll);
+            self.scroll_offset
         };
 
         // Tính toán thanh cuộn (Scrollbar thumb) nếu tổng số dòng log vượt quá chiều cao hiển thị
@@ -407,7 +456,7 @@ impl FormWidget for TabsWidget {
                 EventResult::Consumed
             }
             KeyCode::Down | KeyCode::Char('j') => {
-                self.scroll_offset = self.scroll_offset.saturating_add(1);
+                self.scroll_down_step(1);
                 EventResult::Consumed
             }
             KeyCode::PageUp => {
@@ -415,7 +464,7 @@ impl FormWidget for TabsWidget {
                 EventResult::Consumed
             }
             KeyCode::PageDown => {
-                self.scroll_offset = self.scroll_offset.saturating_add(5);
+                self.scroll_down_step(5);
                 EventResult::Consumed
             }
             KeyCode::Home => {
@@ -522,5 +571,39 @@ mod tests {
         let width = 80;
         let max_inner_w = width - 3;
         assert_eq!(max_inner_w, 77);
+    }
+
+    #[test]
+    fn test_tabs_mouse_and_step_scrolling() {
+        use crossterm::event::KeyModifiers;
+        let mut tabs = TabsWidget::new("nav", vec!["Tab1"]);
+        // Giả lập max_scroll = 10
+        tabs.max_scroll = 10;
+        assert_eq!(tabs.scroll_offset(), 0);
+
+        // Cuộn chuột xuống
+        let scroll_down_event = MouseEvent {
+            kind: MouseEventKind::ScrollDown,
+            column: 10,
+            row: 10,
+            modifiers: KeyModifiers::empty(),
+        };
+        assert!(tabs.handle_mouse_event(scroll_down_event));
+        assert_eq!(tabs.scroll_offset(), 2);
+
+        // Cuộn chuột lên
+        let scroll_up_event = MouseEvent {
+            kind: MouseEventKind::ScrollUp,
+            column: 10,
+            row: 10,
+            modifiers: KeyModifiers::empty(),
+        };
+        assert!(tabs.handle_mouse_event(scroll_up_event));
+        assert_eq!(tabs.scroll_offset(), 0);
+
+        // Cuộn step chặn trên bởi max_scroll
+        tabs.scroll_down_step(100);
+        assert_eq!(tabs.scroll_offset(), 10);
+        assert!(tabs.is_auto_scroll());
     }
 }

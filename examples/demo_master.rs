@@ -6,7 +6,7 @@ use cli_gui_form::{
     TaskWidget, Theme,
 };
 use crossterm::{
-    event::{self, Event, KeyCode, KeyEventKind, KeyModifiers},
+    event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode, KeyEventKind, KeyModifiers},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
@@ -37,7 +37,7 @@ struct TableRowItem {
 fn main() -> io::Result<()> {
     enable_raw_mode()?;
     let mut stdout = stdout();
-    execute!(stdout, EnterAlternateScreen)?;
+    execute!(stdout, EnterAlternateScreen, EnableMouseCapture)?;
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
 
@@ -53,6 +53,7 @@ fn main() -> io::Result<()> {
         ],
     );
     tabs.focus();
+    tabs.set_auto_scroll(false);
 
     // 2. KHỞI TẠO FORM SUITE (TAB 1)
     let mut form = FormManager::new();
@@ -503,46 +504,83 @@ fn main() -> io::Result<()> {
             status_bar.render(main_chunks[2], f);
         })?;
 
-        // Polling sự kiện phím
+        // Polling sự kiện phím và chuột
         if event::poll(Duration::from_millis(30))? {
-            if let Event::Key(key) = event::read()? {
-                if key.kind == KeyEventKind::Press {
-                    let is_ctrl_c = key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('c');
-                    if key.code == KeyCode::Char('q') || key.code == KeyCode::Esc || is_ctrl_c {
-                        break;
-                    }
-
-                    // 1. Chuyển Tab riêng biệt qua phím số 1..5 hoặc Tab / Shift+Tab (không chiếm phím Left/Right)
-                    match key.code {
-                        KeyCode::Char('1') => { tabs.set_selected(0); continue; }
-                        KeyCode::Char('2') => { tabs.set_selected(1); continue; }
-                        KeyCode::Char('3') => { tabs.set_selected(2); continue; }
-                        KeyCode::Char('4') => { tabs.set_selected(3); continue; }
-                        KeyCode::Char('5') => { tabs.set_selected(4); continue; }
-                        KeyCode::Tab => { tabs.select_next(); continue; }
-                        KeyCode::BackTab => { tabs.select_prev(); continue; }
-                        _ => {}
-                    };
-
-                    // 2. Toàn bộ phím điều hướng Left / Right / Up / Down thuộc về nội dung bên trong Tab
-                    match tabs.selected() {
-                        0 => {
-                            // Tab 1 (Form): FormManager xử lý trọn vẹn (Radio Left/Right, Input Cursor, Up/Down Focus)
-                            let _ = form.handle_event(key);
+            match event::read()? {
+                Event::Key(key) => {
+                    if key.kind == KeyEventKind::Press {
+                        let is_ctrl_c = key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('c');
+                        if key.code == KeyCode::Char('q') || key.code == KeyCode::Esc || is_ctrl_c {
+                            break;
                         }
-                        3 => {
-                            // Tab 4 (Logs): Up/Down/PageUp/PageDown cuộn logs
-                            tabs.handle_event(key);
+
+                        // 1. Chuyển Tab riêng biệt qua phím số 1..5 hoặc Tab / Shift+Tab (không chiếm phím Left/Right)
+                        let mut target_tab = None;
+                        match key.code {
+                            KeyCode::Char('1') => target_tab = Some(0),
+                            KeyCode::Char('2') => target_tab = Some(1),
+                            KeyCode::Char('3') => target_tab = Some(2),
+                            KeyCode::Char('4') => target_tab = Some(3),
+                            KeyCode::Char('5') => target_tab = Some(4),
+                            KeyCode::Tab => {
+                                tabs.select_next();
+                                if tabs.selected() == 3 {
+                                    tabs.set_auto_scroll(true); // Tab 4 (Logs): Tiếp tục sticky follow
+                                } else {
+                                    tabs.set_auto_scroll(false); // Tab 1, 2, 3, 5: Khởi đầu từ đầu trang
+                                    tabs.scroll_to_top();
+                                }
+                                continue;
+                            }
+                            KeyCode::BackTab => {
+                                tabs.select_prev();
+                                if tabs.selected() == 3 {
+                                    tabs.set_auto_scroll(true); // Tab 4 (Logs): Tiếp tục sticky follow
+                                } else {
+                                    tabs.set_auto_scroll(false); // Tab 1, 2, 3, 5: Khởi đầu từ đầu trang
+                                    tabs.scroll_to_top();
+                                }
+                                continue;
+                            }
+                            _ => {}
+                        };
+
+                        if let Some(tab_idx) = target_tab {
+                            tabs.set_selected(tab_idx);
+                            if tab_idx == 3 {
+                                tabs.set_auto_scroll(true); // Tab 4 (Logs): Bật sticky follow
+                            } else {
+                                tabs.set_auto_scroll(false); // Tab 1, 2, 3, 5: Khởi đầu từ đầu trang
+                                tabs.scroll_to_top();
+                            }
+                            continue;
                         }
-                        _ => {}
+
+                        // 2. Toàn bộ phím điều hướng Left / Right / Up / Down / PageUp / PageDown / Home / End
+                        match tabs.selected() {
+                            0 => {
+                                // Tab 1 (Form): FormManager xử lý trọn vẹn (Radio Left/Right, Input Cursor, Up/Down Focus)
+                                let _ = form.handle_event(key);
+                            }
+                            _ => {
+                                // Mọi Tab còn lại (Tab 2: Table, Tab 3: Tasks, Tab 4: Logs, Tab 5: Icons & Theme):
+                                // Đều hỗ trợ cuộn văn bản và danh sách mượt mà qua TabsWidget
+                                tabs.handle_event(key);
+                            }
+                        }
                     }
                 }
+                Event::Mouse(mouse) => {
+                    // Lăn chuột cuộn nội dung container ở bất kỳ Tab nào có thanh cuộn
+                    tabs.handle_mouse_event(mouse);
+                }
+                _ => {}
             }
         }
     }
 
     disable_raw_mode()?;
-    execute!(terminal.backend_mut(), LeaveAlternateScreen)?;
+    execute!(terminal.backend_mut(), LeaveAlternateScreen, DisableMouseCapture)?;
     terminal.show_cursor()?;
     println!("=== MASTER SHOWCASE HOÀN TẤT ===");
     Ok(())

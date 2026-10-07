@@ -62,7 +62,7 @@ impl TabsWidget {
             }
         }
     }
-    /// Vẽ toàn bộ Khung Tab Container hoàn chỉnh bo góc (Border Radius) nối liền nội dung
+    /// Vẽ toàn bộ Khung Tab Container hoàn chỉnh bo góc (Border Radius) nối liền nội dung chuẩn log.md
     pub fn render_container(&self, area: Rect, content: Vec<Line<'static>>, frame: &mut Frame) {
         if self.titles.is_empty() || area.width < 10 || area.height < 4 {
             return;
@@ -71,9 +71,27 @@ impl TabsWidget {
         let width = area.width as usize;
         let border_style = Style::default().fg(Theme::NEUTRAL_100);
 
-        // Hàng 0: Tab Titles
-        let mut title_spans: Vec<Span> = Vec::new();
-        title_spans.push(Span::styled("  ", Style::default().fg(Theme::NEUTRAL_100)));
+        // Chiều rộng từng Tab (tiêu đề + 2 space padding)
+        let tab_widths: Vec<usize> = self.titles.iter().map(|t| t.chars().count() + 2).collect();
+        let num_tabs = self.titles.len();
+
+        // 1. HÀNG 0: Nắp trên của Tab Bar (╭──────────┬──────┬──────────┬─────────────╮)
+        let mut row0_spans: Vec<Span> = Vec::new();
+        row0_spans.push(Span::styled("╭", border_style));
+
+        for (idx, &w) in tab_widths.iter().enumerate() {
+            row0_spans.push(Span::styled("─".repeat(w), border_style));
+            if idx < num_tabs - 1 {
+                row0_spans.push(Span::styled("┬", border_style));
+            } else {
+                row0_spans.push(Span::styled("╮", border_style));
+            }
+        }
+        let line_row0 = Line::from(row0_spans);
+
+        // 2. HÀNG 1: Nội dung Tab Titles (│ Overview │ Logs │ Settings │ Deployments │)
+        let mut row1_spans: Vec<Span> = Vec::new();
+        row1_spans.push(Span::styled("│", border_style));
 
         for (idx, title) in self.titles.iter().enumerate() {
             let is_active = idx == self.selected;
@@ -85,79 +103,68 @@ impl TabsWidget {
                 Style::default().fg(Theme::SECONDARY)
             };
 
-            title_spans.push(Span::styled(title.as_str(), style));
-
-            if idx < self.titles.len() - 1 {
-                title_spans.push(Span::styled(" │ ", Style::default().fg(Theme::NEUTRAL_100)));
-            }
+            row1_spans.push(Span::styled(format!(" {} ", title), style));
+            row1_spans.push(Span::styled("│", border_style));
         }
+        let line_row1 = Line::from(row1_spans);
 
-        let line_titles = Line::from(title_spans);
-
-        // Hàng 1: Khung viền trên nối liền bo góc hoàn hảo (╭───╯    ╰───╮)
-        let mut top_border_spans: Vec<Span> = Vec::new();
+        // 3. HÀNG 2: Đường phân cách đáy kết nối lòng Panel (theo đúng chuẩn log.md)
+        let mut row2_spans: Vec<Span> = Vec::new();
         let mut drawn_cols: usize = 0;
 
-        // Xử lý Mép Trái (Đầu)
+        // Mép trái ngoài cùng
         if self.selected == 0 {
-            // Tab đầu tiên đang Active: Mép trái mở thẳng thông lên tab
-            top_border_spans.push(Span::styled("│ ", border_style));
+            row2_spans.push(Span::styled("│", border_style));
         } else {
-            // Tab đầu tiên Inactive: Khép góc bo tròn ╭─
-            top_border_spans.push(Span::styled("╭─", border_style));
+            row2_spans.push(Span::styled("├", border_style));
         }
-        drawn_cols += 2;
+        drawn_cols += 1;
 
-        let num_tabs = self.titles.len();
-        for (idx, title) in self.titles.iter().enumerate() {
+        for (idx, &w) in tab_widths.iter().enumerate() {
             let is_active = idx == self.selected;
-            let tab_len = title.chars().count();
-
             if is_active {
-                top_border_spans.push(Span::styled(" ".repeat(tab_len), border_style));
+                row2_spans.push(Span::raw(" ".repeat(w)));
             } else {
-                top_border_spans.push(Span::styled("─".repeat(tab_len), border_style));
+                row2_spans.push(Span::styled("─".repeat(w), border_style));
             }
-            drawn_cols += tab_len;
+            drawn_cols += w;
 
+            // Xử lý giao điểm cột dọc bên phải tab
             if idx < num_tabs - 1 {
                 let sep = match (idx == self.selected, idx + 1 == self.selected) {
-                    (true, false) => " ╰─", // Active bên trái -> Inactive bên phải
-                    (false, true) => "─╯ ", // Inactive bên trái -> Active bên phải
-                    _ => "───",
+                    (true, false) => "╰", // Chuyển từ Active -> Inactive
+                    (false, true) => "╯", // Chuyển từ Inactive -> Active
+                    _ => "┴",             // Cả 2 đều Inactive
                 };
-                top_border_spans.push(Span::styled(sep, border_style));
-                drawn_cols += 3;
+                row2_spans.push(Span::styled(sep, border_style));
+                drawn_cols += 1;
+            } else {
+                // Điểm kết thúc của tab cuối cùng
+                if is_active {
+                    row2_spans.push(Span::styled("╰", border_style));
+                } else {
+                    row2_spans.push(Span::styled("┴", border_style));
+                }
+                drawn_cols += 1;
             }
         }
 
-        // Xử lý Mép Phải (Cuối)
-        let is_last_active = self.selected == num_tabs - 1;
-        if is_last_active {
-            // Tab cuối cùng đang Active: Mép phải mở thông thẳng lên
-            if width > drawn_cols + 1 {
-                top_border_spans.push(Span::raw(" ".repeat(width - drawn_cols - 1)));
-                top_border_spans.push(Span::styled("│", border_style));
-            } else {
-                top_border_spans.push(Span::styled("│", border_style));
-            }
-        } else {
-            // Tab cuối cùng Inactive: Khép góc bo tròn ─...─╮
-            if width > drawn_cols + 1 {
-                top_border_spans.push(Span::styled("─".repeat(width - drawn_cols - 1), border_style));
-                top_border_spans.push(Span::styled("╮", border_style));
-            } else {
-                top_border_spans.push(Span::styled("╮", border_style));
-            }
+        // Kéo dài viền trên sang hết chiều rộng của Panel và đóng góc ╮
+        if width > drawn_cols + 1 {
+            row2_spans.push(Span::styled("─".repeat(width - drawn_cols - 1), border_style));
+            row2_spans.push(Span::styled("╮", border_style));
+        } else if width > drawn_cols {
+            row2_spans.push(Span::styled("╮", border_style));
         }
 
-        let line_top_border = Line::from(top_border_spans);
+        let line_row2 = Line::from(row2_spans);
 
-        // Hàng 2 đến N-2: Thân Panel chứa nội dung
-        let body_height = (area.height as usize).saturating_sub(3);
+        // 4. HÀNG 3 đến N-2: Thân Panel chứa nội dung
+        let body_height = (area.height as usize).saturating_sub(4);
         let mut body_lines: Vec<Line> = Vec::new();
-        body_lines.push(line_titles);
-        body_lines.push(line_top_border);
+        body_lines.push(line_row0);
+        body_lines.push(line_row1);
+        body_lines.push(line_row2);
 
         for row in 0..body_height {
             let content_line = content.get(row);
@@ -180,7 +187,7 @@ impl TabsWidget {
             body_lines.push(Line::from(line_spans));
         }
 
-        // Hàng cuối: Viền đáy bo góc (╰───────────────╯)
+        // 5. HÀNG CUỐI: Viền đáy bo góc (╰───────────────╯)
         let mut bottom_spans: Vec<Span> = Vec::new();
         bottom_spans.push(Span::styled("╰", border_style));
         if width > 2 {

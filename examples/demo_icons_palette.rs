@@ -193,7 +193,7 @@ fn main() -> io::Result<()> {
 
                 // Căn chuẩn cột không bị lệch do khoảng trắng kép của các icon rộng
                 let icon_lines = vec![
-                    Line::from(Span::styled("  Status Indicators:", Style::default().fg(Theme::SECONDARY).add_modifier(Modifier::BOLD))),
+                    Line::from(Span::styled("  Status Indicators (Mỗi icon chiếm chuẩn 2 ô):", Style::default().fg(Theme::SECONDARY).add_modifier(Modifier::BOLD))),
                     Line::from(vec![
                         Span::styled(format!("   {} ", Icons::SUCCESS), Style::default().fg(Icons::color_success()).add_modifier(Modifier::BOLD)),
                         Span::styled("Success (✔)      ", Style::default().fg(Theme::FG)),
@@ -203,8 +203,8 @@ fn main() -> io::Result<()> {
                     Line::from(vec![
                         Span::styled(format!("   {} ", Icons::WARNING), Style::default().fg(Icons::color_warning()).add_modifier(Modifier::BOLD)),
                         Span::styled("Warning (⚠)      ", Style::default().fg(Theme::FG)),
-                        Span::styled(Icons::INFO, Style::default().fg(Icons::color_info()).add_modifier(Modifier::BOLD)), // i đã có sẵn spacing tự nhiên
-                        Span::styled(" Info (ℹ)", Style::default().fg(Theme::FG)),
+                        Span::styled(format!("{} ", Icons::INFO), Style::default().fg(Icons::color_info()).add_modifier(Modifier::BOLD)),
+                        Span::styled("Info (ℹ)", Style::default().fg(Theme::FG)),
                     ]),
                     Line::from(vec![
                         Span::styled(format!("   {} ", Icons::RUN), Style::default().fg(Icons::color_run()).add_modifier(Modifier::BOLD)),

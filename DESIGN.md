@@ -195,7 +195,7 @@ Single line at bottom. Left-aligned info, right-aligned status. Separated by ` �
 | Error | `✗` | `x` |
 | Warning | `⚠` | `!` |
 | Info | `ℹ` | `i` |
-| Pending | `·,•,●,•,·, ` | `◌, ○` |
+| Pending | `·,•,●,•,·, ` | `o` |
 | Running | `▶` | `>` |
 | Spinner | `⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏` | `\|/-` |
 | Arrow | `→` | `->` |

@@ -15,7 +15,7 @@ use ratatui::{
 };
 use std::{
     io::{self, stdout},
-    time::Duration,
+    time::{Duration, Instant},
 };
 
 fn main() -> io::Result<()> {
@@ -28,7 +28,56 @@ fn main() -> io::Result<()> {
     let mut tabs = TabsWidget::new("main_nav", vec!["Overview", "Logs", "Settings", "Deployments"]);
     tabs.focus();
 
+    // 1. Khởi tạo danh sách log động mô phỏng server streaming
+    let mut streaming_logs: Vec<Line<'static>> = vec![
+        Line::from(vec![
+            Span::styled("14:22:01 ", Style::default().fg(Theme::MUTED)),
+            Span::styled("[INFO] ", Style::default().fg(Theme::ACCENT)),
+            Span::styled("HTTP server listening at 127.0.0.1:3000", Style::default().fg(Theme::FG)),
+        ]),
+        Line::from(vec![
+            Span::styled("14:22:05 ", Style::default().fg(Theme::MUTED)),
+            Span::styled("[OK]   ", Style::default().fg(Theme::SUCCESS)),
+            Span::styled("Database migration applied (version 0.4.2)", Style::default().fg(Theme::FG)),
+        ]),
+        Line::from(vec![
+            Span::styled("14:22:18 ", Style::default().fg(Theme::MUTED)),
+            Span::styled("[BUILD]", Style::default().fg(Theme::PRIMARY)),
+            Span::styled("Compiled client assets in 480ms", Style::default().fg(Theme::FG)),
+        ]),
+        Line::from(vec![
+            Span::styled("14:22:25 ", Style::default().fg(Theme::MUTED)),
+            Span::styled("[DEBUG]", Style::default().fg(Theme::SECONDARY)),
+            Span::styled("Long payload stream: {\"user_id\":1092837,\"token\":\"eyJhbGciOiJIUzI1Ni...\"}", Style::default().fg(Theme::MUTED)),
+        ]),
+    ];
+
+    let mut last_log_time = Instant::now();
+    let mut log_counter = 1;
+
     loop {
+        // Sinh log mới mỗi 1.8 giây để kiểm thử cơ chế Sticky Follow
+        if last_log_time.elapsed() >= Duration::from_millis(1800) {
+            let now_sec = 25 + log_counter * 2;
+            let time_str = format!("14:22:{:02}", now_sec % 60);
+            let (level, color, msg) = match log_counter % 5 {
+                0 => ("[OK]   ", Theme::SUCCESS, format!("Batch task #{} completed successfully", log_counter)),
+                1 => ("[INFO] ", Theme::ACCENT, format!("Worker dispatched payload #{} to background pool", log_counter)),
+                2 => ("[DEBUG]", Theme::SECONDARY, format!("Cache hit on query key 'user_session_{}' (0.3ms)", log_counter)),
+                3 => ("[WARN] ", Theme::WARNING, format!("High CPU spike detected on worker core #{} (82%)", (log_counter % 4) + 1)),
+                _ => ("[INFO] ", Theme::PRIMARY, format!("Heartbeat probe received from edge gateway #{}", log_counter)),
+            };
+
+            streaming_logs.push(Line::from(vec![
+                Span::styled(format!("{} ", time_str), Style::default().fg(Theme::MUTED)),
+                Span::styled(format!("{} ", level), Style::default().fg(color)),
+                Span::styled(msg, Style::default().fg(Theme::FG)),
+            ]));
+
+            log_counter += 1;
+            last_log_time = Instant::now();
+        }
+
         terminal.draw(|f| {
             let size = f.area();
 
@@ -58,40 +107,7 @@ fn main() -> io::Result<()> {
                         Span::styled("12 / 12 clusters ready", Style::default().fg(Theme::FG)),
                     ]),
                 ],
-                1 => {
-                    let mut logs = Vec::new();
-                    let raw_entries = [
-                        ("14:22:01", "[INFO] ", Theme::ACCENT, "HTTP server listening at 127.0.0.1:3000"),
-                        ("14:22:05", "[OK]   ", Theme::SUCCESS, "Database migration applied (version 0.4.2)"),
-                        ("14:22:18", "[BUILD]", Theme::PRIMARY, "Compiled client assets in 480ms"),
-                        ("14:22:25", "[DEBUG]", Theme::SECONDARY, "Long payload stream: {\"user_id\":1092837,\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\"}"),
-                        ("14:22:30", "[INFO] ", Theme::ACCENT, "Worker thread pool initialized with 8 threads"),
-                        ("14:22:35", "[INFO] ", Theme::ACCENT, "Connected to Redis cluster at redis://10.0.0.15:6379"),
-                        ("14:22:42", "[WARN] ", Theme::WARNING, "Disk space threshold warning: 78% utilized on /var/log"),
-                        ("14:22:50", "[OK]   ", Theme::SUCCESS, "SSL Certificate verified for api.internal.domain"),
-                        ("14:23:02", "[DEBUG]", Theme::SECONDARY, "Received webhook event: payment.captured (id: evt_998124)"),
-                        ("14:23:15", "[INFO] ", Theme::ACCENT, "Ingesting batch metrics: 1,420 data points written to TimescaleDB"),
-                        ("14:23:22", "[INFO] ", Theme::ACCENT, "gRPC endpoint registered on port 50051 (reflection active)"),
-                        ("14:23:31", "[OK]   ", Theme::SUCCESS, "Health probe succeeded on 12/12 container replicas"),
-                        ("14:23:45", "[BUILD]", Theme::PRIMARY, "WASM module optimization completed (size reduced by 34%)"),
-                        ("14:24:00", "[INFO] ", Theme::ACCENT, "Cron job scheduler triggered 'cleanup_stale_sessions'"),
-                        ("14:24:12", "[DEBUG]", Theme::SECONDARY, "Query execution: SELECT * FROM users WHERE active = true (duration: 1.4ms)"),
-                        ("14:24:25", "[INFO] ", Theme::ACCENT, "OAuth2 provider handshake validated with Keycloak SSO"),
-                        ("14:24:38", "[WARN] ", Theme::WARNING, "Rate limit reached for IP 198.51.100.44 (429 Too Many Requests)"),
-                        ("14:24:50", "[OK]   ", Theme::SUCCESS, "Automated snapshot backup created: s3://backups/snapshot-20261008.tar.zst"),
-                        ("14:25:05", "[INFO] ", Theme::ACCENT, "Zero-downtime rolling update initiated for worker pods"),
-                        ("14:25:18", "[BUILD]", Theme::PRIMARY, "Rust native library compiled with LTO = fat, codegen-units = 1"),
-                    ];
-
-                    for (time, level, color, msg) in raw_entries {
-                        logs.push(Line::from(vec![
-                            Span::styled(format!("{} ", time), Style::default().fg(Theme::MUTED)),
-                            Span::styled(format!("{} ", level), Style::default().fg(color)),
-                            Span::styled(msg, Style::default().fg(Theme::FG)),
-                        ]));
-                    }
-                    logs
-                },
+                1 => streaming_logs.clone(),
                 2 => vec![
                     Line::from(vec![
                         Span::styled("  Theme Mode:     ", Style::default().fg(Theme::SECONDARY)),
@@ -113,7 +129,7 @@ fn main() -> io::Result<()> {
                     ]),
                     Line::from(vec![
                         Span::styled("  Latest Check: ", Style::default().fg(Theme::SECONDARY)),
-                        Span::styled("✔ 10/10 tests passed", Style::default().fg(Theme::SUCCESS)),
+                        Span::styled("✔ 12/12 tests passed", Style::default().fg(Theme::SUCCESS)),
                     ]),
                 ],
             };
@@ -121,13 +137,18 @@ fn main() -> io::Result<()> {
             // 2. Render Tab Container nối liền bo góc hoàn chỉnh
             tabs.render_container(chunks[0], tab_content, f);
 
-            // 3. Status Bar Widget (DESIGN.md mục 5)
+            // 3. Status Bar Widget với Sticky Follow indicator
             let mut status_bar = StatusBarWidget::new();
             status_bar.add_left(Span::styled("Tab: [Left/Right/Tab]", Style::default().fg(Theme::PRIMARY)));
             status_bar.add_left(Span::styled("Scroll: [Up/Down/PgUp/PgDn]", Style::default().fg(Theme::SECONDARY)));
-            status_bar.add_left(Span::styled(format!("Offset: {}", tabs.scroll_offset()), Style::default().fg(Theme::SUCCESS)));
+            
+            if tabs.is_auto_scroll() {
+                status_bar.add_left(Span::styled("Sticky: [ON - Follow Latest]", Style::default().fg(Theme::SUCCESS).add_modifier(Modifier::BOLD)));
+            } else {
+                status_bar.add_left(Span::styled("Sticky: [PAUSED - Press End to Follow]", Style::default().fg(Theme::WARNING)));
+            }
 
-            status_bar.add_right(Span::styled("127.0.0.1:3000", Style::default().fg(Theme::ACCENT)));
+            status_bar.add_right(Span::styled(format!("Logs: {}", streaming_logs.len()), Style::default().fg(Theme::ACCENT)));
             status_bar.add_right(Span::styled("Press 'q' to exit", Style::default().fg(Theme::MUTED)));
 
             status_bar.render(chunks[1], f);

@@ -25,6 +25,7 @@ pub struct TabsWidget {
     selected: usize,
     focused: bool,
     scroll_offset: usize,
+    auto_scroll: bool,
 }
 
 impl TabsWidget {
@@ -35,6 +36,7 @@ impl TabsWidget {
             selected: 0,
             focused: false,
             scroll_offset: 0,
+            auto_scroll: true, // Mặc định bật chế độ Sticky Follow (tự động bám đáy khi có log mới)
         }
     }
 
@@ -45,6 +47,19 @@ impl TabsWidget {
         self
     }
 
+    pub fn with_auto_scroll(mut self, enabled: bool) -> Self {
+        self.auto_scroll = enabled;
+        self
+    }
+
+    pub fn is_auto_scroll(&self) -> bool {
+        self.auto_scroll
+    }
+
+    pub fn set_auto_scroll(&mut self, enabled: bool) {
+        self.auto_scroll = enabled;
+    }
+
     pub fn selected(&self) -> usize {
         self.selected
     }
@@ -53,6 +68,7 @@ impl TabsWidget {
         if !self.titles.is_empty() {
             self.selected = (self.selected + 1) % self.titles.len();
             self.scroll_offset = 0; // Reset scroll khi đổi tab
+            self.auto_scroll = true; // Bật lại sticky
         }
     }
 
@@ -64,6 +80,7 @@ impl TabsWidget {
                 self.selected -= 1;
             }
             self.scroll_offset = 0; // Reset scroll khi đổi tab
+            self.auto_scroll = true; // Bật lại sticky
         }
     }
 
@@ -73,15 +90,30 @@ impl TabsWidget {
 
     pub fn set_scroll_offset(&mut self, offset: usize) {
         self.scroll_offset = offset;
+        self.auto_scroll = false;
     }
 
     pub fn scroll_up(&mut self, amount: usize) {
+        self.auto_scroll = false; // Tạm dừng bám đáy khi người dùng chủ động cuộn lên xem log cũ
         self.scroll_offset = self.scroll_offset.saturating_sub(amount);
     }
 
     pub fn scroll_down(&mut self, amount: usize, total_lines: usize, viewport_height: usize) {
         let max_offset = total_lines.saturating_sub(viewport_height);
-        self.scroll_offset = (self.scroll_offset + amount).min(max_offset);
+        let new_offset = (self.scroll_offset + amount).min(max_offset);
+        self.scroll_offset = new_offset;
+        if self.scroll_offset >= max_offset {
+            self.auto_scroll = true; // Tự động kích hoạt lại Sticky khi cuộn chạm đáy
+        }
+    }
+
+    pub fn scroll_to_bottom(&mut self) {
+        self.auto_scroll = true;
+    }
+
+    pub fn scroll_to_top(&mut self) {
+        self.auto_scroll = false;
+        self.scroll_offset = 0;
     }
     /// Vẽ toàn bộ Khung Tab Container hoàn chỉnh bo góc (Border Radius) nối liền nội dung chuẩn log.md
     pub fn render_container(&self, area: Rect, content: Vec<Line<'static>>, frame: &mut Frame) {
@@ -190,7 +222,11 @@ impl TabsWidget {
         let max_inner_w = width.saturating_sub(3); // 2 ký tự mép trái ("│ ") + 1 mép phải ("│")
         let total_lines = content.len();
         let max_scroll = total_lines.saturating_sub(body_height);
-        let active_scroll = self.scroll_offset.min(max_scroll);
+        let active_scroll = if self.auto_scroll {
+            max_scroll
+        } else {
+            self.scroll_offset.min(max_scroll)
+        };
 
         // Tính toán thanh cuộn (Scrollbar thumb) nếu tổng số dòng log vượt quá chiều cao hiển thị
         let has_scroll = total_lines > body_height && body_height > 0;
@@ -376,7 +412,11 @@ impl FormWidget for TabsWidget {
                 EventResult::Consumed
             }
             KeyCode::Home => {
-                self.scroll_offset = 0;
+                self.scroll_to_top();
+                EventResult::Consumed
+            }
+            KeyCode::End => {
+                self.scroll_to_bottom();
                 EventResult::Consumed
             }
             KeyCode::Enter => EventResult::Submitted,
@@ -443,6 +483,20 @@ mod tests {
         // Đổi tab phải tự động reset scroll về 0
         tabs.select_next();
         assert_eq!(tabs.scroll_offset(), 0);
+    }
+
+    #[test]
+    fn test_tabs_auto_scroll_sticky() {
+        let mut tabs = TabsWidget::new("nav", vec!["Logs"]);
+        assert!(tabs.is_auto_scroll());
+
+        // Khi người dùng chủ động cuộn lên xem log cũ -> Tạm dừng sticky follow
+        tabs.scroll_up(3);
+        assert!(!tabs.is_auto_scroll());
+
+        // Khi người dùng nhấn End hoặc cuộn chạm đáy -> Bật lại sticky follow
+        tabs.scroll_to_bottom();
+        assert!(tabs.is_auto_scroll());
     }
 
     #[test]

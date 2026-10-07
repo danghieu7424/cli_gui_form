@@ -11,7 +11,7 @@ use ratatui::{
     layout::{Constraint, Direction, Layout},
     style::{Modifier, Style},
     text::{Line, Span},
-    widgets::{Block, BorderType, Borders, Cell, Paragraph, Row, Table, TableState},
+    widgets::{Block, BorderType, Borders, Paragraph, TableState},
     Terminal,
 };
 use std::{
@@ -142,139 +142,165 @@ fn main() -> io::Result<()> {
                 let inner_area = panel_block.inner(chunks[1]);
                 f.render_widget(panel_block, chunks[1]);
 
-                // 3. Table Header & Cells với các ký tự phân cách ─, ┼, ┬, ┴, ├, ┤ theo DESIGN.md Mục 4
-                let header_cells = ["  Name", "Status", "Branch", "Commit", "Time"]
-                    .iter()
-                    .map(|h| {
-                        Cell::from(*h).style(
-                            Style::default()
-                                .fg(Theme::SECONDARY)
-                                .add_modifier(Modifier::BOLD),
-                        )
-                    });
-                let table_header = Row::new(header_cells).height(1);
+                // 3. XÂY DỰNG TABLE GRID CHUẨN XÁC TỪ MỤC 4 DESIGN.MD
+                // Bảng độ rộng thực tế của 5 cột dữ liệu:
+                let widths = [22, 16, 18, 14, 12];
+                let total_width: usize = widths.iter().sum::<usize>() + if show_column_borders { 4 } else { 0 };
 
-                // 4. Các hàng dữ liệu (Rows)
-                let mut rows: Vec<Row> = Vec::new();
-
-                // Tạo đường kẻ phân cách Header (┬ hoặc ─)
-                let col_widths = [22, 16, 18, 14, 10];
-                let divider_line = if show_column_borders {
-                    // Header divider có ngã 3 giao nhau: ──┬──┬──
-                    let parts: Vec<String> = col_widths.iter().map(|&w| "─".repeat(w)).collect();
-                    parts.join("┬")
+                // Các ký tự box drawing
+                let (c_top_left, c_top_right, c_bot_left, c_bot_right) = if is_rounded {
+                    ("╭", "╮", "╰", "╯")
                 } else {
-                    "─".repeat(84)
+                    ("┌", "┐", "└", "┘")
+                };
+                let c_tee_down = "┬";
+                let c_tee_up = "┴";
+                let c_cross = "┼";
+                let c_tee_right = "├";
+                let c_tee_left = "┤";
+                let c_horiz = "─";
+                let c_vert = "│";
+
+                // Hàm tạo đường kẻ ngang phân cách nối chính xác với viền cột
+                let make_divider = |l: &str, m: &str, r: &str| -> String {
+                    let parts: Vec<String> = widths.iter().map(|&w| c_horiz.repeat(w)).collect();
+                    if show_column_borders {
+                        format!("{}{}{}", l, parts.join(m), r)
+                    } else {
+                        format!("{}{}{}", l, c_horiz.repeat(total_width), r)
+                    }
                 };
 
-                // Dòng phân cách dưới header
-                rows.push(Row::new(vec![Cell::from(Span::styled(divider_line, Style::default().fg(Theme::NEUTRAL_100)))])
-                    .height(1));
+                let mut lines: Vec<Line> = Vec::new();
 
+                // 1. Viền đỉnh của bảng (Top border) nếu có kẻ
+                if show_horizontal_lines {
+                    let top_line = make_divider(c_top_left, c_tee_down, c_top_right);
+                    lines.push(Line::from(Span::styled(top_line, Style::default().fg(Theme::NEUTRAL_100))));
+                }
+
+                // 2. Hàng Header
+                let h_cells = [" Name", "Status", "Branch", "Commit", "Time"];
+                let mut header_spans: Vec<Span> = Vec::new();
+                if show_horizontal_lines {
+                    header_spans.push(Span::styled(c_vert, Style::default().fg(Theme::NEUTRAL_100)));
+                } else {
+                    header_spans.push(Span::styled(" ", Style::default()));
+                }
+
+                for (i, &title) in h_cells.iter().enumerate() {
+                    let w = widths[i];
+                    header_spans.push(Span::styled(
+                        format!("{:<width$}", title, width = w),
+                        Style::default().fg(Theme::SECONDARY).add_modifier(Modifier::BOLD),
+                    ));
+                    if show_column_borders && i < h_cells.len() - 1 {
+                        header_spans.push(Span::styled(c_vert, Style::default().fg(Theme::NEUTRAL_100)));
+                    }
+                }
+                if show_horizontal_lines {
+                    header_spans.push(Span::styled(c_vert, Style::default().fg(Theme::NEUTRAL_100)));
+                }
+                lines.push(Line::from(header_spans));
+
+                // 3. Đường phân cách Header (Header Separator: ├─┬─┤ hoặc ├─┼─┤)
+                let header_sep = make_divider(
+                    if show_horizontal_lines { c_tee_right } else { "" },
+                    if show_column_borders { c_cross } else { c_horiz },
+                    if show_horizontal_lines { c_tee_left } else { "" },
+                );
+                lines.push(Line::from(Span::styled(header_sep, Style::default().fg(Theme::NEUTRAL_100))));
+
+                // 4. Các hàng dữ liệu (Data Rows)
                 for (idx, item) in items.iter().enumerate() {
                     let is_selected = table_state.selected() == Some(idx);
+                    let mut row_spans: Vec<Span> = Vec::new();
 
-                    let prefix = if is_selected { "▸ " } else { "  " };
-                    let name_span = Span::styled(
-                        format!("{}{}", prefix, item.name),
-                        if is_selected {
-                            Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)
-                        } else {
-                            Style::default().fg(Theme::FG)
-                        },
-                    );
+                    let row_border_style = Style::default().fg(Theme::NEUTRAL_100);
 
-                    let status_span = Line::from(vec![
-                        Span::styled(format!("{} ", item.status_icon), Style::default().fg(item.status_color).add_modifier(Modifier::BOLD)),
-                        Span::styled(item.status_text, Style::default().fg(item.status_color)),
-                    ]);
-
-                    let branch_span = Span::styled(item.branch, Style::default().fg(Theme::SECONDARY));
-                    let commit_span = Span::styled(item.commit, Style::default().fg(Theme::MUTED));
-                    let time_span = Span::styled(item.time, Style::default().fg(Theme::SECONDARY));
-
-                    // Nếu bật V-Line, gắn kèm thanh dọc "│" giữa các cell
-                    let cells = if show_column_borders {
-                        vec![
-                            Cell::from(name_span),
-                            Cell::from(Span::styled("│ ", Style::default().fg(Theme::NEUTRAL_100))),
-                            Cell::from(status_span),
-                            Cell::from(Span::styled("│ ", Style::default().fg(Theme::NEUTRAL_100))),
-                            Cell::from(branch_span),
-                            Cell::from(Span::styled("│ ", Style::default().fg(Theme::NEUTRAL_100))),
-                            Cell::from(commit_span),
-                            Cell::from(Span::styled("│ ", Style::default().fg(Theme::NEUTRAL_100))),
-                            Cell::from(time_span),
-                        ]
+                    if show_horizontal_lines {
+                        row_spans.push(Span::styled(c_vert, row_border_style));
                     } else {
-                        vec![
-                            Cell::from(name_span),
-                            Cell::from(status_span),
-                            Cell::from(branch_span),
-                            Cell::from(commit_span),
-                            Cell::from(time_span),
-                        ]
+                        row_spans.push(Span::styled(" ", Style::default()));
+                    }
+
+                    // Cột 1: Name (có ▸ khi selected)
+                    let prefix = if is_selected { "▸ " } else { "  " };
+                    let name_str = format!("{}{}", prefix, item.name);
+                    let name_style = if is_selected {
+                        Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)
+                    } else {
+                        Style::default().fg(Theme::FG)
                     };
+                    row_spans.push(Span::styled(format!("{:<width$}", name_str, width = widths[0]), name_style));
 
-                    rows.push(Row::new(cells).height(1));
+                    if show_column_borders {
+                        row_spans.push(Span::styled(c_vert, row_border_style));
+                    }
 
-                    // Nếu bật H-Line: Vẽ dòng phân cách giữa các hàng có giao điểm chữ thập "┼" hoặc "─"
+                    // Cột 2: Status
+                    let status_str = format!("{} {}", item.status_icon, item.status_text);
+                    row_spans.push(Span::styled(
+                        format!("{:<width$}", status_str, width = widths[1]),
+                        Style::default().fg(item.status_color),
+                    ));
+
+                    if show_column_borders {
+                        row_spans.push(Span::styled(c_vert, row_border_style));
+                    }
+
+                    // Cột 3: Branch
+                    row_spans.push(Span::styled(
+                        format!("{:<width$}", item.branch, width = widths[2]),
+                        Style::default().fg(Theme::SECONDARY),
+                    ));
+
+                    if show_column_borders {
+                        row_spans.push(Span::styled(c_vert, row_border_style));
+                    }
+
+                    // Cột 4: Commit
+                    row_spans.push(Span::styled(
+                        format!("{:<width$}", item.commit, width = widths[3]),
+                        Style::default().fg(Theme::MUTED),
+                    ));
+
+                    if show_column_borders {
+                        row_spans.push(Span::styled(c_vert, row_border_style));
+                    }
+
+                    // Cột 5: Time (Right-align theo DESIGN.md)
+                    row_spans.push(Span::styled(
+                        format!("{:>width$}", item.time, width = widths[4]),
+                        Style::default().fg(Theme::SECONDARY),
+                    ));
+
+                    if show_horizontal_lines {
+                        row_spans.push(Span::styled(c_vert, row_border_style));
+                    }
+
+                    let row_line = if is_selected {
+                        Line::from(row_spans).style(Style::default().bg(Theme::SURFACE))
+                    } else {
+                        Line::from(row_spans)
+                    };
+                    lines.push(row_line);
+
+                    // Đường kẻ ngang giữa các hàng dữ liệu (H-Line: ├─┼─┤)
                     if show_horizontal_lines && idx + 1 < items.len() {
-                        let row_div = if show_column_borders {
-                            // Giao điểm chữ thập: ──┼──┼──
-                            let parts: Vec<String> = col_widths.iter().map(|&w| "─".repeat(w)).collect();
-                            parts.join("┼")
-                        } else {
-                            "─".repeat(84)
-                        };
-                        rows.push(Row::new(vec![Cell::from(Span::styled(row_div, Style::default().fg(Theme::NEUTRAL_100)))]).height(1));
+                        let mid_sep = make_divider(c_tee_right, c_cross, c_tee_left);
+                        lines.push(Line::from(Span::styled(mid_sep, Style::default().fg(Theme::NEUTRAL_100))));
                     }
                 }
 
-                let widths = if show_column_borders {
-                    vec![
-                        Constraint::Length(22), // Name
-                        Constraint::Length(2),  // │
-                        Constraint::Length(16), // Status
-                        Constraint::Length(2),  // │
-                        Constraint::Length(18), // Branch
-                        Constraint::Length(2),  // │
-                        Constraint::Length(14), // Commit
-                        Constraint::Length(2),  // │
-                        Constraint::Min(10),    // Time
-                    ]
-                } else {
-                    vec![
-                        Constraint::Length(22), // Name
-                        Constraint::Length(16), // Status
-                        Constraint::Length(18), // Branch
-                        Constraint::Length(14), // Commit
-                        Constraint::Min(10),    // Time
-                    ]
-                };
+                // 5. Viền đáy của bảng (Bottom border: └─┴─┘)
+                if show_horizontal_lines {
+                    let bot_line = make_divider(c_bot_left, c_tee_up, c_bot_right);
+                    lines.push(Line::from(Span::styled(bot_line, Style::default().fg(Theme::NEUTRAL_100))));
+                }
 
-                let table_header_row = if show_column_borders {
-                    Row::new(vec![
-                        Cell::from("  Name").style(Style::default().fg(Theme::SECONDARY).add_modifier(Modifier::BOLD)),
-                        Cell::from("  "),
-                        Cell::from("Status").style(Style::default().fg(Theme::SECONDARY).add_modifier(Modifier::BOLD)),
-                        Cell::from("  "),
-                        Cell::from("Branch").style(Style::default().fg(Theme::SECONDARY).add_modifier(Modifier::BOLD)),
-                        Cell::from("  "),
-                        Cell::from("Commit").style(Style::default().fg(Theme::SECONDARY).add_modifier(Modifier::BOLD)),
-                        Cell::from("  "),
-                        Cell::from("Time").style(Style::default().fg(Theme::SECONDARY).add_modifier(Modifier::BOLD)),
-                    ]).height(1)
-                } else {
-                    table_header
-                };
-
-                let table = Table::new(rows, widths)
-                    .header(table_header_row)
-                    .highlight_style(Style::default().bg(Theme::SURFACE))
-                    .style(Style::default().bg(Theme::BG));
-
-                f.render_widget(table, inner_area);
+                let paragraph = Paragraph::new(lines).style(Style::default().bg(Theme::BG));
+                f.render_widget(paragraph, inner_area);
 
                 // 5. Status Bar hiển thị phím tắt toggles
                 let status_line = Line::from(vec![

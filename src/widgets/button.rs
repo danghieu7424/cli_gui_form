@@ -44,34 +44,32 @@ impl FormWidget for ButtonWidget {
     }
 
     fn render(&self, area: Rect, frame: &mut Frame) {
-        let (prefix, style) = if self.focused {
-            // Theo DESIGN.md: Focused là reverse (white bg, black fg) với "▸" prefix
-            (
-                "▸ ",
-                Style::default()
-                    .bg(crate::Theme::PRIMARY)
-                    .fg(crate::Theme::BG)
-                    .add_modifier(Modifier::BOLD | Modifier::REVERSED),
-            )
+        let style = if self.focused {
+            // Theo DESIGN.md: Focused là reverse (white bg, black fg) với "▸" prefix (nếu không có icon riêng)
+            Style::default()
+                .bg(crate::Theme::PRIMARY)
+                .fg(crate::Theme::BG)
+                .add_modifier(Modifier::BOLD | Modifier::REVERSED)
         } else {
             // Unfocused: plain Foreground text
-            (
-                "  ",
-                Style::default()
-                    .fg(crate::Theme::FG)
-                    .bg(crate::Theme::BG),
-            )
+            Style::default()
+                .fg(crate::Theme::FG)
+                .bg(crate::Theme::BG)
         };
 
         let label = match &self.icon {
             Some(ic) => {
+                // Nếu có icon tùy biến (ví dụ: ▶, ✔, ■), dùng icon làm tiền tố và không chèn thêm "▸" để tránh bị ép/trùng 2 tam giác
                 if ic.ends_with(' ') {
-                    format!("{}{}{}", prefix, ic, self.title)
+                    format!("{}{}", ic, self.title)
                 } else {
-                    format!("{}{} {}", prefix, ic, self.title)
+                    format!("{} {}", ic, self.title)
                 }
             }
-            None => format!("{}{}", prefix, self.title),
+            None => {
+                let prefix = if self.focused { "▸ " } else { "  " };
+                format!("{}{}", prefix, self.title)
+            }
         };
 
         let content = Line::from(vec![

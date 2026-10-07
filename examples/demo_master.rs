@@ -2,7 +2,7 @@
 
 use cli_gui_form::{
     ButtonWidget, CardWidget, CheckboxWidget, FormManager, FormWidget, Icons,
-    InputMode, InputWidget, RadioWidget, ShimmerWidget, SpinnerType, StatusBarWidget, TabsWidget,
+    InputMode, InputWidget, ListWidget, RadioWidget, ShimmerWidget, SpinnerType, StatusBarWidget, TabsWidget,
     TaskWidget, Theme,
 };
 use crossterm::{
@@ -86,6 +86,14 @@ fn main() -> io::Result<()> {
             "Development".into(),
         ],
     )));
+    form.add_widget(Box::new(
+        ListWidget::new("route_menu")
+            .with_label("Select Target Route (DESIGN.md Lists/Menus)")
+            .with_item("api/routes.ts")
+            .with_item("api/handler.ts")
+            .with_disabled_item("lib/internal.ts (deprecated)")
+            .with_item("config.json"),
+    ));
     form.add_widget(Box::new(ButtonWidget::new(
         "btn_deploy",
         "Deploy Now",

@@ -20,6 +20,7 @@ Designed for enterprise-grade command-line tools, AI pipelines, and interactive 
   - `InputWidget`: Single-line Text & Password inputs with real-time cursor editing.
   - `CheckboxWidget`: Boolean toggle controls (`[✔]` / `[ ]`).
   - `RadioWidget`: Single-choice option groups (`(•)` / `( )`).
+  - `ListWidget`: Clean vertical menu selection with active, normal, and disabled state styling (`▸`).
   - `ButtonWidget`: Action triggers with submit signal integration.
   - `CardWidget`: Panels / Cards with embedded top border titles and status rows.
   - `TaskWidget`: Unified multi-phase task runner supporting indeterminate pulse spinners and deterministic progress tracking.

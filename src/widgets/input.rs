@@ -61,9 +61,9 @@ impl FormWidget for InputWidget {
             crate::Theme::MUTED
         };
 
-        let title_formatted = format!(" {} ", self.label);
+        let title_formatted = format!("─ {} ─", self.label);
 
-        // Bo góc theo yêu cầu người dùng (BorderType::Rounded) kết hợp màu Theme
+        // Bo góc theo yêu cầu người dùng (BorderType::Rounded) kết hợp format ╭─ Label ─
         let block = Block::default()
             .borders(Borders::ALL)
             .border_type(BorderType::Rounded)

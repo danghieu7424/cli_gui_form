@@ -129,71 +129,19 @@ fn main() -> io::Result<()> {
         ButtonWidget::new("btn_cancel", "Cancel", Theme::BG, Theme::MUTED),
     ));
 
-    let frame_interval = Duration::from_millis(16); // ~60 FPS
+    let tick_interval = Duration::from_millis(150); // Nhịp Pulse 150ms
     let mut last_tick = Instant::now();
+    let mut needs_render = true;
 
     loop {
-        // Cập nhật nhịp nháy Pulse 150ms theo đúng DESIGN.md mục 8
-        if last_tick.elapsed() >= Duration::from_millis(150) {
-            if let Ok(mut w) = deploy_task.lock() {
-                w.tick();
-            }
-            last_tick = Instant::now();
-        }
+        let elapsed = last_tick.elapsed();
+        let timeout = if elapsed >= tick_interval {
+            Duration::from_millis(0)
+        } else {
+            tick_interval - elapsed
+        };
 
-        terminal.draw(|f| {
-            let full_area = f.area();
-
-            // Bố cục Layout: Top Header (H1), Main Container (Panel), Bottom Status Bar
-            let chunks = Layout::default()
-                .direction(Direction::Vertical)
-                .constraints([
-                    Constraint::Length(3), // Header title
-                    Constraint::Min(12),   // Main panel
-                    Constraint::Length(1), // Status bar
-                ])
-                .split(full_area);
-
-            // Header H1: Minimal, BOLD + Primary
-            let header = Paragraph::new(Line::from(vec![
-                Span::styled("  LINEAR / VERCEL TUI", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
-                Span::styled(" ─ Service Configuration", Style::default().fg(Theme::SECONDARY)),
-            ]))
-            .style(Style::default().bg(Theme::BG));
-            f.render_widget(header, chunks[0]);
-
-            // Main Panel (Panel / Card với Single-line Box Drawing và Embedded Title)
-            let panel_block = Block::default()
-                .borders(Borders::ALL)
-                .border_type(BorderType::Plain)
-                .border_style(Style::default().fg(Theme::NEUTRAL_100))
-                .title(Span::styled("─ Deployment Settings ─", Style::default().fg(Theme::SECONDARY)))
-                .style(Style::default().bg(Theme::BG));
-
-            let panel_inner = panel_block.inner(chunks[1]);
-            f.render_widget(panel_block, chunks[1]);
-
-            // Render toàn bộ Form bên trong panel
-            form.render(panel_inner, f);
-
-            // Status Bar (Single line at bottom, separated by " ─ ")
-            let status_line = Line::from(vec![
-                Span::styled(" main ", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
-                Span::styled("─", Style::default().fg(Theme::MUTED)),
-                Span::styled(" Tab: Next ", Style::default().fg(Theme::SECONDARY)),
-                Span::styled("─", Style::default().fg(Theme::MUTED)),
-                Span::styled(" ↑/↓: Navigate ", Style::default().fg(Theme::SECONDARY)),
-                Span::styled("─", Style::default().fg(Theme::MUTED)),
-                Span::styled(" Enter/Space: Select ", Style::default().fg(Theme::SECONDARY)),
-                Span::styled("─", Style::default().fg(Theme::MUTED)),
-                Span::styled(" Esc: Exit ", Style::default().fg(Theme::SECONDARY)),
-                Span::styled("                              ✓ System Ready ", Style::default().fg(Theme::SUCCESS)),
-            ]);
-            let status_bar = Paragraph::new(status_line).style(Style::default().bg(Theme::BG));
-            f.render_widget(status_bar, chunks[2]);
-        })?;
-
-        if event::poll(frame_interval)? {
+        if event::poll(timeout)? {
             if let Event::Key(key) = event::read()? {
                 if key.kind == KeyEventKind::Press {
                     let is_ctrl_c = key.modifiers.contains(KeyModifiers::CONTROL)
@@ -203,11 +151,75 @@ fn main() -> io::Result<()> {
                     }
 
                     let res = form.handle_event(key);
+                    needs_render = true;
                     if res == EventResult::Submitted {
                         break;
                     }
                 }
             }
+        }
+
+        if last_tick.elapsed() >= tick_interval {
+            if let Ok(mut w) = deploy_task.lock() {
+                w.tick();
+            }
+            last_tick = Instant::now();
+            needs_render = true;
+        }
+
+        if needs_render {
+            terminal.draw(|f| {
+                let full_area = f.area();
+
+                // Bố cục Layout: Top Header (H1), Main Container (Panel), Bottom Status Bar
+                let chunks = Layout::default()
+                    .direction(Direction::Vertical)
+                    .constraints([
+                        Constraint::Length(3), // Header title
+                        Constraint::Min(12),   // Main panel
+                        Constraint::Length(1), // Status bar
+                    ])
+                    .split(full_area);
+
+                // Header H1: Minimal, BOLD + Primary
+                let header = Paragraph::new(Line::from(vec![
+                    Span::styled("  LINEAR / VERCEL TUI", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                    Span::styled(" ─ Service Configuration", Style::default().fg(Theme::SECONDARY)),
+                ]))
+                .style(Style::default().bg(Theme::BG));
+                f.render_widget(header, chunks[0]);
+
+                // Main Panel (Panel / Card với Single-line Box Drawing và Embedded Title)
+                let panel_block = Block::default()
+                    .borders(Borders::ALL)
+                    .border_type(BorderType::Plain)
+                    .border_style(Style::default().fg(Theme::NEUTRAL_100))
+                    .title(Span::styled("─ Deployment Settings ─", Style::default().fg(Theme::SECONDARY)))
+                    .style(Style::default().bg(Theme::BG));
+
+                let panel_inner = panel_block.inner(chunks[1]);
+                f.render_widget(panel_block, chunks[1]);
+
+                // Render toàn bộ Form bên trong panel
+                form.render(panel_inner, f);
+
+                // Status Bar (Single line at bottom, separated by " ─ ")
+                let status_line = Line::from(vec![
+                    Span::styled(" main ", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                    Span::styled("─", Style::default().fg(Theme::MUTED)),
+                    Span::styled(" Tab: Next ", Style::default().fg(Theme::SECONDARY)),
+                    Span::styled("─", Style::default().fg(Theme::MUTED)),
+                    Span::styled(" ↑/↓: Navigate ", Style::default().fg(Theme::SECONDARY)),
+                    Span::styled("─", Style::default().fg(Theme::MUTED)),
+                    Span::styled(" Enter/Space: Select ", Style::default().fg(Theme::SECONDARY)),
+                    Span::styled("─", Style::default().fg(Theme::MUTED)),
+                    Span::styled(" Esc: Exit ", Style::default().fg(Theme::SECONDARY)),
+                    Span::styled("                              ✓ System Ready ", Style::default().fg(Theme::SUCCESS)),
+                ]);
+                let status_bar = Paragraph::new(status_line).style(Style::default().bg(Theme::BG));
+                f.render_widget(status_bar, chunks[2]);
+            })?;
+            needs_render = false;
         }
     }
 

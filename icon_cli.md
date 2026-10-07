@@ -5,7 +5,7 @@
 | Warning | ⚠ | "!, ▲" | U+25B2 / U+0021 | \e[33m (Vàng) |
 | Run / Exec | ▶ | "▸" | U+25B6 / U+279C | \e[36m (Cyan) hoặc \e[34m (Xanh dương) |
 | Build / Work | ⚙ | "⛭, ◈, ◆" | U+2699 / U+25C6 | \e[35m (Tím magenta) |
-| Info | ℹ | "i, ⓘ" | U+2139 / U+25CF | \e[34m (Xanh dương) |
+| Info | ℹ | "i" | U+2139 / U+25CF | \e[34m (Xanh dương) |
 | Pending / Wait | [·, •, ●, •] | "◌, ○" | U+25CC / U+25CB | \e[90m (Xám) |
 | Pause | ⏸ | "⏸" | U+23F8 / U+2016 | \e[90m (Xám) |
 | Stop | ■ | "◼" | U+25A0 | \e[37m (Trắng) |

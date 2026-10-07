@@ -208,7 +208,7 @@ fn main() -> io::Result<()> {
                     ]),
                     Line::from(vec![
                         Span::styled(format!("   {} ", Icons::RUN), Style::default().fg(Icons::color_run())),
-                        Span::styled("Running (▶)      ", Style::default().fg(Theme::FG)),
+                        Span::styled("Running (▶ )     ", Style::default().fg(Theme::FG)),
                         Span::styled(format!("{} ", Icons::BUILD), Style::default().fg(Icons::color_build())),
                         Span::styled("Build (⚙)", Style::default().fg(Theme::FG)),
                     ]),

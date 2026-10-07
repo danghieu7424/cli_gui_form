@@ -159,11 +159,12 @@ Title embedded in top border. 1-space padding inside.
 ### Tabs
 
 ```
-  Overview │ Logs │ Settings
-  ─────────┘      └─────────
+╭──────────┬──────┬──────────┬─────────────╮
+│ Overview │ Logs │ Settings │ Deployments │
+├──────────╯      ╰──────────┴─────────────┴───────────────╮
 ```
 
-Active tab: BOLD + Primary. Inactive: Secondary. Connected by box drawing.
+Active tab: BOLD + Primary (`#ffffff`), mở thông vào thân Panel. Inactive tab: Secondary (`#888888`), đóng khung bởi nắp trên và các góc nối bo tròn `╰` / `╯` / `┴` / `├` / `│`.
 
 ### Status Bar
 

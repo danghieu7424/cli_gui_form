@@ -90,9 +90,37 @@ mod tests {
         assert_eq!(Icons::SUCCESS, "✔");
         assert_eq!(Icons::ERROR, "✗");
         assert_eq!(Icons::WARNING, "⚠");
+        assert_eq!(Icons::RUN, "▶");
+        assert_eq!(Icons::BUILD, "⚙");
+        assert_eq!(Icons::INFO, "ℹ");
+        assert_eq!(Icons::PAUSE, "⏸");
+        assert_eq!(Icons::STOP, "■");
         assert_eq!(Icons::CHECKBOX_ON, "☑");
         assert_eq!(Icons::CHECKBOX_OFF, "☐");
         assert_eq!(Icons::RADIO_ON, "●");
         assert_eq!(Icons::RADIO_OFF, "○");
+        assert_eq!(Icons::POINTER, "▸");
+        assert_eq!(Icons::ARROW_RIGHT, "→");
+        assert_eq!(Icons::BRANCH, "↳");
+        assert_eq!(Icons::PROGRESS_FILLED, "━");
+        assert_eq!(Icons::PROGRESS_EMPTY, "─");
+    }
+
+    #[test]
+    fn test_pulse_and_thinking_frames() {
+        assert_eq!(Icons::PULSE_FRAMES, &["·", "•", "●", "•"]);
+        assert_eq!(Icons::THINKING_FRAMES, &["·", "•", "●", "•", "·", " "]);
+    }
+
+    #[test]
+    fn test_icons_theme_colors() {
+        assert_eq!(Icons::color_success(), crate::Theme::SUCCESS);
+        assert_eq!(Icons::color_error(), crate::Theme::ERROR);
+        assert_eq!(Icons::color_warning(), crate::Theme::WARNING);
+        assert_eq!(Icons::color_run(), crate::Theme::ACCENT);
+        assert_eq!(Icons::color_build(), crate::Theme::PRIMARY);
+        assert_eq!(Icons::color_info(), crate::Theme::ACCENT);
+        assert_eq!(Icons::color_pending(), crate::Theme::MUTED);
+        assert_eq!(Icons::color_stop(), crate::Theme::ERROR);
     }
 }

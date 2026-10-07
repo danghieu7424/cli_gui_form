@@ -74,16 +74,32 @@ impl FormManager {
 
         let (focus_y, focus_h) = widget_positions[self.current_focus];
         if focus_y < self.scroll_offset {
+            // Cuộn lên: căn đỉnh của scroll_offset đúng bằng vị trí bắt đầu của widget đang focus
             self.scroll_offset = focus_y;
         } else if focus_y + focus_h > self.scroll_offset + area.height {
-            self.scroll_offset = (focus_y + focus_h).saturating_sub(area.height);
+            // Cuộn xuống: căn chỉnh scroll_offset theo ranh giới của widget (Widget Boundary Snapping)
+            // để bảo đảm không bao giờ cắt đôi hoặc chồng chéo khung viền ô input
+            let mut target_scroll = (focus_y + focus_h).saturating_sub(area.height);
+            for &(w_y, _) in &widget_positions {
+                if w_y + area.height >= focus_y + focus_h {
+                    target_scroll = w_y;
+                    break;
+                }
+            }
+            self.scroll_offset = target_scroll;
         }
 
         for (idx, widget) in self.widgets.iter().enumerate() {
             let (w_y, w_h) = widget_positions[idx];
-            if w_y + w_h > self.scroll_offset && w_y < self.scroll_offset + area.height {
-                let render_y = area.y + w_y.saturating_sub(self.scroll_offset);
-                let render_h = w_h.min((area.y + area.height).saturating_sub(render_y));
+            // Chỉ render những widget nằm trọn vẹn từ scroll_offset trở xuống trong vùng nhìn
+            if w_y >= self.scroll_offset && w_y < self.scroll_offset + area.height {
+                let render_y = area.y + (w_y - self.scroll_offset);
+                let available_h = (area.y + area.height).saturating_sub(render_y);
+                let render_h = w_h.min(available_h);
+
+                if render_h == 0 {
+                    continue;
+                }
 
                 let widget_area = Rect {
                     x: area.x,
@@ -128,5 +144,29 @@ impl FormManager {
                 }
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::widgets::{CheckboxWidget, InputMode, InputWidget};
+
+    #[test]
+    fn test_form_manager_focus_navigation() {
+        let mut form = FormManager::new();
+        form.add_widget(Box::new(InputWidget::new("u", "User", InputMode::Text)));
+        form.add_widget(Box::new(CheckboxWidget::new("c", "Check", false)));
+
+        assert_eq!(form.current_focus, 0);
+
+        form.focus_next();
+        assert_eq!(form.current_focus, 1);
+
+        form.focus_next(); // Wrap-around
+        assert_eq!(form.current_focus, 0);
+
+        form.focus_prev();
+        assert_eq!(form.current_focus, 1);
     }
 }

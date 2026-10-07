@@ -74,6 +74,11 @@ fn main() -> io::Result<()> {
                         Span::styled("[BUILD] ", Style::default().fg(Theme::PRIMARY)),
                         Span::styled("Compiled client assets in 480ms", Style::default().fg(Theme::FG)),
                     ]),
+                    Line::from(vec![
+                        Span::styled("14:22:25 ", Style::default().fg(Theme::MUTED)),
+                        Span::styled("[DEBUG] ", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled("Long payload stream: {\"user_id\":1092837,\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\"permissions\":[\"admin\",\"read\",\"write\",\"deploy\"],\"metadata\":{\"cluster\":\"us-east-1a\",\"env\":\"production\"}}", Style::default().fg(Theme::MUTED)),
+                    ]),
                 ],
                 2 => vec![
                     Line::from(vec![

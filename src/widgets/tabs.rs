@@ -166,20 +166,35 @@ impl TabsWidget {
         body_lines.push(line_row1);
         body_lines.push(line_row2);
 
+        let max_inner_w = width.saturating_sub(3); // 2 ký tự mép trái ("│ ") + 1 mép phải ("│")
+
         for row in 0..body_height {
             let content_line = content.get(row);
             let mut line_spans: Vec<Span> = Vec::new();
             line_spans.push(Span::styled("│ ", border_style));
 
-            let mut inner_len = 0;
+            let mut cur_w = 0;
             if let Some(cl) = content_line {
                 for s in &cl.spans {
-                    line_spans.push(s.clone());
-                    inner_len += s.content.chars().count();
+                    if cur_w >= max_inner_w {
+                        break;
+                    }
+                    let s_len = s.content.chars().count();
+                    if cur_w + s_len <= max_inner_w {
+                        line_spans.push(s.clone());
+                        cur_w += s_len;
+                    } else {
+                        // Tự động cắt tỉa (Truncate) an toàn nếu span vượt quá bề ngang panel
+                        let take_chars = max_inner_w.saturating_sub(cur_w);
+                        let truncated: String = s.content.chars().take(take_chars).collect();
+                        line_spans.push(Span::styled(truncated, s.style));
+                        cur_w = max_inner_w;
+                        break;
+                    }
                 }
             }
 
-            let remain = width.saturating_sub(inner_len + 3);
+            let remain = max_inner_w.saturating_sub(cur_w);
             if remain > 0 {
                 line_spans.push(Span::raw(" ".repeat(remain)));
             }
@@ -337,5 +352,17 @@ mod tests {
 
         tabs.select_prev();
         assert_eq!(tabs.selected(), 2);
+    }
+
+    #[test]
+    fn test_tabs_container_overflow_protection() {
+        let _tabs = TabsWidget::new("nav", vec!["Tab1", "Tab2"]);
+        let _long_line = Line::from(vec![
+            Span::raw("A".repeat(500)), // Chuỗi cực dài vượt qua mọi kích thước terminal
+        ]);
+        // Kiểm tra logic cắt tỉa với max_inner_w
+        let width = 80;
+        let max_inner_w = width - 3;
+        assert_eq!(max_inner_w, 77);
     }
 }

@@ -92,6 +92,11 @@ fn main() -> io::Result<()> {
     let mut table_state = TableState::default();
     table_state.select(Some(0));
 
+    // Các cờ tùy chỉnh giao diện (Toggleable styles):
+    let mut is_rounded = false;       // Bật / tắt bo góc (BorderType::Rounded vs Plain)
+    let mut show_horizontal_lines = false; // Bật / tắt đường kẻ ngang giữa các hàng
+    let mut show_column_borders = false;   // Bật / tắt đường kẻ dọc phân cách cột
+
     let mut needs_render = true;
 
     loop {
@@ -116,18 +121,28 @@ fn main() -> io::Result<()> {
                 .style(Style::default().bg(Theme::BG));
                 f.render_widget(header_widget, chunks[0]);
 
-                // 2. Main Container Panel (Panel / Card với Single-line Box Drawing)
+                // 2. Main Container Panel (Màu viền và màu tiêu đề đồng bộ bằng Theme::NEUTRAL_100 / Theme::SECONDARY)
+                let panel_border_type = if is_rounded {
+                    BorderType::Rounded
+                } else {
+                    BorderType::Plain
+                };
+
                 let panel_block = Block::default()
                     .borders(Borders::ALL)
-                    .border_type(BorderType::Plain)
+                    .border_type(panel_border_type)
                     .border_style(Style::default().fg(Theme::NEUTRAL_100))
-                    .title(Span::styled("─ Services & Pipelines ─", Style::default().fg(Theme::SECONDARY)))
+                    .title(Line::from(vec![
+                        Span::styled("─ ", Style::default().fg(Theme::NEUTRAL_100)),
+                        Span::styled("Services & Pipelines", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                        Span::styled(" ─", Style::default().fg(Theme::NEUTRAL_100)),
+                    ]))
                     .style(Style::default().bg(Theme::BG));
 
                 let inner_area = panel_block.inner(chunks[1]);
                 f.render_widget(panel_block, chunks[1]);
 
-                // 3. Table Header chuẩn DESIGN.md: BOLD + Secondary, no outer border, separator bằng ─
+                // 3. Table Header: BOLD + Secondary
                 let header_cells = ["  Name", "Status", "Branch", "Commit", "Time"]
                     .iter()
                     .map(|h| {
@@ -139,13 +154,12 @@ fn main() -> io::Result<()> {
                     });
                 let table_header = Row::new(header_cells)
                     .height(1)
-                    .bottom_margin(1); // Tạo khoảng cách divider dòng phân cách
+                    .bottom_margin(1); // Tạo khoảng cách divider phân cách
 
                 // 4. Các hàng dữ liệu (Rows)
-                let rows = items.iter().enumerate().map(|(idx, item)| {
+                let rows: Vec<Row> = items.iter().enumerate().map(|(idx, item)| {
                     let is_selected = table_state.selected() == Some(idx);
 
-                    // Khi chọn (Selected): ▸ prefix + BOLD Primary, khi thường: 2-space indent + Foreground
                     let prefix = if is_selected { "▸ " } else { "  " };
                     let name_span = Span::styled(
                         format!("{}{}", prefix, item.name),
@@ -165,17 +179,23 @@ fn main() -> io::Result<()> {
                     let commit_span = Span::styled(item.commit, Style::default().fg(Theme::MUTED));
                     let time_span = Span::styled(item.time, Style::default().fg(Theme::SECONDARY));
 
-                    Row::new(vec![
+                    let row = Row::new(vec![
                         Cell::from(name_span),
                         Cell::from(status_span),
                         Cell::from(branch_span),
                         Cell::from(commit_span),
                         Cell::from(time_span),
                     ])
-                    .height(1)
-                });
+                    .height(1);
 
-                // Cột căn lề: Left-align các cột nội dung, Right-align cột Time (DESIGN.md mục 6)
+                    // Thêm đường kẻ ngang giữa các dòng nếu được bật
+                    if show_horizontal_lines {
+                        row.bottom_margin(1)
+                    } else {
+                        row
+                    }
+                }).collect();
+
                 let widths = [
                     Constraint::Length(22), // Name
                     Constraint::Length(16), // Status
@@ -184,25 +204,31 @@ fn main() -> io::Result<()> {
                     Constraint::Min(10),    // Time
                 ];
 
-                let table = Table::new(rows, widths)
+                let mut table = Table::new(rows, widths)
                     .header(table_header)
                     .highlight_style(Style::default().bg(Theme::SURFACE))
                     .style(Style::default().bg(Theme::BG));
 
+                if show_column_borders {
+                    table = table.column_spacing(1);
+                }
+
                 f.render_stateful_widget(table, inner_area, &mut table_state);
 
-                // 5. Status Bar ở đáy màn hình (DESIGN.md mục 5)
+                // 5. Status Bar hiển thị phím tắt toggles
                 let status_line = Line::from(vec![
-                    Span::styled(" main ", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                    Span::styled(" [B] ", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                    Span::styled(format!("Border:{} ", if is_rounded { "Rounded" } else { "Plain" }), Style::default().fg(Theme::SECONDARY)),
                     Span::styled("─", Style::default().fg(Theme::MUTED)),
-                    Span::styled(" 5 deployments loaded ", Style::default().fg(Theme::SECONDARY)),
+                    Span::styled(" [H] ", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                    Span::styled(format!("H-Line:{} ", if show_horizontal_lines { "ON" } else { "OFF" }), Style::default().fg(Theme::SECONDARY)),
+                    Span::styled("─", Style::default().fg(Theme::MUTED)),
+                    Span::styled(" [V] ", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                    Span::styled(format!("V-Line:{} ", if show_column_borders { "ON" } else { "OFF" }), Style::default().fg(Theme::SECONDARY)),
                     Span::styled("─", Style::default().fg(Theme::MUTED)),
                     Span::styled(" ↑/↓: Navigate ", Style::default().fg(Theme::SECONDARY)),
                     Span::styled("─", Style::default().fg(Theme::MUTED)),
-                    Span::styled(" Enter: Details ", Style::default().fg(Theme::SECONDARY)),
-                    Span::styled("─", Style::default().fg(Theme::MUTED)),
                     Span::styled(" Esc: Exit ", Style::default().fg(Theme::SECONDARY)),
-                    Span::styled("                                  ✓ Ready ", Style::default().fg(Theme::SUCCESS)),
                 ]);
                 let status_bar = Paragraph::new(status_line).style(Style::default().bg(Theme::BG));
                 f.render_widget(status_bar, chunks[2]);
@@ -232,8 +258,19 @@ fn main() -> io::Result<()> {
                             table_state.select(Some(prev));
                             needs_render = true;
                         }
-                        KeyCode::Enter => {
-                            // Khi nhấn Enter có thể xem chi tiết hoặc trigger action
+                        KeyCode::Char('b') | KeyCode::Char('B') => {
+                            // Toggle bo góc khung ngoài: Rounded <-> Plain
+                            is_rounded = !is_rounded;
+                            needs_render = true;
+                        }
+                        KeyCode::Char('h') | KeyCode::Char('H') => {
+                            // Toggle đường kẻ ngang giữa các dòng
+                            show_horizontal_lines = !show_horizontal_lines;
+                            needs_render = true;
+                        }
+                        KeyCode::Char('v') | KeyCode::Char('V') => {
+                            // Toggle đường kẻ dọc
+                            show_column_borders = !show_column_borders;
                             needs_render = true;
                         }
                         _ => {}

@@ -234,9 +234,15 @@ fn main() -> io::Result<()> {
                     ]),
                     Line::from(vec![
                         Span::styled(format!("   {} ", Icons::POINTER), Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
-                        Span::styled("Selected (▸)     ", Style::default().fg(Theme::FG)),
+                        Span::styled("Selected (▹)     ", Style::default().fg(Theme::FG)),
                         Span::styled(format!("{} ", Icons::ARROW_RIGHT), Style::default().fg(Theme::SECONDARY)),
                         Span::styled("Arrow (→)", Style::default().fg(Theme::FG)),
+                    ]),
+                    Line::from(vec![
+                        Span::styled(format!("   {} ", Icons::BRANCH), Style::default().fg(Theme::ACCENT)),
+                        Span::styled("Branch (⤷)       ", Style::default().fg(Theme::FG)),
+                        Span::styled(format!("{} ", Icons::POWER), Style::default().fg(Theme::WARNING)),
+                        Span::styled("Power (⚡︎)", Style::default().fg(Theme::FG)),
                     ]),
                     Line::from(""),
                     Line::from(Span::styled("  Motion & Spinners (Mục 8):", Style::default().fg(Theme::SECONDARY).add_modifier(Modifier::BOLD))),

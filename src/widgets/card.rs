@@ -185,11 +185,17 @@ impl CardWidget {
             // Status Icon (nếu có)
             let mut status_content_len = 0;
             if let Some(ref icon) = item.status_icon {
+                let icon_str = if icon.ends_with(' ') {
+                    icon.clone()
+                } else {
+                    format!("{} ", icon)
+                };
+                let icon_len = icon_str.chars().count();
                 row_spans.push(Span::styled(
-                    format!("{} ", icon),
-                    Style::default().fg(item.status_color).add_modifier(Modifier::BOLD),
+                    icon_str,
+                    Style::default().fg(item.status_color), // Không dùng BOLD trên glyph biểu tượng để chống clipping font trên Windows
                 ));
-                status_content_len += icon.chars().count() + 1;
+                status_content_len += icon_len;
             }
 
             // Status Text

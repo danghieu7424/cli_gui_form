@@ -236,6 +236,9 @@ shimmer.render(area, frame);
 This crate includes interactive examples demonstrating all components in action:
 
 ```bash
+# 🔥 Master Comprehensive Showcase (All components, 5 Tabs, Tables, Forms, Spinners, Logs, Icons)
+cargo run --example demo_master
+
 # Full interactive form with background worker thread
 cargo run --example demo
 

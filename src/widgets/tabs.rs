@@ -47,6 +47,14 @@ impl TabsWidget {
         self
     }
 
+    pub fn set_selected(&mut self, index: usize) {
+        if !self.titles.is_empty() {
+            self.selected = index.min(self.titles.len() - 1);
+            self.scroll_offset = 0;
+            self.auto_scroll = true;
+        }
+    }
+
     pub fn with_auto_scroll(mut self, enabled: bool) -> Self {
         self.auto_scroll = enabled;
         self

@@ -59,7 +59,7 @@ fn main() -> io::Result<()> {
                     .direction(Direction::Vertical)
                     .constraints([
                         Constraint::Length(3), // Header
-                        Constraint::Min(20),   // Content
+                        Constraint::Min(14),   // Content linh hoạt theo mọi chiều cao terminal
                         Constraint::Length(1), // Footer
                     ])
                     .split(full_area);

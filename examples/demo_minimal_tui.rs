@@ -1,7 +1,7 @@
 // --- PHÂN ĐOẠN: DEMO MINIMAL TUI VỚI CÁC THÀNH PHẦN THEO CHUẨN DESIGN.MD ---
 
 use cli_gui_form::{
-    ButtonWidget, CheckboxWidget, EventResult, FormManager, FormValue, FormWidget, Icons,
+    ButtonWidget, CheckboxWidget, EventResult, FormManager, FormValue, FormWidget,
     InputMode, InputWidget, RadioWidget, SpinnerType, TaskWidget, Theme,
 };
 use crossterm::{
@@ -122,8 +122,7 @@ fn main() -> io::Result<()> {
 
     // 5. Buttons (▸ prefix, Reverse video on focused)
     form.add_widget(Box::new(
-        ButtonWidget::new("btn_deploy", "Deploy Now", Theme::BG, Theme::FG)
-            .with_icon(Icons::RUN),
+        ButtonWidget::new("btn_deploy", "Deploy Now", Theme::BG, Theme::FG),
     ));
     form.add_widget(Box::new(
         ButtonWidget::new("btn_cancel", "Cancel", Theme::BG, Theme::MUTED),

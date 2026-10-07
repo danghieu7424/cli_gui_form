@@ -208,13 +208,13 @@ fn main() -> io::Result<()> {
                     ]),
                     Line::from(vec![
                         Span::styled(format!("   {} ", Icons::RUN), Style::default().fg(Icons::color_run()).add_modifier(Modifier::BOLD)),
-                        Span::styled("Running (▶︎)    ", Style::default().fg(Theme::FG)),
+                        Span::styled("Running (▶︎)     ", Style::default().fg(Theme::FG)),
                         Span::styled(format!("{} ", Icons::BUILD), Style::default().fg(Icons::color_build()).add_modifier(Modifier::BOLD)),
                         Span::styled("Build (⚙)", Style::default().fg(Theme::FG)),
                     ]),
                     Line::from(vec![
                         Span::styled(format!("   {} ", Icons::STOP), Style::default().fg(Icons::color_stop()).add_modifier(Modifier::BOLD)),
-                        Span::styled("Stop (■)          ", Style::default().fg(Theme::FG)),
+                        Span::styled("Stop (■)         ", Style::default().fg(Theme::FG)),
                         Span::styled(format!("{} ", Icons::PAUSE), Style::default().fg(Icons::color_pending()).add_modifier(Modifier::BOLD)),
                         Span::styled("Pause (⏸)", Style::default().fg(Theme::FG)),
                     ]),
@@ -227,37 +227,37 @@ fn main() -> io::Result<()> {
                         Span::styled("Checkbox Off (☐)", Style::default().fg(Theme::FG)),
                     ]),
                     Line::from(vec![
-                        Span::styled(format!("   {}  ", Icons::RADIO_ON), Style::default().fg(Theme::ACCENT)),
-                        Span::styled("Radio On (●)      ", Style::default().fg(Theme::FG)),
+                        Span::styled(format!("   {} ", Icons::RADIO_ON), Style::default().fg(Theme::ACCENT)),
+                        Span::styled("Radio On (●)     ", Style::default().fg(Theme::FG)),
                         Span::styled(format!("{} ", Icons::RADIO_OFF), Style::default().fg(Theme::MUTED)),
                         Span::styled("Radio Off (○)", Style::default().fg(Theme::FG)),
                     ]),
                     Line::from(vec![
-                        Span::styled(format!("   {}  ", Icons::POINTER), Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
-                        Span::styled("Selected (▹)      ", Style::default().fg(Theme::FG)),
+                        Span::styled(format!("   {} ", Icons::POINTER), Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                        Span::styled("Selected (▹)     ", Style::default().fg(Theme::FG)),
                         Span::styled(format!("{} ", Icons::ARROW_RIGHT), Style::default().fg(Theme::SECONDARY)),
                         Span::styled("Arrow (→)", Style::default().fg(Theme::FG)),
                     ]),
                     Line::from(vec![
-                        Span::styled(format!("   {}  ", Icons::BRANCH), Style::default().fg(Theme::ACCENT)),
-                        Span::styled("Branch (⤷)        ", Style::default().fg(Theme::FG)),
+                        Span::styled(format!("   {} ", Icons::BRANCH), Style::default().fg(Theme::ACCENT)),
+                        Span::styled("Branch (⤷)       ", Style::default().fg(Theme::FG)),
                         Span::styled(format!("{} ", Icons::BULLET), Style::default().fg(Theme::SECONDARY)),
                         Span::styled("Bullet (▪)", Style::default().fg(Theme::FG)),
                     ]),
                     Line::from(""),
                     Line::from(Span::styled("  Motion & Spinners (Mục 8):", Style::default().fg(Theme::SECONDARY).add_modifier(Modifier::BOLD))),
                     Line::from(vec![
-                        Span::styled(format!("   {}  ", cur_braille), Style::default().fg(Theme::ACCENT).add_modifier(Modifier::BOLD)),
+                        Span::styled(format!("   {} ", cur_braille), Style::default().fg(Theme::ACCENT).add_modifier(Modifier::BOLD)),
                         Span::styled("Braille (80ms)         ", Style::default().fg(Theme::FG)),
                         Span::styled(format!("[{}]", cur_braille), Style::default().fg(Theme::ACCENT).add_modifier(Modifier::BOLD)),
                     ]),
                     Line::from(vec![
-                        Span::styled(format!("   {}  ", cur_pulse), Style::default().fg(Theme::ACCENT).add_modifier(Modifier::BOLD)),
+                        Span::styled(format!("   {} ", cur_pulse), Style::default().fg(Theme::ACCENT).add_modifier(Modifier::BOLD)),
                         Span::styled("Pulse Dot (150ms)      ", Style::default().fg(Theme::FG)),
                         Span::styled(format!("[{}]", cur_pulse), Style::default().fg(Theme::ACCENT).add_modifier(Modifier::BOLD)),
                     ]),
                     Line::from(vec![
-                        Span::styled(format!("   {}  ", cur_think), Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                        Span::styled(format!("   {} ", cur_think), Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
                         Span::styled("Thinking (150ms)       ", Style::default().fg(Theme::FG)),
                         Span::styled(format!("[{}]", cur_think), Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
                     ]),
@@ -275,7 +275,7 @@ fn main() -> io::Result<()> {
                 f.render_widget(paragraph, main_cols[1]);
 
                 // 3. Status Bar (Tự động co giãn theo chiều rộng terminal)
-                let width_avail = chunks[2].width as usize;
+                let width_avail = chunks[2].width.saturating_sub(2) as usize;
                 let left_txt = " main ─ Press Esc to Exit ";
                 let right_txt = "✓ 100% Design Matched ";
                 let space_count = width_avail.saturating_sub(left_txt.len() + right_txt.len());

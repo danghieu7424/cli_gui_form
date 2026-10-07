@@ -46,11 +46,9 @@ impl FormWidget for RadioWidget {
         for (idx, opt) in self.options.iter().enumerate() {
             let is_selected = idx == self.selected_index;
             let (symbol, opt_color) = if is_selected {
-                ("●", Color::LightCyan)
-                // ("(•)", Color::LightCyan)
+                (crate::Icons::RADIO_ON, Color::LightCyan)
             } else {
-                ("○", Color::DarkGray)
-                // ("( )", Color::DarkGray)
+                (crate::Icons::RADIO_OFF, crate::Icons::color_pending())
             };
 
             spans.push(Span::styled(format!("{} {}  ", symbol, opt), Style::default().fg(opt_color)));

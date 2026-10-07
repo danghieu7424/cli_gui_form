@@ -114,7 +114,7 @@ fn main() -> io::Result<()> {
         let now = Instant::now();
 
         // Chu kỳ nhịp đập Pulse (~150ms theo đặc tả DESIGN.md)
-        if now.duration_since(last_pulse_tick) >= Duration::from_millis(150) {
+        if now.duration_since(last_pulse_tick) >= Duration::from_millis(100) {
             if let Ok(mut w) = thinking_task.lock() {
                 w.tick();
             }

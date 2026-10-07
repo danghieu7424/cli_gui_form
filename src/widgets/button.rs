@@ -13,6 +13,7 @@ use ratatui::{
 pub struct ButtonWidget {
     pub id: String,
     pub title: String,
+    pub icon: Option<String>,
     pub bg_color: Color,
     pub fg_color: Color,
     focused: bool,
@@ -23,10 +24,17 @@ impl ButtonWidget {
         Self {
             id: id.into(),
             title: title.into(),
+            icon: None,
             bg_color,
             fg_color,
             focused: false,
         }
+    }
+
+    /// Thêm biểu tượng icon (ví dụ: Icons::RUN, Icons::SUCCESS, Icons::STOP)
+    pub fn with_icon(mut self, icon: impl Into<String>) -> Self {
+        self.icon = Some(icon.into());
+        self
     }
 }
 
@@ -42,7 +50,10 @@ impl FormWidget for ButtonWidget {
             (self.bg_color, self.fg_color)
         };
 
-        let button_text = format!(" [ {} ] ", self.title);
+        let button_text = match &self.icon {
+            Some(ic) => format!(" [ {} {} ] ", ic, self.title),
+            None => format!(" [ {} ] ", self.title),
+        };
         let content = Line::from(vec![
             Span::styled(button_text, Style::default().bg(bg).fg(fg).add_modifier(Modifier::BOLD)),
         ]);

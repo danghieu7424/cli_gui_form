@@ -216,11 +216,11 @@ fn main() -> io::Result<()> {
                 }
                 lines.push(Line::from(header_spans));
 
-                // 3. Đường phân cách Header (Header Separator: chuẩn luôn luôn khít cả khi H-Line off)
+                // 3. Đường phân cách Header (Header Separator: luôn dùng ┼ cho mọi giao điểm cột dọc)
                 let header_sep = if show_horizontal_lines {
                     make_divider(c_tee_right, if show_column_borders { c_cross } else { c_horiz }, c_tee_left, c_horiz)
                 } else {
-                    make_divider("", if show_column_borders { c_tee_down } else { c_horiz }, "", c_horiz)
+                    make_divider("", if show_column_borders { c_cross } else { c_horiz }, "", c_horiz)
                 };
                 lines.push(Line::from(Span::styled(header_sep, Style::default().fg(Theme::NEUTRAL_100))));
 

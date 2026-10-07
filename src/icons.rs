@@ -1,6 +1,7 @@
-// --- PHÂN ĐOẠN: BẢNG KÝ TỰ BIỂU TƯỢNG (ICONS) VÀ BẢNG MÀU CHUẨN TỪ ICON_CLI.MD ---
-
-use ratatui::style::Color;
+use ratatui::{
+    style::{Color, Modifier, Style},
+    text::{Line, Span},
+};
 
 /****
  * Module: Icons
@@ -16,7 +17,8 @@ impl Icons {
     pub const SUCCESS: &'static str = "✔ ";       // U+2714 + space
     pub const ERROR: &'static str = "✗ ";         // U+2716 + space
     pub const WARNING: &'static str = "⚠ ";       // U+25B2 / U+26A0 + space
-    pub const RUN: &'static str = "▶ ";           // U+25B6 + space
+    pub const RUN: &'static str = "▸ ";           // U+25B8 (Black Right-Pointing Small Triangle) - Miễn nhiễm với co ép / clipping font
+    pub const RUN_LARGE: &'static str = "▶ ";     // U+25B6 (Large Triangle)
     pub const BUILD: &'static str = "⚙ ";         // U+2699 + space
     pub const INFO: &'static str = "ℹ ";          // U+2139 + space
     pub const PAUSE: &'static str = "⏸ ";         // U+23F8 + space
@@ -53,6 +55,36 @@ impl Icons {
         } else {
             format!("{} {}", icon, text)
         }
+    }
+
+    /// Tạo Span an toàn cho Icon: Tự động loại bỏ Modifier::BOLD khỏi icon để bảo đảm
+    /// glyph không bao giờ bị méo, co lại hay bị clipping trên terminal Windows/Linux
+    /// ngay cả khi lập trình viên áp dụng style có BOLD.
+    #[inline]
+    pub fn span(icon: &'static str, style: Style) -> Span<'static> {
+        let safe_style = style.remove_modifier(Modifier::BOLD);
+        Span::styled(icon, safe_style)
+    }
+
+    /// Ghép Icon và Text thành Line an toàn chuẩn UI:
+    /// - Icon tự động được bảo vệ khỏi Modifier::BOLD (không bao giờ co rúm).
+    /// - Text bên cạnh vẫn giữ nguyên trọn vẹn toàn bộ style, màu sắc và Modifier::BOLD.
+    #[inline]
+    pub fn line(
+        icon: &'static str,
+        icon_color: Color,
+        text: impl Into<String>,
+        text_style: Style,
+    ) -> Line<'static> {
+        let icon_str = if icon.ends_with(' ') {
+            icon.to_string()
+        } else {
+            format!("{} ", icon)
+        };
+        Line::from(vec![
+            Span::styled(icon_str, Style::default().fg(icon_color)),
+            Span::styled(text.into(), text_style),
+        ])
     }
 
     /// Màu sắc khuyến nghị tương ứng từng trạng thái theo chuẩn DESIGN.md & Theme
@@ -106,7 +138,8 @@ mod tests {
         assert_eq!(Icons::SUCCESS, "✔ ");
         assert_eq!(Icons::ERROR, "✗ ");
         assert_eq!(Icons::WARNING, "⚠ ");
-        assert_eq!(Icons::RUN, "▶ ");
+        assert_eq!(Icons::RUN, "▸ ");
+        assert_eq!(Icons::RUN_LARGE, "▶ ");
         assert_eq!(Icons::BUILD, "⚙ ");
         assert_eq!(Icons::INFO, "ℹ ");
         assert_eq!(Icons::PAUSE, "⏸ ");
@@ -144,5 +177,13 @@ mod tests {
         assert_eq!(Icons::color_info(), crate::Theme::ACCENT);
         assert_eq!(Icons::color_pending(), crate::Theme::MUTED);
         assert_eq!(Icons::color_stop(), crate::Theme::ERROR);
+    }
+
+    #[test]
+    fn test_icons_safe_span_removes_bold() {
+        let bold_style = Style::default().fg(Color::Blue).add_modifier(Modifier::BOLD);
+        let span = Icons::span(Icons::RUN, bold_style);
+        assert!(!span.style.add_modifier.contains(Modifier::BOLD));
+        assert_eq!(span.content, Icons::RUN);
     }
 }

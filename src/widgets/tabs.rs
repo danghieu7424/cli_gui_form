@@ -24,6 +24,7 @@ pub struct TabsWidget {
     titles: Vec<String>,
     selected: usize,
     focused: bool,
+    scroll_offset: usize,
 }
 
 impl TabsWidget {
@@ -33,6 +34,7 @@ impl TabsWidget {
             titles: titles.into_iter().map(Into::into).collect(),
             selected: 0,
             focused: false,
+            scroll_offset: 0,
         }
     }
 
@@ -50,6 +52,7 @@ impl TabsWidget {
     pub fn select_next(&mut self) {
         if !self.titles.is_empty() {
             self.selected = (self.selected + 1) % self.titles.len();
+            self.scroll_offset = 0; // Reset scroll khi đổi tab
         }
     }
 
@@ -60,7 +63,25 @@ impl TabsWidget {
             } else {
                 self.selected -= 1;
             }
+            self.scroll_offset = 0; // Reset scroll khi đổi tab
         }
+    }
+
+    pub fn scroll_offset(&self) -> usize {
+        self.scroll_offset
+    }
+
+    pub fn set_scroll_offset(&mut self, offset: usize) {
+        self.scroll_offset = offset;
+    }
+
+    pub fn scroll_up(&mut self, amount: usize) {
+        self.scroll_offset = self.scroll_offset.saturating_sub(amount);
+    }
+
+    pub fn scroll_down(&mut self, amount: usize, total_lines: usize, viewport_height: usize) {
+        let max_offset = total_lines.saturating_sub(viewport_height);
+        self.scroll_offset = (self.scroll_offset + amount).min(max_offset);
     }
     /// Vẽ toàn bộ Khung Tab Container hoàn chỉnh bo góc (Border Radius) nối liền nội dung chuẩn log.md
     pub fn render_container(&self, area: Rect, content: Vec<Line<'static>>, frame: &mut Frame) {
@@ -167,9 +188,26 @@ impl TabsWidget {
         body_lines.push(line_row2);
 
         let max_inner_w = width.saturating_sub(3); // 2 ký tự mép trái ("│ ") + 1 mép phải ("│")
+        let total_lines = content.len();
+        let max_scroll = total_lines.saturating_sub(body_height);
+        let active_scroll = self.scroll_offset.min(max_scroll);
+
+        // Tính toán thanh cuộn (Scrollbar thumb) nếu tổng số dòng log vượt quá chiều cao hiển thị
+        let has_scroll = total_lines > body_height && body_height > 0;
+        let (thumb_start, thumb_len) = if has_scroll {
+            let t_len = ((body_height * body_height) / total_lines).max(1);
+            let t_start = if max_scroll > 0 {
+                (active_scroll * (body_height.saturating_sub(t_len))) / max_scroll
+            } else {
+                0
+            };
+            (t_start, t_len)
+        } else {
+            (0, 0)
+        };
 
         for row in 0..body_height {
-            let content_line = content.get(row);
+            let content_line = content.get(active_scroll + row);
             let mut line_spans: Vec<Span> = Vec::new();
             line_spans.push(Span::styled("│ ", border_style));
 
@@ -198,7 +236,18 @@ impl TabsWidget {
             if remain > 0 {
                 line_spans.push(Span::raw(" ".repeat(remain)));
             }
-            line_spans.push(Span::styled("│", border_style));
+
+            // Ký tự viền phải: tích hợp thanh cuộn tinh tế
+            if has_scroll {
+                if row >= thumb_start && row < thumb_start + thumb_len {
+                    line_spans.push(Span::styled("█", Style::default().fg(Theme::PRIMARY)));
+                } else {
+                    line_spans.push(Span::styled("│", border_style));
+                }
+            } else {
+                line_spans.push(Span::styled("│", border_style));
+            }
+
             body_lines.push(Line::from(line_spans));
         }
 
@@ -310,6 +359,26 @@ impl FormWidget for TabsWidget {
                 self.select_prev();
                 EventResult::Consumed
             }
+            KeyCode::Up | KeyCode::Char('k') => {
+                self.scroll_up(1);
+                EventResult::Consumed
+            }
+            KeyCode::Down | KeyCode::Char('j') => {
+                self.scroll_offset = self.scroll_offset.saturating_add(1);
+                EventResult::Consumed
+            }
+            KeyCode::PageUp => {
+                self.scroll_up(5);
+                EventResult::Consumed
+            }
+            KeyCode::PageDown => {
+                self.scroll_offset = self.scroll_offset.saturating_add(5);
+                EventResult::Consumed
+            }
+            KeyCode::Home => {
+                self.scroll_offset = 0;
+                EventResult::Consumed
+            }
             KeyCode::Enter => EventResult::Submitted,
             _ => EventResult::Ignored,
         }
@@ -352,6 +421,28 @@ mod tests {
 
         tabs.select_prev();
         assert_eq!(tabs.selected(), 2);
+    }
+
+    #[test]
+    fn test_tabs_scrolling() {
+        let mut tabs = TabsWidget::new("nav", vec!["Tab1", "Tab2"]);
+        assert_eq!(tabs.scroll_offset(), 0);
+
+        // Cuộn xuống
+        tabs.scroll_down(5, 50, 10);
+        assert_eq!(tabs.scroll_offset(), 5);
+
+        // Cuộn tiếp
+        tabs.scroll_down(100, 50, 10);
+        assert_eq!(tabs.scroll_offset(), 40); // max_offset = 50 - 10 = 40
+
+        // Cuộn lên
+        tabs.scroll_up(15);
+        assert_eq!(tabs.scroll_offset(), 25);
+
+        // Đổi tab phải tự động reset scroll về 0
+        tabs.select_next();
+        assert_eq!(tabs.scroll_offset(), 0);
     }
 
     #[test]

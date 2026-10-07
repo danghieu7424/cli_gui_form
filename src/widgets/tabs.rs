@@ -394,14 +394,6 @@ impl FormWidget for TabsWidget {
         }
 
         match key.code {
-            KeyCode::Left | KeyCode::Char('h') => {
-                self.select_prev();
-                EventResult::Consumed
-            }
-            KeyCode::Right | KeyCode::Char('l') => {
-                self.select_next();
-                EventResult::Consumed
-            }
             KeyCode::Tab => {
                 self.select_next();
                 EventResult::Consumed

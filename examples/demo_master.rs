@@ -1,7 +1,7 @@
 // --- PHÂN ĐOẠN: MASTER SHOWCASE TOÀN DIỆN DESIGN.MD VÀ MỌI WIDGET ---
 
 use cli_gui_form::{
-    ButtonWidget, CheckboxWidget, EventResult, FormManager, FormWidget, Icons,
+    ButtonWidget, CheckboxWidget, FormManager, FormWidget, Icons,
     InputMode, InputWidget, RadioWidget, ShimmerWidget, SpinnerType, StatusBarWidget, TabsWidget,
     TaskWidget, Theme,
 };
@@ -425,25 +425,14 @@ fn main() -> io::Result<()> {
                 }
             }
 
-            // 3. STATUS BAR ĐÁY (STATUS BAR WIDGET)
+            // 3. STATUS BAR ĐÁY (Theo đúng chuẩn DESIGN.md Mục 5: Clean, Minimal, Tinh gọn)
             let mut status_bar = StatusBarWidget::new();
             status_bar.add_left(Span::styled("main", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)));
-            status_bar.add_left(Span::styled("Tab: [1-5 or Tab/Shift+Tab]", Style::default().fg(Theme::SECONDARY)));
+            status_bar.add_left(Span::styled("3 files changed", Style::default().fg(Theme::SECONDARY)));
+            status_bar.add_left(Span::styled("✔ Ready", Style::default().fg(Theme::SUCCESS)));
 
-            if tabs.selected() == 3 {
-                if tabs.is_auto_scroll() {
-                    status_bar.add_left(Span::styled("Logs: [STICKY FOLLOW ON]", Style::default().fg(Theme::SUCCESS).add_modifier(Modifier::BOLD)));
-                } else {
-                    status_bar.add_left(Span::styled("Logs: [PAUSED - Touch bottom to resume]", Style::default().fg(Theme::WARNING)));
-                }
-            } else if tabs.selected() == 0 {
-                status_bar.add_left(Span::styled("Form: [Tab/Arrows: Navigate ─ Space: Toggle ─ Enter: Submit]", Style::default().fg(Theme::ACCENT)));
-            } else if tabs.selected() == 1 {
-                status_bar.add_left(Span::styled(format!("Selected: [{}] {}", table_selected, table_items[table_selected].name), Style::default().fg(Theme::ACCENT)));
-            }
-
-            status_bar.add_right(Span::styled("✔ All 14 tests passed", Style::default().fg(Theme::SUCCESS)));
-            status_bar.add_right(Span::styled("q / Esc: Exit", Style::default().fg(Theme::MUTED)));
+            status_bar.add_right(Span::styled(format!("Tab [{}/5]", tabs.selected() + 1), Style::default().fg(Theme::ACCENT)));
+            status_bar.add_right(Span::styled("Esc: Exit", Style::default().fg(Theme::MUTED)));
 
             status_bar.render(main_chunks[2], f);
         })?;
@@ -457,29 +446,26 @@ fn main() -> io::Result<()> {
                         break;
                     }
 
-                    // Chuyển nhanh qua phím số 1..5
+                    // 1. Chuyển Tab riêng biệt qua phím số 1..5 hoặc Tab / Shift+Tab (không chiếm phím Left/Right)
                     match key.code {
-                        KeyCode::Char('1') => tabs.set_selected(0),
-                        KeyCode::Char('2') => tabs.set_selected(1),
-                        KeyCode::Char('3') => tabs.set_selected(2),
-                        KeyCode::Char('4') => tabs.set_selected(3),
-                        KeyCode::Char('5') => tabs.set_selected(4),
+                        KeyCode::Char('1') => { tabs.set_selected(0); continue; }
+                        KeyCode::Char('2') => { tabs.set_selected(1); continue; }
+                        KeyCode::Char('3') => { tabs.set_selected(2); continue; }
+                        KeyCode::Char('4') => { tabs.set_selected(3); continue; }
+                        KeyCode::Char('5') => { tabs.set_selected(4); continue; }
+                        KeyCode::Tab => { tabs.select_next(); continue; }
+                        KeyCode::BackTab => { tabs.select_prev(); continue; }
                         _ => {}
                     };
 
+                    // 2. Toàn bộ phím điều hướng Left / Right / Up / Down thuộc về nội dung bên trong Tab
                     match tabs.selected() {
                         0 => {
-                            // Tab 1: Form handling
-                            let res = form.handle_event(key);
-                            if res == EventResult::Submitted {
-                                // Form submitted
-                            }
-                            if key.code == KeyCode::Left || key.code == KeyCode::Right {
-                                tabs.handle_event(key);
-                            }
+                            // Tab 1 (Form): FormManager xử lý trọn vẹn (Radio Left/Right, Input Cursor, Up/Down Focus)
+                            let _ = form.handle_event(key);
                         }
                         1 => {
-                            // Tab 2: Table navigation
+                            // Tab 2 (Table): Up/Down điều hướng chọn hàng
                             match key.code {
                                 KeyCode::Up | KeyCode::Char('k') => {
                                     if table_selected > 0 {
@@ -491,14 +477,14 @@ fn main() -> io::Result<()> {
                                         table_selected += 1;
                                     }
                                 }
-                                _ => {
-                                    tabs.handle_event(key);
-                                }
+                                _ => {}
                             }
                         }
-                        _ => {
+                        3 => {
+                            // Tab 4 (Logs): Up/Down/PageUp/PageDown cuộn logs
                             tabs.handle_event(key);
                         }
+                        _ => {}
                     }
                 }
             }

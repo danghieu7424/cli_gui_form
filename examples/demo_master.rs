@@ -170,7 +170,6 @@ fn main() -> io::Result<()> {
             time: "3h ago",
         },
     ];
-    let mut table_selected: usize = 0;
 
     // Card 1: Plain border Deploy Status theo đúng chuẩn DESIGN.md mục 5
     let deploy_card = CardWidget::new("card_deploy", "Deploy Status")
@@ -317,34 +316,26 @@ fn main() -> io::Result<()> {
                     form.render(inner_form_area, f);
                 }
                 1 => {
-                    // TAB 2: DATA TABLE & BADGES
+                    // TAB 2: DATA TABLE & BADGES (Read-only Data Table theo chuẩn DESIGN.md mục 5)
                     let mut lines = Vec::new();
                     lines.push(Line::from(vec![
                         Span::styled("  Deployment Workloads & Status Badges", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
-                        Span::styled(" (Use ↑/↓ or j/k to navigate rows)", Style::default().fg(Theme::MUTED)),
+                        Span::styled(" (Read-only Table ─ DESIGN.md)", Style::default().fg(Theme::MUTED)),
                     ]));
                     lines.push(Line::from(""));
 
-                    // Header bảng theo chuẩn DESIGN.md mục 5
+                    // Header bảng theo chuẩn DESIGN.md: No outer border, header separated by ─, dim separator
                     lines.push(Line::from(vec![
-                        Span::styled("    NAME              STATUS         BRANCH     COMMIT    LATENCY    TIME", Style::default().fg(Theme::SECONDARY).add_modifier(Modifier::BOLD)),
+                        Span::styled("  NAME              STATUS         BRANCH     COMMIT    LATENCY    TIME", Style::default().fg(Theme::SECONDARY).add_modifier(Modifier::BOLD)),
                     ]));
                     lines.push(Line::from(vec![
                         Span::styled("  ─────────────────────────────────────────────────────────────────────────────", Style::default().fg(Theme::NEUTRAL_100)),
                     ]));
 
-                    for (idx, row) in table_items.iter().enumerate() {
-                        let is_sel = idx == table_selected;
-                        let prefix = if is_sel { "  ▸ " } else { "    " };
-                        let row_style = if is_sel {
-                            Style::default().fg(Theme::FG).bg(Theme::SURFACE).add_modifier(Modifier::BOLD)
-                        } else {
-                            Style::default().fg(Theme::FG)
-                        };
-
+                    for row in &table_items {
                         lines.push(Line::from(vec![
-                            Span::styled(prefix, Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
-                            Span::styled(format!("{:<16} ", row.name), row_style),
+                            Span::raw("  "),
+                            Span::styled(format!("{:<16} ", row.name), Style::default().fg(Theme::FG)),
                             Span::styled(format!("{} ", row.status_icon), Style::default().fg(row.status_color)),
                             Span::styled(format!("{:<12} ", row.status_text), Style::default().fg(row.status_color)),
                             Span::styled(format!("{:<10} ", row.branch), Style::default().fg(Theme::SECONDARY)),
@@ -356,13 +347,14 @@ fn main() -> io::Result<()> {
 
                     tabs.render_container(main_chunks[1], lines, f);
 
-                    // Render 2 Panels / Cards (DESIGN.md mục 5) ở dưới bảng nếu đủ chiều cao
-                    if main_chunks[1].height >= 20 {
+                    // Render 2 Panels / Cards (DESIGN.md mục 5) bên dưới bảng KHI VÀ CHỈ KHI đủ chiều cao (>= 24 dòng)
+                    // để đảm bảo khoảng cách an toàn, không bao giờ đè lên dòng cuối của bảng
+                    if main_chunks[1].height >= 24 {
                         let card_w = (main_chunks[1].width.saturating_sub(8) / 2).min(38);
                         if card_w > 20 {
                             let card_deploy_area = Rect {
                                 x: main_chunks[1].x + 3,
-                                y: main_chunks[1].y + 13,
+                                y: main_chunks[1].y + 15,
                                 width: card_w,
                                 height: 7,
                             };
@@ -370,7 +362,7 @@ fn main() -> io::Result<()> {
 
                             let card_infra_area = Rect {
                                 x: main_chunks[1].x + 3 + card_w + 2,
-                                y: main_chunks[1].y + 13,
+                                y: main_chunks[1].y + 15,
                                 width: card_w,
                                 height: 7,
                             };
@@ -507,22 +499,6 @@ fn main() -> io::Result<()> {
                         0 => {
                             // Tab 1 (Form): FormManager xử lý trọn vẹn (Radio Left/Right, Input Cursor, Up/Down Focus)
                             let _ = form.handle_event(key);
-                        }
-                        1 => {
-                            // Tab 2 (Table): Up/Down điều hướng chọn hàng
-                            match key.code {
-                                KeyCode::Up | KeyCode::Char('k') => {
-                                    if table_selected > 0 {
-                                        table_selected -= 1;
-                                    }
-                                }
-                                KeyCode::Down | KeyCode::Char('j') => {
-                                    if table_selected + 1 < table_items.len() {
-                                        table_selected += 1;
-                                    }
-                                }
-                                _ => {}
-                            }
                         }
                         3 => {
                             // Tab 4 (Logs): Up/Down/PageUp/PageDown cuộn logs

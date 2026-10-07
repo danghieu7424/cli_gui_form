@@ -31,6 +31,7 @@ impl Icons {
     pub const CHECKBOX_OFF: &'static str = "☐";  // U+2610
     pub const RADIO_ON: &'static str = "●";      // U+25CF
     pub const RADIO_OFF: &'static str = "○";     // U+25CB
+    pub const   BULLET: &'static str = "▪";       // U+25AA
 
     // Bộ chỉ hướng & tiến trình (Progress & Pointers)
     pub const POINTER: &'static str = "▹";       // U+25B8
@@ -106,6 +107,7 @@ mod tests {
         assert_eq!(Icons::CHECKBOX_OFF, "☐");
         assert_eq!(Icons::RADIO_ON, "●");
         assert_eq!(Icons::RADIO_OFF, "○");
+        assert_eq!(Icons::BULLET, "▪");
         assert_eq!(Icons::POINTER, "▹");
         assert_eq!(Icons::ARROW_RIGHT, "→");
         assert_eq!(Icons::BRANCH, "⤷");

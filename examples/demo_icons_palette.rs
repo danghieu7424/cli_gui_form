@@ -241,24 +241,24 @@ fn main() -> io::Result<()> {
                     Line::from(vec![
                         Span::styled(format!("   {} ", Icons::BRANCH), Style::default().fg(Theme::ACCENT)),
                         Span::styled("Branch (⤷)       ", Style::default().fg(Theme::FG)),
-                        Span::styled(format!("{} ", Icons::POWER), Style::default().fg(Theme::WARNING)),
-                        Span::styled("Power (⚡︎)", Style::default().fg(Theme::FG)),
+                        Span::styled(format!("{} ", Icons::BULLET), Style::default().fg(Theme::SECONDARY)),
+                        Span::styled("Bullet (▪)", Style::default().fg(Theme::FG)),
                     ]),
                     Line::from(""),
                     Line::from(Span::styled("  Motion & Spinners (Mục 8):", Style::default().fg(Theme::SECONDARY).add_modifier(Modifier::BOLD))),
                     Line::from(vec![
                         Span::styled(format!("   {} ", cur_braille), Style::default().fg(Theme::ACCENT).add_modifier(Modifier::BOLD)),
-                        Span::styled("Braille Spinner (80ms):            ", Style::default().fg(Theme::FG)),
+                        Span::styled("Braille (80ms)          ", Style::default().fg(Theme::FG)),
                         Span::styled(format!("[{}]", cur_braille), Style::default().fg(Theme::ACCENT).add_modifier(Modifier::BOLD)),
                     ]),
                     Line::from(vec![
                         Span::styled(format!("   {} ", cur_pulse), Style::default().fg(Theme::ACCENT).add_modifier(Modifier::BOLD)),
-                        Span::styled("Pulse Dot (150ms):                ", Style::default().fg(Theme::FG)),
+                        Span::styled("Pulse Dot (150ms)       ", Style::default().fg(Theme::FG)),
                         Span::styled(format!("[{}]", cur_pulse), Style::default().fg(Theme::ACCENT).add_modifier(Modifier::BOLD)),
                     ]),
                     Line::from(vec![
                         Span::styled(format!("   {} ", cur_think), Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
-                        Span::styled("Thinking Cycle (150ms):           ", Style::default().fg(Theme::FG)),
+                        Span::styled("Thinking (150ms)        ", Style::default().fg(Theme::FG)),
                         Span::styled(format!("[{}]", cur_think), Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
                     ]),
                     Line::from(""),
@@ -274,12 +274,19 @@ fn main() -> io::Result<()> {
                 let paragraph = Paragraph::new(icon_lines).block(icon_block);
                 f.render_widget(paragraph, main_cols[1]);
 
-                // 3. Status Bar
+                // 3. Status Bar (Tự động co giãn theo chiều rộng terminal)
+                let width_avail = chunks[2].width as usize;
+                let left_txt = " main ─ Press Esc to Exit ";
+                let right_txt = "✓ 100% Design Matched ";
+                let space_count = width_avail.saturating_sub(left_txt.len() + right_txt.len());
+                let spaces = " ".repeat(space_count);
+
                 let status_line = Line::from(vec![
                     Span::styled(" main ", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
                     Span::styled("─", Style::default().fg(Theme::MUTED)),
                     Span::styled(" Press Esc to Exit ", Style::default().fg(Theme::SECONDARY)),
-                    Span::styled("                                              ✓ 100% Design Matched ", Style::default().fg(Theme::SUCCESS)),
+                    Span::raw(spaces),
+                    Span::styled("✓ 100% Design Matched ", Style::default().fg(Theme::SUCCESS)),
                 ]);
                 let status_bar = Paragraph::new(status_line).style(Style::default().bg(Theme::BG));
                 f.render_widget(status_bar, chunks[2]);

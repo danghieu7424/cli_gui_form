@@ -146,12 +146,12 @@ No outer border. Header separated by `─`. Dim separator line.
 
 ```
 ┌─ Deploy Status ──────────────┐
-│                               │
-│  Production    ✔ Ready        │
-│  Preview       ▶ Building     │
-│  Staging       ✔ Ready        │
-│                               │
-└───────────────────────────────┘
+│                              │
+│  Production    ✔ Ready       │
+│  Preview       ▶ Building    │
+│  Staging       ✔ Ready       │
+│                              │
+└──────────────────────────────┘
 ```
 
 Title embedded in top border. 1-space padding inside.

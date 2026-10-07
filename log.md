@@ -1,4 +1,10 @@
 ```Bash
-│   ■ Foreground  #ededed  (Default text)                              ││   ⚠ Warning (⚠)      ℹ Info (ℹ)                                     ││   ■ Primary     #ffffff  (Key actions, focus)                        ││   ▶︎ Running (▶︎)      ⚙ Build (⚙)                                   │   ■ Secondary   #888888  (Supporting text)                           ││   ■ Stop (■)          ⏸ Pause (⏸)                                   ││
- 
+╭──────────┬──────┬──────────┬─────────────╮
+│ Overview │ Logs │ Settings │ Deployments │                                                                                           
+│          ╰──────┴──────────┴─────────────┴───────────────
+```
+```Bash
+╭──────────┬──────┬──────────┬─────────────╮
+│ Overview │ Logs │ Settings │ Deployments │                                                                                           
+├──────────╯      ╰──────────┴─────────────┴───────────────
 ```

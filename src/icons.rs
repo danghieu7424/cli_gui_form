@@ -17,8 +17,7 @@ impl Icons {
     pub const SUCCESS: &'static str = "✔ ";       // U+2714 + space
     pub const ERROR: &'static str = "✗ ";         // U+2716 + space
     pub const WARNING: &'static str = "⚠ ";       // U+25B2 / U+26A0 + space
-    pub const RUN: &'static str = "▸ ";           // U+25B8 (Black Right-Pointing Small Triangle) - Miễn nhiễm với co ép / clipping font
-    pub const RUN_LARGE: &'static str = "▶ ";     // U+25B6 (Large Triangle)
+    pub const RUN: &'static str = "▶ ";           // U+25B6 (Black Right-Pointing Triangle) + space
     pub const BUILD: &'static str = "⚙ ";         // U+2699 + space
     pub const INFO: &'static str = "ℹ ";          // U+2139 + space
     pub const PAUSE: &'static str = "⏸ ";         // U+23F8 + space
@@ -138,8 +137,7 @@ mod tests {
         assert_eq!(Icons::SUCCESS, "✔ ");
         assert_eq!(Icons::ERROR, "✗ ");
         assert_eq!(Icons::WARNING, "⚠ ");
-        assert_eq!(Icons::RUN, "▸ ");
-        assert_eq!(Icons::RUN_LARGE, "▶ ");
+        assert_eq!(Icons::RUN, "▶ ");
         assert_eq!(Icons::BUILD, "⚙ ");
         assert_eq!(Icons::INFO, "ℹ ");
         assert_eq!(Icons::PAUSE, "⏸ ");

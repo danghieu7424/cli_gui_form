@@ -16,7 +16,7 @@ impl Icons {
     pub const SUCCESS: &'static str = "✔";       // U+2714
     pub const ERROR: &'static str = "✗";         // U+2716
     pub const WARNING: &'static str = "⚠";       // U+25B2 / U+26A0
-    pub const RUN: &'static str = "▶";           // U+25B6
+    pub const RUN: &'static str = "▶︎";           // U+25B6
     pub const BUILD: &'static str = "⚙";         // U+2699
     pub const INFO: &'static str = "ℹ";          // U+2139
     pub const PAUSE: &'static str = "⏸";         // U+23F8
@@ -33,9 +33,9 @@ impl Icons {
     pub const RADIO_OFF: &'static str = "○";     // U+25CB
 
     // Bộ chỉ hướng & tiến trình (Progress & Pointers)
-    pub const POINTER: &'static str = "▸";       // U+25B8
+    pub const POINTER: &'static str = "▹";       // U+25B8
     pub const ARROW_RIGHT: &'static str = "→";   // U+2192
-    pub const BRANCH: &'static str = "↳";        // U+21B3
+    pub const BRANCH: &'static str = "⤷";        // U+21B3
     pub const PROGRESS_FILLED: &'static str = "━"; // U+2501
     pub const PROGRESS_EMPTY: &'static str = "─";  // U+2500
 
@@ -107,7 +107,7 @@ mod tests {
         assert_eq!(Icons::RADIO_OFF, "○");
         assert_eq!(Icons::POINTER, "▹");
         assert_eq!(Icons::ARROW_RIGHT, "→");
-        assert_eq!(Icons::BRANCH, "↳");
+        assert_eq!(Icons::BRANCH, "⤷");
         assert_eq!(Icons::PROGRESS_FILLED, "━");
         assert_eq!(Icons::PROGRESS_EMPTY, "─");
     }

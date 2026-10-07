@@ -265,8 +265,8 @@ fn main() -> io::Result<()> {
                         Span::styled(" 50%", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
                     ]),
                 ];
-                let p_right = Paragraph::new(icon_lines).block(icon_block);
-                f.render_widget(p_right, main_cols[1]);
+                let paragraph = Paragraph::new(icon_lines).block(icon_block);
+                f.render_widget(paragraph, main_cols[1]);
 
                 // 3. Status Bar
                 let status_line = Line::from(vec![
@@ -286,7 +286,7 @@ fn main() -> io::Result<()> {
                 if key.kind == KeyEventKind::Press {
                     let is_ctrl_c = key.modifiers.contains(KeyModifiers::CONTROL)
                         && key.code == KeyCode::Char('c');
-                    if key.code == KeyCode::Esc || is_ctrl_c || key.code == KeyCode::Char('q') {
+                    if key.code == KeyCode::Esc || is_ctrl_c {
                         break;
                     }
                 }

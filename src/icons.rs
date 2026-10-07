@@ -39,6 +39,12 @@ impl Icons {
     pub const PROGRESS_FILLED: &'static str = "━"; // U+2501
     pub const PROGRESS_EMPTY: &'static str = "─";  // U+2500
 
+    /// Trả về chuỗi icon chuẩn kèm 1 space (chuẩn 2 ô trên Terminal grid)
+    #[inline]
+    pub fn format(icon: &'static str, text: &str) -> String {
+        format!("{} {}", icon, text)
+    }
+
     /// Màu sắc khuyến nghị tương ứng từng trạng thái theo chuẩn DESIGN.md & Theme
     #[inline]
     pub const fn color_success() -> Color {
@@ -90,7 +96,7 @@ mod tests {
         assert_eq!(Icons::SUCCESS, "✔");
         assert_eq!(Icons::ERROR, "✗");
         assert_eq!(Icons::WARNING, "⚠");
-        assert_eq!(Icons::RUN, "▶");
+        assert_eq!(Icons::RUN, "▶︎");
         assert_eq!(Icons::BUILD, "⚙");
         assert_eq!(Icons::INFO, "ℹ");
         assert_eq!(Icons::PAUSE, "⏸");
@@ -99,7 +105,7 @@ mod tests {
         assert_eq!(Icons::CHECKBOX_OFF, "☐");
         assert_eq!(Icons::RADIO_ON, "●");
         assert_eq!(Icons::RADIO_OFF, "○");
-        assert_eq!(Icons::POINTER, "▸");
+        assert_eq!(Icons::POINTER, "▹");
         assert_eq!(Icons::ARROW_RIGHT, "→");
         assert_eq!(Icons::BRANCH, "↳");
         assert_eq!(Icons::PROGRESS_FILLED, "━");

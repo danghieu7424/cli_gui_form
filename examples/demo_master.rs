@@ -450,7 +450,7 @@ fn main() -> io::Result<()> {
 
                     for (glyph, const_name, unicode_char, color_name, color) in icon_matrix {
                         lines.push(Line::from(vec![
-                            Span::styled(format!("    {} ", glyph), Style::default().fg(color).add_modifier(Modifier::BOLD)),
+                            Span::styled(format!("    {}", glyph), Style::default().fg(color)),
                             Span::styled(format!("{:<22} ", const_name), Style::default().fg(Theme::FG)),
                             Span::styled(format!("{:<15} ", unicode_char), Style::default().fg(Theme::SECONDARY)),
                             Span::styled(color_name, Style::default().fg(color)),

@@ -21,6 +21,7 @@ Designed for enterprise-grade command-line tools, AI pipelines, and interactive 
   - `CheckboxWidget`: Boolean toggle controls (`[✔]` / `[ ]`).
   - `RadioWidget`: Single-choice option groups (`(•)` / `( )`).
   - `ButtonWidget`: Action triggers with submit signal integration.
+  - `CardWidget`: Panels / Cards with embedded top border titles and status rows.
   - `TaskWidget`: Unified multi-phase task runner supporting indeterminate pulse spinners and deterministic progress tracking.
   - `ShimmerWidget`: Smooth animated gradient highlight for status indicators.
   - `TabsWidget`: Clean top rounded tab navigation (`╭─┬─╮`, `╰`, `╯`, `┴`) with continuous border container rendering.

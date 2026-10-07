@@ -1,7 +1,7 @@
 // --- PHÂN ĐOẠN: MASTER SHOWCASE TOÀN DIỆN DESIGN.MD VÀ MỌI WIDGET ---
 
 use cli_gui_form::{
-    ButtonWidget, CheckboxWidget, FormManager, FormWidget, Icons,
+    ButtonWidget, CardWidget, CheckboxWidget, FormManager, FormWidget, Icons,
     InputMode, InputWidget, RadioWidget, ShimmerWidget, SpinnerType, StatusBarWidget, TabsWidget,
     TaskWidget, Theme,
 };
@@ -163,6 +163,20 @@ fn main() -> io::Result<()> {
         },
     ];
     let mut table_selected: usize = 0;
+
+    // Card 1: Plain border Deploy Status theo đúng chuẩn DESIGN.md mục 5
+    let deploy_card = CardWidget::new("card_deploy", "Deploy Status")
+        .with_item("Production", Some(Icons::SUCCESS), "Ready", Theme::SUCCESS)
+        .with_item("Preview", Some(Icons::RUN), "Building", Theme::ACCENT)
+        .with_item("Staging", Some(Icons::SUCCESS), "Ready", Theme::SUCCESS);
+
+    // Card 2: Rounded border Infrastructure Metrics
+    let infra_card = CardWidget::new("card_infra", "Infrastructure")
+        .with_rounded(true)
+        .with_title_color(Theme::PRIMARY)
+        .with_item("PostgreSQL", Some(Icons::SUCCESS), "Healthy", Theme::SUCCESS)
+        .with_item("Redis Cluster", Some(Icons::WARNING), "Degraded", Theme::WARNING)
+        .with_item("Edge Router", Some(Icons::RUN), "Active", Theme::ACCENT);
 
     // 4. TASKS & ANIMATIONS (TAB 3)
     let mut pulse_task = TaskWidget::new_loading(
@@ -333,6 +347,28 @@ fn main() -> io::Result<()> {
                     }
 
                     tabs.render_container(main_chunks[1], lines, f);
+
+                    // Render 2 Panels / Cards (DESIGN.md mục 5) ở dưới bảng nếu đủ chiều cao
+                    if main_chunks[1].height >= 20 {
+                        let card_w = (main_chunks[1].width.saturating_sub(8) / 2).min(38);
+                        if card_w > 20 {
+                            let card_deploy_area = Rect {
+                                x: main_chunks[1].x + 3,
+                                y: main_chunks[1].y + 13,
+                                width: card_w,
+                                height: 7,
+                            };
+                            deploy_card.render(card_deploy_area, f);
+
+                            let card_infra_area = Rect {
+                                x: main_chunks[1].x + 3 + card_w + 2,
+                                y: main_chunks[1].y + 13,
+                                width: card_w,
+                                height: 7,
+                            };
+                            infra_card.render(card_infra_area, f);
+                        }
+                    }
                 }
                 2 => {
                     // TAB 3: TASKS, PROGRESS & SHIMMER

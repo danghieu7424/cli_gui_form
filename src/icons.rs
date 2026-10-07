@@ -12,39 +12,43 @@ use ratatui::style::Color;
 pub struct Icons;
 
 impl Icons {
-    // Trạng thái (Status Icons)
-    pub const SUCCESS: &'static str = "✔";       // U+2714
-    pub const ERROR: &'static str = "✗";         // U+2716
-    pub const WARNING: &'static str = "⚠";       // U+25B2 / U+26A0
-    pub const RUN: &'static str = "▶";           // U+25B6 + U+FE0E (Dạng text đầy đặn 2 ô, không co hẹp)
-    pub const BUILD: &'static str = "⚙";         // U+2699
-    pub const INFO: &'static str = "ℹ";          // U+2139
-    pub const PAUSE: &'static str = "⏸";         // U+23F8
-    pub const STOP: &'static str = "■";          // U+25A0
+    // Trạng thái (Status Icons) - Đã bao gồm 1 space chuẩn 2 ô
+    pub const SUCCESS: &'static str = "✔ ";       // U+2714 + space
+    pub const ERROR: &'static str = "✗ ";         // U+2716 + space
+    pub const WARNING: &'static str = "⚠ ";       // U+25B2 / U+26A0 + space
+    pub const RUN: &'static str = "▶ ";           // U+25B6 + space
+    pub const BUILD: &'static str = "⚙ ";         // U+2699 + space
+    pub const INFO: &'static str = "ℹ ";          // U+2139 + space
+    pub const PAUSE: &'static str = "⏸ ";         // U+23F8 + space
+    pub const STOP: &'static str = "■ ";          // U+25A0 + space
 
-    // Chuỗi nhịp đập Pending / Thinking
+    // Chuỗi nhịp đập Pending / Thinking (Giữ nguyên không space để ghép nhịp)
     pub const PULSE_FRAMES: &'static [&'static str] = &["·", "•", "●", "•"];
     pub const THINKING_FRAMES: &'static [&'static str] = &["·", "•", "●", "•", "·", " "];
 
-    // Form Controls (Checkbox & Radio)
-    pub const CHECKBOX_ON: &'static str = "☑";   // U+2611
-    pub const CHECKBOX_OFF: &'static str = "☐";  // U+2610
-    pub const RADIO_ON: &'static str = "●";      // U+25CF
-    pub const RADIO_OFF: &'static str = "○";     // U+25CB
-    pub const BULLET: &'static str = "▪";        // U+25AA
+    // Form Controls (Checkbox & Radio) - Đã bao gồm 1 space chuẩn
+    pub const CHECKBOX_ON: &'static str = "☑ ";   // U+2611 + space
+    pub const CHECKBOX_OFF: &'static str = "☐ ";  // U+2610 + space
+    pub const RADIO_ON: &'static str = "● ";      // U+25CF + space
+    pub const RADIO_OFF: &'static str = "○ ";     // U+25CB + space
+    pub const BULLET: &'static str = "▪ ";        // U+25AA + space
 
     // Bộ chỉ hướng & tiến trình (Progress & Pointers)
-    pub const POINTER: &'static str = "▹";       // U+25B8
-    pub const ARROW_RIGHT: &'static str = "→";   // U+2192
-    pub const BRANCH: &'static str = "⤷";        // U+21B3
-    pub const POWER: &'static str = "⚡";         // U+26A1
-    pub const PROGRESS_FILLED: &'static str = "━"; // U+2501
-    pub const PROGRESS_EMPTY: &'static str = "─";  // U+2500
+    pub const POINTER: &'static str = "▹ ";       // U+25B8 + space
+    pub const ARROW_RIGHT: &'static str = "→ ";   // U+2192 + space
+    pub const BRANCH: &'static str = "⤷ ";        // U+21B3 + space
+    pub const POWER: &'static str = "⚡ ";         // U+26A1 + space
+    pub const PROGRESS_FILLED: &'static str = "━"; // U+2501 (Không space để nối thanh bar)
+    pub const PROGRESS_EMPTY: &'static str = "─";  // U+2500 (Không space để nối thanh bar)
 
-    /// Trả về chuỗi icon chuẩn kèm 1 space (chuẩn 2 ô trên Terminal grid)
+    /// Trả về chuỗi icon chuẩn ghép cùng text (Zero-overhead logic)
     #[inline]
     pub fn format(icon: &'static str, text: &str) -> String {
-        format!("{} {}", icon, text)
+        if icon.ends_with(' ') {
+            format!("{}{}", icon, text)
+        } else {
+            format!("{} {}", icon, text)
+        }
     }
 
     /// Màu sắc khuyến nghị tương ứng từng trạng thái theo chuẩn DESIGN.md & Theme
@@ -95,23 +99,23 @@ mod tests {
 
     #[test]
     fn test_icons_constants() {
-        assert_eq!(Icons::SUCCESS, "✔");
-        assert_eq!(Icons::ERROR, "✗");
-        assert_eq!(Icons::WARNING, "⚠");
-        assert_eq!(Icons::RUN, "▶");
-        assert_eq!(Icons::BUILD, "⚙");
-        assert_eq!(Icons::INFO, "ℹ");
-        assert_eq!(Icons::PAUSE, "⏸");
-        assert_eq!(Icons::STOP, "■");
-        assert_eq!(Icons::CHECKBOX_ON, "☑");
-        assert_eq!(Icons::CHECKBOX_OFF, "☐");
-        assert_eq!(Icons::RADIO_ON, "●");
-        assert_eq!(Icons::RADIO_OFF, "○");
-        assert_eq!(Icons::BULLET, "▪");
-        assert_eq!(Icons::POINTER, "▹");
-        assert_eq!(Icons::ARROW_RIGHT, "→");
-        assert_eq!(Icons::BRANCH, "⤷");
-        assert_eq!(Icons::POWER, "⚡");
+        assert_eq!(Icons::SUCCESS, "✔ ");
+        assert_eq!(Icons::ERROR, "✗ ");
+        assert_eq!(Icons::WARNING, "⚠ ");
+        assert_eq!(Icons::RUN, "▶ ");
+        assert_eq!(Icons::BUILD, "⚙ ");
+        assert_eq!(Icons::INFO, "ℹ ");
+        assert_eq!(Icons::PAUSE, "⏸ ");
+        assert_eq!(Icons::STOP, "■ ");
+        assert_eq!(Icons::CHECKBOX_ON, "☑ ");
+        assert_eq!(Icons::CHECKBOX_OFF, "☐ ");
+        assert_eq!(Icons::RADIO_ON, "● ");
+        assert_eq!(Icons::RADIO_OFF, "○ ");
+        assert_eq!(Icons::BULLET, "▪ ");
+        assert_eq!(Icons::POINTER, "▹ ");
+        assert_eq!(Icons::ARROW_RIGHT, "→ ");
+        assert_eq!(Icons::BRANCH, "⤷ ");
+        assert_eq!(Icons::POWER, "⚡ ");
         assert_eq!(Icons::PROGRESS_FILLED, "━");
         assert_eq!(Icons::PROGRESS_EMPTY, "─");
     }

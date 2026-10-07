@@ -64,7 +64,13 @@ impl FormWidget for ButtonWidget {
         };
 
         let label = match &self.icon {
-            Some(ic) => format!("{}{} {}", prefix, ic, self.title),
+            Some(ic) => {
+                if ic.ends_with(' ') {
+                    format!("{}{}{}", prefix, ic, self.title)
+                } else {
+                    format!("{}{} {}", prefix, ic, self.title)
+                }
+            }
             None => format!("{}{}", prefix, self.title),
         };
 

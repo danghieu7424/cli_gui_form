@@ -249,7 +249,7 @@ fn main() -> io::Result<()> {
                     }
 
                     // Cột 2: Status
-                    let status_str = format!("{} {}", item.status_icon, item.status_text);
+                    let status_str = Icons::format(item.status_icon, item.status_text);
                     row_spans.push(Span::styled(
                         format!("{:<width$}", status_str, width = widths[1]),
                         Style::default().fg(item.status_color),

@@ -207,8 +207,8 @@ fn main() -> io::Result<()> {
                         Span::styled(" Info (ℹ)", Style::default().fg(Theme::FG)),
                     ]),
                     Line::from(vec![
-                        Span::styled(Icons::RUN, Style::default().fg(Icons::color_run()).add_modifier(Modifier::BOLD)),
-                        Span::styled("  Running (▶)      ", Style::default().fg(Theme::FG)),
+                        Span::styled(format!("   {} ", Icons::RUN), Style::default().fg(Icons::color_run()).add_modifier(Modifier::BOLD)),
+                        Span::styled("Running (▶)      ", Style::default().fg(Theme::FG)),
                         Span::styled(format!("{} ", Icons::BUILD), Style::default().fg(Icons::color_build()).add_modifier(Modifier::BOLD)),
                         Span::styled("Build (⚙)", Style::default().fg(Theme::FG)),
                     ]),

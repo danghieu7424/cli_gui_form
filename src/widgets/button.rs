@@ -40,7 +40,7 @@ impl ButtonWidget {
             bordered: false,
             centered: false,
             full_width: false,
-            bold_on_focus: true,
+            bold_on_focus: false, // Mặc định tắt BOLD để bảo vệ font rendering và chống co rút glyph Unicode
             first_char_unbold: false,
             double_space_icon: false,
             focused: false,
@@ -274,7 +274,8 @@ mod tests {
             Theme::PRIMARY,
         )
         .with_bordered(true)
-        .with_centered(true);
+        .with_centered(true)
+        .with_bold(true);
         btn.focus();
 
         let line = btn.build_line();
@@ -287,16 +288,28 @@ mod tests {
         assert!(!icon_span.style.add_modifier.contains(Modifier::BOLD));
         assert!(icon_span.style.sub_modifier.contains(Modifier::BOLD));
 
-        // Span 1 là text -> BẮT BUỘC có BOLD
+        // Span 1 là text -> BẮT BUỘC có BOLD khi with_bold(true)
         let text_span = &spans[1];
         assert!(text_span.content.contains("BẮT ĐẦU TẠO PODCAST"));
         assert!(text_span.style.add_modifier.contains(Modifier::BOLD));
     }
 
     #[test]
+    fn test_button_default_no_bold_clean_rendering() {
+        let mut btn = ButtonWidget::new("btn_clean", "▶ RUN", Theme::BG, Theme::PRIMARY);
+        btn.focus();
+        let line = btn.build_line();
+        // Kiểm tra mặc định toàn bộ spans đều không bị dính cờ BOLD
+        for span in &line.spans {
+            assert!(!span.style.add_modifier.contains(Modifier::BOLD));
+        }
+    }
+
+    #[test]
     fn test_button_with_explicit_icon_separation() {
         let mut btn = ButtonWidget::new("btn_run", "RUN JOB", Theme::BG, Theme::PRIMARY)
-            .with_icon("▶");
+            .with_icon("▶")
+            .with_bold(true);
         btn.focus();
 
         let line = btn.build_line();

@@ -232,6 +232,7 @@ fn main() -> io::Result<()> {
             FormValue::Text(t) => println!("- {}: \"{}\"", k, t),
             FormValue::Bool(b) => println!("- {}: {}", k, b),
             FormValue::Select(idx, name) => println!("- {}: [{}] {}", k, idx, name),
+            FormValue::List(items) => println!("- {}: {:?}", k, items),
             FormValue::None => {}
         }
     }

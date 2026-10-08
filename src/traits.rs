@@ -15,6 +15,7 @@ pub enum FormValue {
     Text(String),
     Bool(bool),
     Select(usize, String),
+    List(Vec<String>),
     None,
 }
 

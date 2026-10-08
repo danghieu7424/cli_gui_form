@@ -1,6 +1,7 @@
 pub mod button;
 pub mod card;
 pub mod checkbox;
+pub mod editable_list;
 pub mod input;
 pub mod list;
 pub mod radio;
@@ -13,6 +14,7 @@ pub mod task;
 pub use button::ButtonWidget;
 pub use card::{CardItem, CardWidget};
 pub use checkbox::CheckboxWidget;
+pub use editable_list::{EditMode, EditableListWidget};
 pub use input::{InputMode, InputWidget};
 pub use list::{ListItem, ListWidget};
 pub use radio::RadioWidget;

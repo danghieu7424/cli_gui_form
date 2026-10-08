@@ -34,7 +34,7 @@ pub use manager::FormManager;
 pub use theme::Theme;
 pub use traits::{EventResult, FormValue, FormWidget};
 pub use widgets::{
-    ButtonWidget, CardItem, CardWidget, CheckboxWidget, InputMode, InputWidget,
+    ButtonWidget, CardItem, CardWidget, CheckboxWidget, EditMode, EditableListWidget, InputMode, InputWidget,
     ListItem, ListWidget, RadioWidget, SelectOption, SelectWidget, ShimmerWidget, StatusBarWidget, TabsWidget,
     SpinnerType, TaskState, TaskWidget,
 };

@@ -1,7 +1,7 @@
 // --- PHÂN ĐOẠN: MASTER SHOWCASE TOÀN DIỆN DESIGN.MD VÀ MỌI WIDGET ---
 
 use cli_gui_form::{
-    ButtonWidget, CardWidget, CheckboxWidget, FormManager, FormWidget, Icons,
+    ButtonWidget, CardWidget, CheckboxWidget, EditableListWidget, EventResult, FormManager, FormWidget, Icons,
     InputMode, InputWidget, ListWidget, RadioWidget, SelectWidget, ShimmerWidget, SpinnerType, StatusBarWidget, TabsWidget,
     TaskWidget, Theme,
 };
@@ -112,6 +112,15 @@ fn main() -> io::Result<()> {
         .with_placeholder("Select deployment datacenter... ▾")
         .with_selected(0)
         .with_max_visible(6),
+    ));
+    form.add_widget(Box::new(
+        EditableListWidget::new(
+            "tags",
+            "Tags / Environment Variables (CRUD List: Enter: Sửa/Thêm, Del: Xoá, Esc: Đóng)",
+            vec!["v1.0-release", "cluster:eu-west", "monorepo-core"],
+        )
+        .with_max_visible(5)
+        .with_max_items(8),
     ));
     form.add_widget(Box::new(
         ListWidget::new("route_menu")
@@ -536,7 +545,7 @@ fn main() -> io::Result<()> {
                 Event::Key(key) => {
                     if key.kind == KeyEventKind::Press {
                         let is_ctrl_c = key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('c');
-                        if key.code == KeyCode::Char('q') || key.code == KeyCode::Esc || is_ctrl_c {
+                        if is_ctrl_c {
                             break;
                         }
 
@@ -582,17 +591,23 @@ fn main() -> io::Result<()> {
                             continue;
                         }
 
-                        // 2. Toàn bộ phím điều hướng Left / Right / Up / Down / PageUp / PageDown / Home / End
-                        match tabs.selected() {
-                            0 => {
-                                // Tab 1 (Form): FormManager xử lý trọn vẹn (Radio Left/Right, Input Cursor, Up/Down Focus)
-                                let _ = form.handle_event(key);
+                        // 2. Tab 1 (Form): FormManager xử lý trước (Widget-First Event Delegation)
+                        // Khi popup dropdown/overlay đang mở, Esc/Enter sẽ được tiêu thụ (Consumed) để đóng/lưu popup
+                        // và KHÔNG làm thoát chương trình TUI!
+                        if tabs.selected() == 0 {
+                            if form.handle_event(key) == EventResult::Consumed {
+                                continue;
                             }
-                            _ => {
-                                // Mọi Tab còn lại (Tab 2: Table, Tab 3: Tasks, Tab 4: Logs, Tab 5: Icons & Theme):
-                                // Đều hỗ trợ cuộn văn bản và danh sách mượt mà qua TabsWidget
-                                tabs.handle_event(key);
-                            }
+                        }
+
+                        // 3. Thoát chương trình khi nhấn Esc hoặc q (chỉ khi không có overlay nào tiêu thụ)
+                        if key.code == KeyCode::Char('q') || key.code == KeyCode::Esc {
+                            break;
+                        }
+
+                        // 4. Các Tab còn lại: TabsWidget xử lý cuộn nội dung
+                        if tabs.selected() != 0 {
+                            tabs.handle_event(key);
                         }
                     }
                 }

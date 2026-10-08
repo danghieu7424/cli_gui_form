@@ -96,7 +96,7 @@ fn main() -> io::Result<()> {
                 ("us-west-2", "US West (Oregon)"),
                 ("ca-central-1", "Canada (Central)"),
                 ("eu-west-1", "Europe (Ireland)"),
-                ("eu-central-1", "Europe (Frankfurt)"),
+                ("eu-central-1", "Europe (Frankfurt) ─ High-Performance Low-Latency Financial Cloud Cluster"),
                 ("eu-west-2", "Europe (London)"),
                 ("eu-south-1", "Europe (Milan)"),
                 ("ap-northeast-1", "Asia Pacific (Tokyo)"),
@@ -106,6 +106,7 @@ fn main() -> io::Result<()> {
                 ("ap-south-1", "Asia Pacific (Mumbai)"),
                 ("me-south-1", "Middle East (Bahrain)"),
                 ("sa-east-1", "South America (São Paulo)"),
+                ("us-gov-west-1", "AWS GovCloud (US-West) ─ Isolated High-Compliance Secure Enclave Multi-Zone Tier-4"),
             ],
         )
         .with_placeholder("Select deployment datacenter... ▾")

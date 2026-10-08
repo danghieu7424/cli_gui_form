@@ -287,19 +287,38 @@ impl FormWidget for SelectWidget {
         // 1. Quét sạch vùng bên dưới để chống chữ xuyên thấu
         frame.render_widget(Clear, popup_area);
 
-        // 2. Khung viền nổi bật bo góc chuẩn Linear/Vercel
-        let block = Block::default()
+        // 2. Tính toán thanh cuộn (Scrollbar thumb) khi tổng số option vượt quá max_visible_options
+        let has_scroll = total_opts > visible_count;
+        let thumb_len = if has_scroll {
+            ((visible_count * visible_count) / total_opts).max(1)
+        } else {
+            0
+        };
+        let max_scroll = total_opts.saturating_sub(visible_count);
+        let thumb_start = if has_scroll && max_scroll > 0 {
+            (self.scroll_offset * (visible_count.saturating_sub(thumb_len))) / max_scroll
+        } else {
+            0
+        };
+
+        // 3. Khung viền nổi bật bo góc chuẩn Linear/Vercel kèm chỉ báo số lượng [idx/total]
+        let mut block = Block::default()
             .borders(Borders::ALL)
             .border_type(BorderType::Rounded)
             .border_style(Style::default().fg(Theme::BORDER_FOCUS))
             .style(Style::default().bg(Theme::SURFACE_ELEVATED))
             .padding(Padding::horizontal(1));
 
-        // 3. Render danh sách các option
+        if has_scroll {
+            block = block.title(format!("─ [{}/{}] ─", self.highlighted + 1, total_opts));
+        }
+
+        // 4. Render danh sách các option với thanh cuộn tinh tế ở mép phải
         let mut lines = Vec::new();
         let end_idx = (self.scroll_offset + visible_count).min(total_opts);
+        let inner_w = (popup_w as usize).saturating_sub(4); // 2 viền + 2 padding
 
-        for idx in self.scroll_offset..end_idx {
+        for (row_idx, idx) in (self.scroll_offset..end_idx).enumerate() {
             let opt = &self.options[idx];
             let is_highlighted = idx == self.highlighted;
             let is_selected = Some(idx) == self.selected;
@@ -332,6 +351,25 @@ impl FormWidget for SelectWidget {
 
             if opt.disabled {
                 spans.push(Span::styled(" (disabled)", Style::default().fg(Theme::NEUTRAL_300).add_modifier(Modifier::DIM)));
+            }
+
+            // Thanh cuộn ở mép phải của mỗi hàng
+            if has_scroll {
+                let cur_len: usize = spans.iter().map(|s| s.content.chars().count()).sum();
+                let pad = inner_w.saturating_sub(cur_len + 1);
+                if pad > 0 {
+                    spans.push(Span::raw(" ".repeat(pad)));
+                }
+
+                if row_idx == 0 && self.scroll_offset > 0 {
+                    spans.push(Span::styled("▲", Style::default().fg(Theme::ACCENT)));
+                } else if row_idx + 1 == visible_count && self.scroll_offset + visible_count < total_opts {
+                    spans.push(Span::styled("▼", Style::default().fg(Theme::ACCENT)));
+                } else if row_idx >= thumb_start && row_idx < thumb_start + thumb_len {
+                    spans.push(Span::styled("█", Style::default().fg(Theme::PRIMARY)));
+                } else {
+                    spans.push(Span::styled("│", Style::default().fg(Theme::NEUTRAL_100)));
+                }
             }
 
             lines.push(Line::from(spans));
@@ -383,6 +421,30 @@ impl FormWidget for SelectWidget {
                     } else {
                         self.highlighted = 0;
                     }
+                    self.adjust_scroll();
+                    EventResult::Consumed
+                }
+                KeyCode::Home => {
+                    self.highlighted = 0;
+                    self.adjust_scroll();
+                    EventResult::Consumed
+                }
+                KeyCode::End => {
+                    if !self.options.is_empty() {
+                        self.highlighted = self.options.len() - 1;
+                        self.adjust_scroll();
+                    }
+                    EventResult::Consumed
+                }
+                KeyCode::PageUp => {
+                    let step = self.max_visible_options.min(self.highlighted);
+                    self.highlighted = self.highlighted.saturating_sub(step);
+                    self.adjust_scroll();
+                    EventResult::Consumed
+                }
+                KeyCode::PageDown => {
+                    let step = self.max_visible_options;
+                    self.highlighted = (self.highlighted + step).min(self.options.len().saturating_sub(1));
                     self.adjust_scroll();
                     EventResult::Consumed
                 }
@@ -508,5 +570,45 @@ mod tests {
         assert!(!select.is_open());
         // Giữ nguyên lựa chọn ban đầu (index 0)
         assert_eq!(select.selected, Some(0));
+    }
+
+    #[test]
+    fn test_select_widget_dozens_of_options_scrolling_and_navigation() {
+        // Tạo 50 options (ví dụ 50 bang/tiểu bang hoặc 50 quốc gia)
+        let options: Vec<String> = (1..=50).map(|i| format!("Option {:02}", i)).collect();
+        let mut select = SelectWidget::new("fifty", "Dozens of Options", options)
+            .with_max_visible(6);
+
+        select.open();
+        assert!(select.is_open());
+        assert_eq!(select.highlighted, 0);
+        assert_eq!(select.scroll_offset, 0);
+
+        // 1. Phím End: Nhảy ngay tới option cuối cùng (49)
+        let _ = select.handle_event(KeyEvent::from(KeyCode::End));
+        assert_eq!(select.highlighted, 49);
+        // scroll_offset phải tự động cuộn đến 49 + 1 - 6 = 44
+        assert_eq!(select.scroll_offset, 44);
+
+        // 2. Phím Home: Nhảy về option đầu tiên (0)
+        let _ = select.handle_event(KeyEvent::from(KeyCode::Home));
+        assert_eq!(select.highlighted, 0);
+        assert_eq!(select.scroll_offset, 0);
+
+        // 3. Phím PageDown: Nhảy xuống 6 options
+        let _ = select.handle_event(KeyEvent::from(KeyCode::PageDown));
+        assert_eq!(select.highlighted, 6);
+        assert_eq!(select.scroll_offset, 1);
+
+        // 4. Phím PageUp: Nhảy ngược lên
+        let _ = select.handle_event(KeyEvent::from(KeyCode::PageUp));
+        assert_eq!(select.highlighted, 0);
+        assert_eq!(select.scroll_offset, 0);
+
+        // 5. Chọn option 12 bằng phím
+        select.highlighted = 12;
+        let _ = select.handle_event(KeyEvent::from(KeyCode::Enter));
+        assert!(!select.is_open());
+        assert_eq!(select.value(), FormValue::Select(12, "Option 13".to_string()));
     }
 }

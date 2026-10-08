@@ -16,6 +16,8 @@ pub struct ButtonWidget {
     pub icon: Option<String>,
     pub bg_color: Color,
     pub fg_color: Color,
+    pub focused_bg_color: Option<Color>,
+    pub focused_fg_color: Option<Color>,
     focused: bool,
 }
 
@@ -27,6 +29,8 @@ impl ButtonWidget {
             icon: None,
             bg_color,
             fg_color,
+            focused_bg_color: None,
+            focused_fg_color: None,
             focused: false,
         }
     }
@@ -34,6 +38,19 @@ impl ButtonWidget {
     /// Thêm biểu tượng icon (ví dụ: Icons::RUN, Icons::SUCCESS, Icons::STOP)
     pub fn with_icon(mut self, icon: impl Into<String>) -> Self {
         self.icon = Some(icon.into());
+        self
+    }
+
+    /// Tùy biến màu nền khi nút được chọn / hover
+    pub fn with_focused_bg(mut self, bg: Color) -> Self {
+        self.focused_bg_color = Some(bg);
+        self
+    }
+
+    /// Tùy biến cả màu nền và màu chữ khi nút được chọn / hover
+    pub fn with_focused_colors(mut self, bg: Color, fg: Color) -> Self {
+        self.focused_bg_color = Some(bg);
+        self.focused_fg_color = Some(fg);
         self
     }
 }
@@ -44,38 +61,36 @@ impl FormWidget for ButtonWidget {
     }
 
     fn render(&self, area: Rect, frame: &mut Frame) {
-        let (prefix, style) = if self.focused {
-            (
-                "▸ ",
-                Style::default()
-                    .bg(crate::Theme::PRIMARY)
-                    .fg(crate::Theme::BG)
-                    .add_modifier(Modifier::BOLD | Modifier::REVERSED),
-            )
+        let (prefix, bg, fg, is_focused) = if self.focused {
+            let focused_bg = self.focused_bg_color.unwrap_or(crate::Theme::GRAY_33);
+            let focused_fg = self.focused_fg_color.unwrap_or(crate::Theme::PRIMARY);
+            ("▸ ", focused_bg, focused_fg, true)
         } else {
-            (
-                "  ",
-                Style::default()
-                    .fg(self.fg_color)
-                    .bg(self.bg_color),
-            )
+            ("  ", self.bg_color, self.fg_color, false)
         };
 
-        let label = match &self.icon {
-            Some(ic) => {
-                if ic.ends_with(' ') {
-                    format!("{}{}", ic, self.title)
-                } else {
-                    format!("{} {}", ic, self.title)
-                }
-            }
-            None => self.title.clone(),
-        };
+        let mut spans = Vec::new();
+        spans.push(Span::styled(format!(" {}", prefix), Style::default().fg(fg).bg(bg)));
 
-        let content = Line::from(vec![
-            Span::styled(format!(" {}{} ", prefix, label), style),
-        ]);
+        if let Some(ic) = &self.icon {
+            let icon_str = if ic.ends_with(' ') {
+                ic.clone()
+            } else {
+                format!("{} ", ic)
+            };
+            // Ranh giới bảo vệ thị giác: Icon tuyệt đối KHÔNG có Modifier::BOLD khi hover
+            // để đảm bảo glyph 2-cell không bị méo hay biến dạng trên terminal.
+            let icon_style = Style::default().fg(fg).bg(bg);
+            spans.push(Span::styled(icon_str, icon_style));
+        }
 
+        let mut title_style = Style::default().fg(fg).bg(bg);
+        if is_focused {
+            title_style = title_style.add_modifier(Modifier::BOLD);
+        }
+        spans.push(Span::styled(format!("{} ", self.title), title_style));
+
+        let content = Line::from(spans);
         frame.render_widget(Paragraph::new(content), area);
     }
 

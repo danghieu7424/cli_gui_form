@@ -61,16 +61,34 @@ impl FormWidget for ButtonWidget {
     }
 
     fn render(&self, area: Rect, frame: &mut Frame) {
-        let (prefix, bg, fg, is_focused) = if self.focused {
+        let (bg, fg) = if self.focused {
             let focused_bg = self.focused_bg_color.unwrap_or(crate::Theme::GRAY_33);
             let focused_fg = self.focused_fg_color.unwrap_or(crate::Theme::PRIMARY);
-            ("▸ ", focused_bg, focused_fg, true)
+            (focused_bg, focused_fg)
         } else {
-            ("  ", self.bg_color, self.fg_color, false)
+            (self.bg_color, self.fg_color)
         };
 
+        // Nếu nút đã có icon riêng (ví dụ: Icons::RUN "▶ "), không chèn thêm tiền tố "▸ "
+        // để tránh xuất hiện 2 hình tam giác "▸ ▶ " gây hiểu nhầm icon bị bold/méo hiển thị.
+        let prefix = if self.icon.is_some() {
+            "  "
+        } else if self.focused {
+            "▸ "
+        } else {
+            "  "
+        };
+
+        // Ranh giới bảo vệ thị giác: Tuyệt đối KHÔNG sử dụng Modifier::BOLD khi hover/focus
+        // Giữ trọn vẹn nét thanh mảnh chuẩn Minimalist trên nền xám #333333,
+        // bảo đảm icon glyph "▶ " không bao giờ bị dày lên hay co rút cell.
+        let base_style = Style::default()
+            .fg(fg)
+            .bg(bg)
+            .remove_modifier(Modifier::BOLD);
+
         let mut spans = Vec::new();
-        spans.push(Span::styled(format!(" {}", prefix), Style::default().fg(fg).bg(bg)));
+        spans.push(Span::styled(format!(" {}", prefix), base_style));
 
         if let Some(ic) = &self.icon {
             let icon_str = if ic.ends_with(' ') {
@@ -78,17 +96,10 @@ impl FormWidget for ButtonWidget {
             } else {
                 format!("{} ", ic)
             };
-            // Ranh giới bảo vệ thị giác: Icon tuyệt đối KHÔNG có Modifier::BOLD khi hover
-            // để đảm bảo glyph 2-cell không bị méo hay biến dạng trên terminal.
-            let icon_style = Style::default().fg(fg).bg(bg);
-            spans.push(Span::styled(icon_str, icon_style));
+            spans.push(Span::styled(icon_str, base_style));
         }
 
-        let mut title_style = Style::default().fg(fg).bg(bg);
-        if is_focused {
-            title_style = title_style.add_modifier(Modifier::BOLD);
-        }
-        spans.push(Span::styled(format!("{} ", self.title), title_style));
+        spans.push(Span::styled(format!("{} ", self.title), base_style));
 
         let content = Line::from(spans);
         frame.render_widget(Paragraph::new(content), area);

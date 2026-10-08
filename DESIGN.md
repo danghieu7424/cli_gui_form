@@ -135,14 +135,29 @@ Single-line box drawing. Clean and lightweight.
 ### Buttons / Actions `[x]` (`ButtonWidget`)
 
 ```
- ▸ Submit    Cancel    Help
+ ▶ Submit    Cancel    Help
    ↑          ↑        ↑
  focused   unfocused  muted
 ```
 
-- Focused: `reverse` (white bg, black fg) với prefix `▸`
-- Unfocused: plain Foreground text
+- Focused: `reverse` (white bg, black fg) hoặc Solid Accent
+- Unfocused: plain Foreground text / Dark background
 - Disabled: Muted + dim
+- Không sử dụng `Modifier::BOLD` khi hover/focus để bảo vệ 100% hình dạng glyph Unicode (`▶`).
+
+#### Bảng Cụm Màu Nút Bấm An Toàn (Safe Button Color Presets) `[x]`
+
+> **Ranh giới bảo vệ thị giác (Guardrail):** Tuyệt đối **KHÔNG dùng nền xám trung gian** (`Theme::GRAY_22` `#222222` hoặc `Theme::GRAY_33` `#333333`) làm background cho glyph `▶` vì bộ dựng hình Windows Terminal sẽ bị lỗi gamma/subpixel antialiasing làm co dẹt icon.
+> Luôn sử dụng các cặp màu có **độ tương phản cực đại** dưới đây:
+
+| Mã Preset | Phong cách | Màu Blur (Nghỉ) | Màu Focus (Hover) | Ngữ cảnh sử dụng |
+| :--- | :--- | :--- | :--- | :--- |
+| **`INVERT_APPLE`** | Invert High-Contrast | `Theme::BG` / `Theme::FG` | `Theme::PRIMARY` / `Theme::BG` | Nút hành động chính chuẩn Linear/Apple (Nền trắng, chữ đen). |
+| **`SOLID_VERCEL`** | Solid Vercel Blue | `Theme::ACCENT` / `Theme::WHITE` | `Theme::PRIMARY` / `Theme::ACCENT` | Nút triển khai, tạo mới (Primary CTA). |
+| **`AI_VIOLET`** | Neural Violet | `Theme::PURPLE` / `Theme::WHITE` | `Theme::PRIMARY` / `Theme::PURPLE` | Tính năng AI Agent, Dubbing, Podcast Generator. |
+| **`EMERALD_SUCCESS`**| Emerald Green | `Theme::BG` / `Theme::EMERALD` | `Theme::EMERALD` / `Theme::BLACK` | Nút hoàn tất, xác nhận lưu, xuất bản file. |
+| **`MINIMAL_GHOST`** | Subtle Ghost | `Theme::BG` / `Theme::SECONDARY` | `Theme::BG` / `Theme::PRIMARY` | Nút phụ (Secondary/Cancel/Help) phong cách GitHub CLI. |
+| **`AMBER_WARN`** | Amber Pipeline | `Theme::BG` / `Theme::ORANGE` | `Theme::ORANGE` / `Theme::BLACK` | Nút cảnh báo, reset cache, hủy tiến trình. |
 
 ### Input Fields `[x]` (`InputWidget`)
 

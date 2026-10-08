@@ -53,16 +53,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with_selected(0),
     ));
 
-    // Nút 1: Kiểu Invert High-Contrast (Linear / Apple Dark Mode - Nền trắng chữ đen khi hover)
+    // Nút 1: Kiểu Invert High-Contrast (Linear / Apple Dark Mode - Nền đen chữ sáng, hover nền trắng chữ đen)
     form.add_widget(Box::new(
         ButtonWidget::new(
             "btn_invert",
             "BẮT ĐẦU TẠO PODCAST (Enter) ─ [Invert High-Contrast]",
-            Theme::GRAY_22,
-            Theme::PRIMARY,
+            Theme::BG,
+            Theme::FG,
         )
         .with_icon(Icons::RUN)
-        .with_focused_colors(Theme::PRIMARY, Theme::BG),
+        .with_preset(Theme::BTN_INVERT),
     ));
 
     // Nút 2: Kiểu Solid Accent CTA (Vercel Blue)
@@ -75,7 +75,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         )
         .with_icon(Icons::RUN)
         .with_full_width(true)
-        .with_focused_colors(Theme::PRIMARY, Theme::ACCENT),
+        .with_preset(Theme::BTN_ACCENT),
     ));
 
     // Nút 3: Kiểu AI Intelligence (Linear Violet - Cực hợp với AI Dubbing/Podcast)
@@ -88,7 +88,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         )
         .with_icon(Icons::RUN)
         .with_full_width(true)
-        .with_focused_colors(Theme::PRIMARY, Theme::PURPLE),
+        .with_preset(Theme::BTN_PURPLE),
     ));
 
     // Nút 4: Kiểu Emerald Success (Green Production)
@@ -96,11 +96,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         ButtonWidget::new(
             "btn_emerald",
             "BẮT ĐẦU TẠO PODCAST (Enter) ─ [Emerald Success]",
-            Theme::GRAY_22,
+            Theme::BG,
             Theme::EMERALD,
         )
         .with_icon(Icons::RUN)
-        .with_focused_colors(Theme::EMERALD, Theme::BLACK),
+        .with_preset(Theme::BTN_EMERALD),
     ));
 
     // Nút 5: Kiểu Minimal Ghost (GitHub CLI Style - Nhẹ nhàng, thanh lịch)
@@ -112,7 +112,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             Theme::SECONDARY,
         )
         .with_icon(Icons::RUN)
-        .with_focused_colors(Theme::GRAY_33, Theme::PRIMARY),
+        .with_preset(Theme::BTN_GHOST),
     ));
 
     let mut last_action = String::from("Sẵn sàng. Dùng Tab / ↑ / ↓ để di chuyển focus vào các nút.");

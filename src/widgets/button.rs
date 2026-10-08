@@ -62,6 +62,16 @@ impl ButtonWidget {
         self
     }
 
+    /// Áp dụng bộ màu chuẩn từ Theme (Theme::BTN_INVERT, Theme::BTN_ACCENT, Theme::BTN_PURPLE,...)
+    /// Đảm bảo độ tương phản cao, an toàn tuyệt đối cho glyph Unicode không bao giờ bị co dẹt.
+    pub fn with_preset(mut self, preset: (Color, Color, Color, Color)) -> Self {
+        self.bg_color = preset.0;
+        self.fg_color = preset.1;
+        self.focused_bg_color = Some(preset.2);
+        self.focused_fg_color = Some(preset.3);
+        self
+    }
+
     /// Đóng khung viền bo tròn (Rounded border) cho nút bấm dạng Box/Pill
     pub fn with_bordered(mut self, bordered: bool) -> Self {
         self.bordered = bordered;

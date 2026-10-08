@@ -182,8 +182,8 @@ impl Theme {
     pub const BTN_PURPLE: (Color, Color, Color, Color) = (Self::PURPLE, Self::WHITE, Self::PRIMARY, Self::PURPLE);
     /// Preset: Emerald Success (Nền đen chữ xanh ngọc -> Hover nền xanh ngọc chữ đen)
     pub const BTN_EMERALD: (Color, Color, Color, Color) = (Self::BG, Self::EMERALD, Self::EMERALD, Self::BLACK);
-    /// Preset: Minimal Ghost (Nền đen chữ xám -> Hover nền đen chữ trắng)
-    pub const BTN_GHOST: (Color, Color, Color, Color) = (Self::BG, Self::SECONDARY, Self::BG, Self::PRIMARY);
+    /// Preset: Minimal Ghost (GitHub CLI: Nền đen chữ xám -> Hover nền đen chữ xanh Accent)
+    pub const BTN_GHOST: (Color, Color, Color, Color) = (Self::BG, Self::SECONDARY, Self::BG, Self::ACCENT);
     /// Preset: Amber Warning (Nền đen chữ cam -> Hover nền cam chữ đen)
     pub const BTN_AMBER: (Color, Color, Color, Color) = (Self::BG, Self::ORANGE, Self::ORANGE, Self::BLACK);
 }

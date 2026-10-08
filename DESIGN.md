@@ -156,7 +156,7 @@ Single-line box drawing. Clean and lightweight.
 | **`SOLID_VERCEL`** | Solid Vercel Blue | `Theme::ACCENT` / `Theme::WHITE` | `Theme::PRIMARY` / `Theme::ACCENT` | Nút triển khai, tạo mới (Primary CTA). |
 | **`AI_VIOLET`** | Neural Violet | `Theme::PURPLE` / `Theme::WHITE` | `Theme::PRIMARY` / `Theme::PURPLE` | Tính năng AI Agent, Dubbing, Podcast Generator. |
 | **`EMERALD_SUCCESS`**| Emerald Green | `Theme::BG` / `Theme::EMERALD` | `Theme::EMERALD` / `Theme::BLACK` | Nút hoàn tất, xác nhận lưu, xuất bản file. |
-| **`MINIMAL_GHOST`** | Subtle Ghost | `Theme::BG` / `Theme::SECONDARY` | `Theme::BG` / `Theme::PRIMARY` | Nút phụ (Secondary/Cancel/Help) phong cách GitHub CLI. |
+| **`MINIMAL_GHOST`** | Subtle Ghost | `Theme::BG` / `Theme::SECONDARY` | `Theme::BG` / `Theme::ACCENT` | Nút phụ (Secondary/Cancel/Help) phong cách GitHub CLI. |
 | **`AMBER_WARN`** | Amber Pipeline | `Theme::BG` / `Theme::ORANGE` | `Theme::ORANGE` / `Theme::BLACK` | Nút cảnh báo, reset cache, hủy tiến trình. |
 
 ### Input Fields `[x]` (`InputWidget`)

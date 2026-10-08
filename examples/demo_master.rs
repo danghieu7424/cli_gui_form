@@ -523,6 +523,51 @@ fn main() -> io::Result<()> {
                         ]));
                     }
 
+                    // Bảng chuyển màu xám 16 nấc Grayscale Ramp (#000000 -> #ffffff)
+                    lines.push(Line::from(""));
+                    lines.push(Line::from(vec![
+                        Span::styled("  16-Step Monochrome Grayscale Ramp (000000 ─► ffffff)", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                    ]));
+                    lines.push(Line::from(vec![
+                        Span::styled("  ─────────────────────────────────────────────────────────────────────────────", Style::default().fg(Theme::NEUTRAL_100)),
+                    ]));
+                    lines.push(Line::from(""));
+
+                    let mut ramp_spans = vec![Span::raw("    ")];
+                    for &c in &Theme::GRAYSCALE_16 {
+                        ramp_spans.push(Span::styled("████", Style::default().fg(c)));
+                    }
+                    lines.push(Line::from(ramp_spans));
+                    lines.push(Line::from(""));
+
+                    let hex_steps = [
+                        ("000000", Theme::GRAY_00, "Theme::BLACK / Theme::GRAY_00"),
+                        ("111111", Theme::GRAY_11, "Theme::GRAY_11"),
+                        ("222222", Theme::GRAY_22, "Theme::GRAY_22 (SURFACE_ELEVATED)"),
+                        ("333333", Theme::GRAY_33, "Theme::GRAY_33"),
+                        ("444444", Theme::GRAY_44, "Theme::GRAY_44 (NEUTRAL_200)"),
+                        ("555555", Theme::GRAY_55, "Theme::GRAY_55 (MUTED)"),
+                        ("666666", Theme::GRAY_66, "Theme::GRAY_66 (NEUTRAL_300)"),
+                        ("777777", Theme::GRAY_77, "Theme::GRAY_77"),
+                        ("888888", Theme::GRAY_88, "Theme::GRAY_88 (SECONDARY / NEUTRAL_400)"),
+                        ("999999", Theme::GRAY_99, "Theme::GRAY_99"),
+                        ("aaaaaa", Theme::GRAY_AA, "Theme::GRAY_AA"),
+                        ("bbbbbb", Theme::GRAY_BB, "Theme::GRAY_BB"),
+                        ("cccccc", Theme::GRAY_CC, "Theme::GRAY_CC"),
+                        ("dddddd", Theme::GRAY_DD, "Theme::GRAY_DD"),
+                        ("eeeeee", Theme::GRAY_EE, "Theme::GRAY_EE"),
+                        ("ffffff", Theme::GRAY_FF, "Theme::WHITE / Theme::GRAY_FF (PRIMARY)"),
+                    ];
+
+                    for (hex_code, color, alias) in hex_steps {
+                        lines.push(Line::from(vec![
+                            Span::raw("    "),
+                            Span::styled("■ ", Style::default().fg(color)),
+                            Span::styled(format!("#{:<8} ", hex_code), Style::default().fg(color)),
+                            Span::styled(alias, Style::default().fg(Theme::SECONDARY)),
+                        ]));
+                    }
+
                     tabs.render_container(main_chunks[1], lines, f);
                 }
             }

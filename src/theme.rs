@@ -84,10 +84,91 @@ impl Theme {
     // ----------------------------------------------------
     pub const NEUTRAL_50: Color = Color::Rgb(0x1a, 0x1a, 0x1a);
     pub const NEUTRAL_100: Color = Color::Rgb(0x2a, 0x2a, 0x2a); // Borders, dividers
-    pub const NEUTRAL_200: Color = Color::Rgb(0x44, 0x44, 0x44); // Disabled text
-    pub const NEUTRAL_300: Color = Color::Rgb(0x66, 0x66, 0x66); // Placeholder text
-    pub const NEUTRAL_400: Color = Color::Rgb(0x88, 0x88, 0x88); // Secondary text
+    pub const NEUTRAL_200: Color = Color::Rgb(0x44, 0x44, 0x44); // Disabled text (#444444)
+    pub const NEUTRAL_300: Color = Color::Rgb(0x66, 0x66, 0x66); // Placeholder text (#666666)
+    pub const NEUTRAL_400: Color = Color::Rgb(0x88, 0x88, 0x88); // Secondary text (#888888)
     pub const NEUTRAL_500: Color = Color::Rgb(0xed, 0xed, 0xed); // Body text
+
+    // ----------------------------------------------------
+    // 4. 16-STEP MONOCHROME / GRAYSCALE RAMP (#000000 -> #ffffff)
+    // Tối ưu hoá: Kế thừa trực tiếp các mã màu đã có trong hệ thống,
+    // bổ sung đầy đủ các nấc chuyển sắc để phục vụ gradient, shimmer, shadow.
+    // ----------------------------------------------------
+    pub const BLACK: Color = Color::Rgb(0x00, 0x00, 0x00); // #000000
+    pub const GRAY_00: Color = Self::BLACK;
+    pub const GRAY_000000: Color = Self::BLACK;
+
+    pub const GRAY_11: Color = Color::Rgb(0x11, 0x11, 0x11); // #111111
+    pub const GRAY_111111: Color = Self::GRAY_11;
+
+    // #222222: Đã có sẵn SURFACE_ELEVATED
+    pub const GRAY_22: Color = Self::SURFACE_ELEVATED; // #222222
+    pub const GRAY_222222: Color = Self::SURFACE_ELEVATED;
+
+    pub const GRAY_33: Color = Color::Rgb(0x33, 0x33, 0x33); // #333333
+    pub const GRAY_333333: Color = Self::GRAY_33;
+
+    // #444444: Đã có sẵn NEUTRAL_200
+    pub const GRAY_44: Color = Self::NEUTRAL_200; // #444444
+    pub const GRAY_444444: Color = Self::NEUTRAL_200;
+
+    // #555555: Đã có sẵn MUTED
+    pub const GRAY_55: Color = Self::MUTED; // #555555
+    pub const GRAY_555555: Color = Self::MUTED;
+
+    // #666666: Đã có sẵn NEUTRAL_300
+    pub const GRAY_66: Color = Self::NEUTRAL_300; // #666666
+    pub const GRAY_666666: Color = Self::NEUTRAL_300;
+
+    pub const GRAY_77: Color = Color::Rgb(0x77, 0x77, 0x77); // #777777
+    pub const GRAY_777777: Color = Self::GRAY_77;
+
+    // #888888: Đã có sẵn SECONDARY / NEUTRAL_400
+    pub const GRAY_88: Color = Self::SECONDARY; // #888888
+    pub const GRAY_888888: Color = Self::SECONDARY;
+
+    pub const GRAY_99: Color = Color::Rgb(0x99, 0x99, 0x99); // #999999
+    pub const GRAY_999999: Color = Self::GRAY_99;
+
+    pub const GRAY_AA: Color = Color::Rgb(0xaa, 0xaa, 0xaa); // #aaaaaa
+    pub const GRAY_AAAAAA: Color = Self::GRAY_AA;
+
+    pub const GRAY_BB: Color = Color::Rgb(0xbb, 0xbb, 0xbb); // #bbbbbb
+    pub const GRAY_BBBBBB: Color = Self::GRAY_BB;
+
+    pub const GRAY_CC: Color = Color::Rgb(0xcc, 0xcc, 0xcc); // #cccccc
+    pub const GRAY_CCCCCC: Color = Self::GRAY_CC;
+
+    pub const GRAY_DD: Color = Color::Rgb(0xdd, 0xdd, 0xdd); // #dddddd
+    pub const GRAY_DDDDDD: Color = Self::GRAY_DD;
+
+    pub const GRAY_EE: Color = Color::Rgb(0xee, 0xee, 0xee); // #eeeeee
+    pub const GRAY_EEEEEE: Color = Self::GRAY_EE;
+
+    pub const WHITE: Color = Color::Rgb(0xff, 0xff, 0xff); // #ffffff
+    // #ffffff: Đã có sẵn PRIMARY
+    pub const GRAY_FF: Color = Self::PRIMARY; // #ffffff
+    pub const GRAY_FFFFFF: Color = Self::PRIMARY;
+
+    /// Mảng hằng số 16 nấc màu xám liên tục từ tối nhất (#000000) đến sáng nhất (#ffffff)
+    pub const GRAYSCALE_16: [Color; 16] = [
+        Self::GRAY_00,
+        Self::GRAY_11,
+        Self::GRAY_22,
+        Self::GRAY_33,
+        Self::GRAY_44,
+        Self::GRAY_55,
+        Self::GRAY_66,
+        Self::GRAY_77,
+        Self::GRAY_88,
+        Self::GRAY_99,
+        Self::GRAY_AA,
+        Self::GRAY_BB,
+        Self::GRAY_CC,
+        Self::GRAY_DD,
+        Self::GRAY_EE,
+        Self::GRAY_FF,
+    ];
 }
 
 #[cfg(test)]
@@ -103,5 +184,19 @@ mod tests {
         assert_eq!(Theme::PURPLE, Color::Rgb(0x79, 0x28, 0xca));
         assert_eq!(Theme::ORANGE, Color::Rgb(0xff, 0x88, 0x00));
         assert_eq!(Theme::INDIGO, Color::Rgb(0x5e, 0x6a, 0xd2));
+    }
+
+    #[test]
+    fn test_grayscale_16_ramp() {
+        assert_eq!(Theme::GRAYSCALE_16.len(), 16);
+        for (i, &color) in Theme::GRAYSCALE_16.iter().enumerate() {
+            let val = (i as u8) * 0x11;
+            assert_eq!(color, Color::Rgb(val, val, val));
+        }
+        assert_eq!(Theme::BLACK, Color::Rgb(0x00, 0x00, 0x00));
+        assert_eq!(Theme::WHITE, Color::Rgb(0xff, 0xff, 0xff));
+        assert_eq!(Theme::GRAY_55, Theme::MUTED);
+        assert_eq!(Theme::GRAY_88, Theme::SECONDARY);
+        assert_eq!(Theme::GRAY_FF, Theme::PRIMARY);
     }
 }

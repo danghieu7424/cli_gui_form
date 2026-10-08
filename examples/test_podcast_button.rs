@@ -57,7 +57,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     form.add_widget(Box::new(
         ButtonWidget::new(
             "btn_podcast_goc",
-            "▶ [GỐC: Text BOLD] BẮT ĐẦU TẠO PODCAST (Enter)",
+            "▶ BẮT ĐẦU TẠO PODCAST (Enter)  ─  [1: Gốc Bold]",
             Theme::GRAY_22,
             Theme::PRIMARY,
         )
@@ -66,11 +66,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with_focused_colors(Theme::GRAY_33, Theme::PRIMARY),
     ));
 
-    // Nút 2: [TEST 1 THEO ĐỀ XUẤT USER] Chữ đầu tiên KHÔNG BOLD, các chữ sau BOLD
+    // Nút 2: [THEO ĐỀ XUẤT CỦA BẠN] Chữ 'B' đầu tiên KHÔNG BOLD, các chữ sau BOLD
     form.add_widget(Box::new(
         ButtonWidget::new(
             "btn_podcast_unbold_first",
-            "▶ [TEST 1: Chữ đầu KHÔNG Bold] BẮT ĐẦU TẠO PODCAST (Enter)",
+            "▶ BẮT ĐẦU TẠO PODCAST (Enter)  ─  [2: Chữ 'B' không Bold]",
             Theme::GRAY_22,
             Theme::PRIMARY,
         )
@@ -80,11 +80,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with_focused_colors(Theme::GRAY_33, Theme::PRIMARY),
     ));
 
-    // Nút 3: [TEST 2 ĐỆM 2 SPACES] Icon cách text 2 khoảng trắng đệm
+    // Nút 3: [ĐỆM 2 SPACES] Icon cách text 2 khoảng trắng đệm
     form.add_widget(Box::new(
         ButtonWidget::new(
             "btn_podcast_double_space",
-            "▶ [TEST 2: Đệm 2 Spaces] BẮT ĐẦU TẠO PODCAST (Enter)",
+            "▶ BẮT ĐẦU TẠO PODCAST (Enter)  ─  [3: Đệm 2 Spaces]",
             Theme::GRAY_22,
             Theme::PRIMARY,
         )
@@ -94,11 +94,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with_focused_colors(Theme::GRAY_33, Theme::PRIMARY),
     ));
 
-    // Nút 4: [TEST 3 CHUẨN UI VERCEL/LINEAR] Tắt hoàn toàn BOLD khi hover, chỉ highlight màu sắc
+    // Nút 4: [CHUẨN UI VERCEL/LINEAR] Tắt hoàn toàn BOLD khi hover, chỉ highlight màu sắc
     form.add_widget(Box::new(
         ButtonWidget::new(
             "btn_podcast_no_bold",
-            "▶ [TEST 3: Tắt BOLD khi Hover] BẮT ĐẦU TẠO PODCAST (Enter)",
+            "▶ BẮT ĐẦU TẠO PODCAST (Enter)  ─  [4: Tắt BOLD khi Hover]",
             Theme::ACCENT,
             Theme::WHITE,
         )

@@ -53,55 +53,65 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with_selected(0),
     ));
 
-    // Nút 1: Kiểu Boxed Rounded (Viền bo tròn - Linear / Vercel TUI)
+    // Nút 1: Kiểu Invert High-Contrast (Linear / Apple Dark Mode - Nền trắng chữ đen khi hover)
     form.add_widget(Box::new(
         ButtonWidget::new(
-            "btn_podcast_boxed",
-            "BẮT ĐẦU TẠO PODCAST (Enter)",
+            "btn_invert",
+            "BẮT ĐẦU TẠO PODCAST (Enter) ─ [Invert High-Contrast]",
             Theme::GRAY_22,
             Theme::PRIMARY,
         )
         .with_icon(Icons::RUN)
-        .with_bordered(false)
-        .with_centered(false)
-        .with_focused_colors(Theme::GRAY_33, Theme::PRIMARY),
-    ));
-
-    // Nút 2: Kiểu Solid Accent CTA (Khối nền xanh Vercel nổi bật)
-    form.add_widget(Box::new(
-        ButtonWidget::new(
-            "btn_podcast_accent",
-            "▶ BẮT ĐẦU TẠO PODCAST (Enter)",
-            Theme::ACCENT,
-            Theme::WHITE,
-        )
-        .with_full_width(true)
-        .with_centered(true)
         .with_focused_colors(Theme::PRIMARY, Theme::BG),
     ));
 
-    // Nút 3: Kiểu Minimal Inline truyền thống
+    // Nút 2: Kiểu Solid Accent CTA (Vercel Blue)
     form.add_widget(Box::new(
         ButtonWidget::new(
-            "btn_podcast_minimal",
-            "▶ BẮT ĐẦU TẠO PODCAST (Enter)",
+            "btn_accent",
+            "BẮT ĐẦU TẠO PODCAST (Enter) ─ [Solid Vercel Blue]",
+            Theme::ACCENT,
+            Theme::WHITE,
+        )
+        .with_icon(Icons::RUN)
+        .with_full_width(true)
+        .with_focused_colors(Theme::PRIMARY, Theme::ACCENT),
+    ));
+
+    // Nút 3: Kiểu AI Intelligence (Linear Violet - Cực hợp với AI Dubbing/Podcast)
+    form.add_widget(Box::new(
+        ButtonWidget::new(
+            "btn_purple",
+            "BẮT ĐẦU TẠO PODCAST (Enter) ─ [AI Violet / Neural]",
+            Theme::PURPLE,
+            Theme::WHITE,
+        )
+        .with_icon(Icons::RUN)
+        .with_full_width(true)
+        .with_focused_colors(Theme::PRIMARY, Theme::PURPLE),
+    ));
+
+    // Nút 4: Kiểu Emerald Success (Green Production)
+    form.add_widget(Box::new(
+        ButtonWidget::new(
+            "btn_emerald",
+            "BẮT ĐẦU TẠO PODCAST (Enter) ─ [Emerald Success]",
+            Theme::GRAY_22,
+            Theme::EMERALD,
+        )
+        .with_icon(Icons::RUN)
+        .with_focused_colors(Theme::EMERALD, Theme::BLACK),
+    ));
+
+    // Nút 5: Kiểu Minimal Ghost (GitHub CLI Style - Nhẹ nhàng, thanh lịch)
+    form.add_widget(Box::new(
+        ButtonWidget::new(
+            "btn_minimal",
+            "BẮT ĐẦU TẠO PODCAST (Enter) ─ [Minimal Ghost]",
             Theme::BG,
             Theme::SECONDARY,
         )
-        .with_focused_colors(Theme::GRAY_33, Theme::PRIMARY),
-    ));
-
-    // Nút 4: Kiểu Bật BOLD tùy chọn qua with_bold(true)
-    form.add_widget(Box::new(
-        ButtonWidget::new(
-            "btn_podcast_bold",
-            "▶ BẮT ĐẦU TẠO PODCAST (Enter) [Bold Mode]",
-            Theme::GRAY_22,
-            Theme::MUTED,
-        )
-        .with_bordered(true)
-        .with_centered(true)
-        .with_bold(true)
+        .with_icon(Icons::RUN)
         .with_focused_colors(Theme::GRAY_33, Theme::PRIMARY),
     ));
 

@@ -295,8 +295,9 @@ impl FormWidget for SelectWidget {
             0
         };
         let max_scroll = total_opts.saturating_sub(visible_count);
+        let max_start = visible_count.saturating_sub(thumb_len);
         let thumb_start = if has_scroll && max_scroll > 0 {
-            (self.scroll_offset * (visible_count.saturating_sub(thumb_len))) / max_scroll
+            (self.scroll_offset * max_start + (max_scroll / 2)) / max_scroll
         } else {
             0
         };
@@ -361,11 +362,7 @@ impl FormWidget for SelectWidget {
                     spans.push(Span::raw(" ".repeat(pad)));
                 }
 
-                if row_idx == 0 && self.scroll_offset > 0 {
-                    spans.push(Span::styled("▲", Style::default().fg(Theme::ACCENT)));
-                } else if row_idx + 1 == visible_count && self.scroll_offset + visible_count < total_opts {
-                    spans.push(Span::styled("▼", Style::default().fg(Theme::ACCENT)));
-                } else if row_idx >= thumb_start && row_idx < thumb_start + thumb_len {
+                if row_idx >= thumb_start && row_idx < thumb_start + thumb_len {
                     spans.push(Span::styled("█", Style::default().fg(Theme::PRIMARY)));
                 } else {
                     spans.push(Span::styled("│", Style::default().fg(Theme::NEUTRAL_100)));

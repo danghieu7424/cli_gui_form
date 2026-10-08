@@ -54,6 +54,44 @@ fn truncate_with_ellipsis(text: &str, max_len: usize) -> String {
 }
 
 /****
+ * Function: render_input_spans
+ * Chức năng: Tạo các Span hiển thị văn bản kèm con trỏ insert dạng khối '█' di chuyển theo cursor.
+ * Ranh giới bảo vệ: Đảm bảo con trỏ '█' luôn nằm trong khung hiển thị và di chuyển trực quan khi nhấn Left/Right.
+ ****/
+fn render_input_spans(input: &str, cursor: usize, max_w: usize) -> Vec<Span<'static>> {
+    let chars: Vec<char> = input.chars().collect();
+    let total_chars = chars.len();
+    let cursor = cursor.min(total_chars);
+
+    // Dành 1 ô cho ký tự con trỏ █
+    let view_capacity = max_w.saturating_sub(1).max(1);
+    let start_idx = if total_chars <= view_capacity {
+        0
+    } else if cursor >= view_capacity {
+        cursor + 1 - view_capacity
+    } else {
+        0
+    };
+    let end_idx = (start_idx + view_capacity).min(total_chars);
+
+    let mut spans = Vec::new();
+    let left: String = chars[start_idx..cursor].iter().collect();
+    if !left.is_empty() {
+        spans.push(Span::styled(left, Style::default().fg(Theme::FG).add_modifier(Modifier::BOLD)));
+    }
+
+    // Con trỏ chèn dạng khối █ chuẩn Linear TUI
+    spans.push(Span::styled("█", Style::default().fg(Theme::PRIMARY)));
+
+    let right: String = chars[cursor..end_idx].iter().collect();
+    if !right.is_empty() {
+        spans.push(Span::styled(right, Style::default().fg(Theme::FG).add_modifier(Modifier::BOLD)));
+    }
+
+    spans
+}
+
+/****
  * Struct: EditableListWidget
  * Chức năng: Widget danh sách động kết hợp giữa Select/Option và Text Input (Dynamic CRUD List).
  * Ranh giới bảo vệ:
@@ -283,13 +321,11 @@ impl FormWidget for EditableListWidget {
             Style::default().fg(Theme::FG)
         };
 
-        let title_formatted = format!("─ {} ─", self.label);
         let block = Block::default()
             .borders(Borders::ALL)
             .border_type(BorderType::Rounded)
             .border_style(Style::default().fg(border_color))
-            .padding(Padding::horizontal(1))
-            .title(title_formatted);
+            .padding(Padding::horizontal(1));
 
         let inner_width = (area.width as usize).saturating_sub(4);
         let max_text_len = inner_width.saturating_sub(2);
@@ -382,31 +418,30 @@ impl FormWidget for EditableListWidget {
             let mut spans = Vec::new();
 
             if idx == 0 {
-                // DÒNG 0: "+ Thêm mới."
+                // DÒNG 0: "[+] Thêm mới."
                 match &self.mode {
                     EditMode::Adding { input, cursor } if is_highlighted => {
-                        spans.push(Span::styled("▸ + [ ", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)));
-                        let max_input_w = inner_w.saturating_sub(8 + scroll_col_width);
-                        let safe_input = truncate_with_ellipsis(input, max_input_w);
-                        spans.push(Span::styled(safe_input, Style::default().fg(Theme::FG).add_modifier(Modifier::BOLD)));
-                        spans.push(Span::styled(" ▏]", Style::default().fg(Theme::ACCENT)));
+                        spans.push(Span::styled("▸ [+] [ ", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)));
+                        let max_input_w = inner_w.saturating_sub(10 + scroll_col_width);
+                        spans.extend(render_input_spans(input, *cursor, max_input_w));
+                        spans.push(Span::styled(" ]", Style::default().fg(Theme::PRIMARY)));
                     }
                     _ => {
                         let can_add = self.max_items.map_or(true, |max| self.items.len() < max);
                         if is_highlighted {
                             spans.push(Span::styled("▸ ", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)));
                             let text = if can_add {
-                                "+ Thêm mới."
+                                "[+] Thêm mới."
                             } else {
-                                "+ Thêm mới. (Đầy)"
+                                "[+] Thêm mới. (Đầy)"
                             };
                             spans.push(Span::styled(text, Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)));
                         } else {
                             spans.push(Span::raw("  "));
                             let text = if can_add {
-                                "+ Thêm mới."
+                                "[+] Thêm mới."
                             } else {
-                                "+ Thêm mới. (Đầy)"
+                                "[+] Thêm mới. (Đầy)"
                             };
                             let style = if can_add {
                                 Style::default().fg(Theme::SECONDARY)
@@ -424,14 +459,14 @@ impl FormWidget for EditableListWidget {
                 let prefix_num = format!("[{}] ", item_idx + 1);
 
                 match &self.mode {
-                    EditMode::Editing { index, input, cursor: _ } if *index == item_idx && is_highlighted => {
+                    EditMode::Editing { index, input, cursor } if *index == item_idx && is_highlighted => {
                         spans.push(Span::styled("▸ ", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)));
-                        spans.push(Span::styled(prefix_num, Style::default().fg(Theme::SECONDARY)));
+                        spans.push(Span::styled(prefix_num.clone(), Style::default().fg(Theme::SECONDARY)));
                         spans.push(Span::styled("[ ", Style::default().fg(Theme::PRIMARY)));
-                        let max_input_w = inner_w.saturating_sub(10 + scroll_col_width);
-                        let safe_input = truncate_with_ellipsis(input, max_input_w);
-                        spans.push(Span::styled(safe_input, Style::default().fg(Theme::FG).add_modifier(Modifier::BOLD)));
-                        spans.push(Span::styled(" ▏]", Style::default().fg(Theme::ACCENT)));
+                        let fixed_w = 2 + prefix_num.chars().count() + 2 + 2 + scroll_col_width;
+                        let max_input_w = inner_w.saturating_sub(fixed_w);
+                        spans.extend(render_input_spans(input, *cursor, max_input_w));
+                        spans.push(Span::styled(" ]", Style::default().fg(Theme::PRIMARY)));
                     }
                     _ => {
                         let prefix_w = 2 + prefix_num.chars().count();
@@ -744,5 +779,26 @@ mod tests {
         let res2 = widget.handle_event(KeyEvent::from(KeyCode::Esc));
         assert_eq!(res2, EventResult::Consumed);
         assert!(!widget.is_open());
+    }
+
+    #[test]
+    fn test_render_input_spans_block_cursor() {
+        // 1. Khi rỗng: hiển thị đúng [ █ ]
+        let spans_empty = render_input_spans("", 0, 20);
+        assert_eq!(spans_empty.len(), 1);
+        assert_eq!(spans_empty[0].content, "█");
+
+        // 2. Khi con trỏ ở cuối: [ abc█ ]
+        let spans_end = render_input_spans("abc", 3, 20);
+        assert_eq!(spans_end.len(), 2);
+        assert_eq!(spans_end[0].content, "abc");
+        assert_eq!(spans_end[1].content, "█");
+
+        // 3. Khi con trỏ ở giữa: [ a█bc ]
+        let spans_mid = render_input_spans("abc", 1, 20);
+        assert_eq!(spans_mid.len(), 3);
+        assert_eq!(spans_mid[0].content, "a");
+        assert_eq!(spans_mid[1].content, "█");
+        assert_eq!(spans_mid[2].content, "bc");
     }
 }

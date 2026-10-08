@@ -57,12 +57,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     form.add_widget(Box::new(
         ButtonWidget::new(
             "btn_podcast_boxed",
-            "▶ BẮT ĐẦU TẠO PODCAST (Enter)",
+            "BẮT ĐẦU TẠO PODCAST (Enter)",
             Theme::GRAY_22,
             Theme::PRIMARY,
         )
-        .with_bordered(true)
-        .with_centered(true)
+        .with_icon(Icons::RUN)
+        .with_bordered(false)
+        .with_centered(false)
         .with_focused_colors(Theme::GRAY_33, Theme::PRIMARY),
     ));
 

@@ -2,7 +2,7 @@
 
 use cli_gui_form::{
     ButtonWidget, CardWidget, CheckboxWidget, FormManager, FormWidget, Icons,
-    InputMode, InputWidget, ListWidget, RadioWidget, ShimmerWidget, SpinnerType, StatusBarWidget, TabsWidget,
+    InputMode, InputWidget, ListWidget, RadioWidget, SelectWidget, ShimmerWidget, SpinnerType, StatusBarWidget, TabsWidget,
     TaskWidget, Theme,
 };
 use crossterm::{
@@ -85,6 +85,20 @@ fn main() -> io::Result<()> {
             "Development".into(),
         ],
     )));
+    form.add_widget(Box::new(
+        SelectWidget::new(
+            "region",
+            "Hosting Region (HTML Select/Option Dropdown)",
+            vec![
+                ("us-east-1", "US East (N. Virginia)"),
+                ("eu-central-1", "Europe (Frankfurt)"),
+                ("ap-southeast-1", "Asia Pacific (Singapore)"),
+                ("sa-east-1", "South America (São Paulo)"),
+            ],
+        )
+        .with_placeholder("Select a deployment datacenter... ▾")
+        .with_selected(0),
+    ));
     form.add_widget(Box::new(
         ListWidget::new("route_menu")
             .with_label("Select Target Route (DESIGN.md Lists/Menus)")

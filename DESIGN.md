@@ -15,6 +15,7 @@
 | **Input Fields** | `src/widgets/input.rs` | `[x]` Hoàn thành | Text/Password, con trỏ nhấp nháy inline, viền focus `#0070f3` |
 | **Checkbox Widget** | `src/widgets/checkbox.rs`| `[x]` Hoàn thành | Toggle logic `[✔]` / `[ ]`, phím Space/Enter |
 | **Radio Groups** | `src/widgets/radio.rs` | `[x]` Hoàn thành | `Left`/`Right` chọn nhanh, `Up`/`Down` chuyển ô form an toàn |
+| **Select Dropdown** | `src/widgets/select.rs` | `[x]` Hoàn thành | Floating popup overlay (`<select>`/`<option>`), Clear pass, tự lật hướng |
 | **Lists / Menus** | `src/widgets/list.rs` | `[x]` Hoàn thành | Điều hướng cây phân cấp: `→` vào mục con, `←` thoát ra, `Enter` chọn |
 | **Panels / Cards** | `src/widgets/card.rs` | `[x]` Hoàn thành | Tiêu đề nhúng nắp trên, tùy chọn viền vuông / viền bo tròn |
 | **Tables** | `demo_master.rs` | `[x]` Hoàn thành | Header tách biệt gạch ngang `─`, cột canh lề tỉ mỉ, không viền ngoài |
@@ -154,6 +155,25 @@ Single-line box drawing. Clean and lightweight.
 - Inactive: viền `Theme::MUTED` (`#555555`)
 - Placeholder: văn bản gợi ý mờ bằng `Theme::NEUTRAL_300` (`#666666`) khi ô chưa có dữ liệu
 - Password mode: tự động mã hóa ký tự dạng `••••••••` khi người dùng nhập dữ liệu
+
+### Select Dropdown `[x]` (`SelectWidget`)
+
+```
+  Region: │ US East (N. Virginia)      ▾ │
+          ├──────────────────────────────┤
+          │ ▸ US East (N. Virginia)    ✔ │
+          │   Europe (Frankfurt)         │
+          │   Asia Pacific (Singapore)   │
+          ╰──────────────────────────────╯
+```
+
+- **Đóng**: Khung 3 dòng gọn gàng, hiển thị nhãn và mũi tên `▾`. Phím `Up`/`Down` nhả cho `FormManager` chuyển ô form.
+- **Mở (`Enter`/`Space`)**: Bung menu nổi floating popup overlay đè lên trên các widget bên dưới, dùng `Clear` widget quét sạch layer đáy.
+- **Điều hướng trong popup**:
+  - `Up`/`Down` (hoặc `k`/`j`): Duyệt highlight giữa các options.
+  - `Enter`/`Space`: Chọn option hiện tại và đóng menu.
+  - `Esc`: Đóng menu mà không đổi lựa chọn.
+  - Tự động lật hướng lên trên nếu không đủ không gian phía dưới màn hình.
 
 ### Tables `[x]` (`demo_master.rs` / `demo_table.rs`)
 

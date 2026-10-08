@@ -20,6 +20,7 @@
   * `InputWidget`: Ô nhập văn bản dạng Text và Password với con trỏ inline, văn bản gợi ý mờ (`placeholder`) khi ô rỗng theo chuẩn `Theme::NEUTRAL_300` và thao tác chỉnh sửa tức thì.
   * `CheckboxWidget`: Hộp kiểm logic bật/tắt (`[✔]` / `[ ]`).
   * `RadioWidget`: Nhóm lựa chọn một giá trị duy nhất, điều hướng ngang độc lập (`Left`/`Right` thay đổi tùy chọn, `Up`/`Down` chuyển ô form mà không làm nhảy giá trị).
+  * `SelectWidget`: **Menu thả xuống dạng Dropdown Popup Overlay (`<select>` / `<option>`)**, chiếm 3 dòng gọn gàng khi đóng, bấm `Enter`/`Space` bung menu nổi đè lên trên với cơ chế `Clear` layer và viền bo tròn, hỗ trợ cuộn `Up`/`Down`, `Enter` để chọn, `Esc` để đóng.
   * `ListWidget`: **Menu danh sách điều hướng cây phân cấp (Hierarchical Sub-items Tree Navigation)**, hỗ trợ đi sâu vào danh mục con bằng phím `Right` / `Enter`, quay lại danh mục cha bằng phím `Left` / `Esc`, và chọn giá trị mục lá.
   * `ButtonWidget`: Nút hành động với hiệu ứng đảo màu khi focus và cơ chế phát tín hiệu submit.
   * `CardWidget`: Khung Panel / Card nhúng tiêu đề trực tiếp lên nắp viền trên, hỗ trợ cả viền vuông (`┌─┐`) lẫn viền bo tròn (`╭─╮`).
@@ -196,7 +197,40 @@ let radio = RadioWidget::new(
 ).with_selected(0);
 ```
 
-### 3. `TabsWidget` & `StatusBarWidget` (Hệ Thống Thẻ & Cuộn Chuột)
+### 3. `SelectWidget` (Dropdown Popup Overlay ─ HTML `<select>` / `<option>`)
+
+Điều khiển chọn danh sách thả xuống mô phỏng trực quan phần tử `<select>` của HTML:
+
+* **Khi đóng**: Chiếm 3 dòng cố định như ô input (`[ Selected Value... ▾ ]`), không làm lệch bố cục Form. Phím `Up` / `Down` được nhả cho `FormManager` để di chuyển focus lên/xuống các ô khác.
+* **Khi mở**: Nhấn `Enter` hoặc `Space` để bung menu popup nổi (overlay) đè lên các widget phía dưới với cơ chế `Clear` layer chống xuyên thấu.
+* **Điều hướng trong popup**:
+  * `Up` / `Down` (hoặc `k` / `j`): Di chuyển con trỏ highlight giữa các options.
+  * `Enter` / `Space`: Chọn option đang highlight và tự động đóng dropdown.
+  * `Esc`: Đóng dropdown mà không thay đổi lựa chọn.
+  * Tự động lật ngược lên trên nếu vị trí ô select nằm sát mép đáy màn hình terminal.
+
+```rust
+use cli_gui_form::{SelectWidget, FormWidget};
+
+// Khởi tạo SelectWidget với danh sách các option (hỗ trợ cả cặp value / label)
+let select = SelectWidget::new(
+    "region",
+    "Chọn Data Center Lưu Trữ",
+    vec![
+        ("us-east-1", "US East (N. Virginia)"),
+        ("eu-central-1", "Europe (Frankfurt)"),
+        ("ap-southeast-1", "Asia Pacific (Singapore)"),
+        ("sa-east-1", "South America (São Paulo)"),
+    ],
+)
+.with_placeholder("Vui lòng chọn khu vực... ▾")
+.with_selected(0);
+
+// Đăng ký trực tiếp vào FormManager như mọi widget khác:
+// form.add_widget(Box::new(select));
+```
+
+### 4. `TabsWidget` & `StatusBarWidget` (Hệ Thống Thẻ & Cuộn Chuột)
 
 Hỗ trợ giao diện Dashboard đa tab nối liền với panel container bo góc, tích hợp sẵn thanh cuộn và nhận diện chuột:
 

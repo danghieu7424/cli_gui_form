@@ -43,4 +43,7 @@ pub trait FormWidget: Send {
     fn cursor_position(&self, _area: Rect) -> Option<(u16, u16)> {
         None
     }
+
+    /// Vẽ lớp phủ popup/dropdown trên đỉnh nếu widget đang mở modal
+    fn render_overlay(&self, _area: Rect, _frame: &mut Frame) {}
 }

@@ -35,6 +35,6 @@ pub use theme::Theme;
 pub use traits::{EventResult, FormValue, FormWidget};
 pub use widgets::{
     ButtonWidget, CardItem, CardWidget, CheckboxWidget, InputMode, InputWidget,
-    ListItem, ListWidget, RadioWidget, ShimmerWidget, StatusBarWidget, TabsWidget,
+    ListItem, ListWidget, RadioWidget, SelectOption, SelectWidget, ShimmerWidget, StatusBarWidget, TabsWidget,
     SpinnerType, TaskState, TaskWidget,
 };

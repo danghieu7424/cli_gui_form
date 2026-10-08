@@ -119,6 +119,25 @@ impl FormManager {
                 }
             }
         }
+
+        // 2. Render Overlay Pass: Vẽ các menu popup, dropdown nổi trên đỉnh mọi widget khác
+        for (idx, widget) in self.widgets.iter().enumerate() {
+            let (w_y, w_h) = widget_positions[idx];
+            if w_y >= self.scroll_offset && w_y < self.scroll_offset + area.height {
+                let render_y = area.y + (w_y - self.scroll_offset);
+                let available_h = (area.y + area.height).saturating_sub(render_y);
+                let render_h = w_h.min(available_h);
+                if render_h > 0 {
+                    let widget_area = Rect {
+                        x: area.x,
+                        y: render_y,
+                        width: area.width,
+                        height: render_h,
+                    };
+                    widget.render_overlay(widget_area, frame);
+                }
+            }
+        }
     }
 
     pub fn handle_event(&mut self, key: KeyEvent) -> EventResult {

@@ -77,14 +77,17 @@ impl ButtonWidget {
         self.full_width = full_width;
         self
     }
-}
-
-impl FormWidget for ButtonWidget {
-    fn id(&self) -> &str {
-        &self.id
-    }
-
-    fn render(&self, area: Rect, frame: &mut Frame) {
+    /****
+     * Hàm: build_line
+     * Chức năng: Xây dựng dòng hiển thị (Line) gồm các Span tách biệt hoàn toàn giữa Icon và Text.
+     * Đầu vào: Tham chiếu &self của ButtonWidget.
+     * Đầu ra: Line<'static> cấu trúc gồm Span Icon (Normal/Clean) và Span Text (Bold khi focus).
+     * Ranh giới bảo vệ:
+     *   1. Span Icon tuyệt đối khóa cờ `remove_modifier(Modifier::BOLD)` để glyph Unicode 2-cell không bao giờ bị co méo.
+     *   2. Span Text nhận `Modifier::BOLD` khi nút được focus để tạo điểm nhấn thị giác.
+     *   3. Không chèn thêm con trỏ `▸ ` khi nút đã có icon riêng nhằm chống biến dạng và lặp glyph.
+     ****/
+    pub fn build_line(&self) -> Line<'static> {
         let (prefix, bg, fg, is_focused) = if self.focused {
             let focused_bg = self.focused_bg_color.unwrap_or(crate::Theme::GRAY_33);
             let focused_fg = self.focused_fg_color.unwrap_or(crate::Theme::PRIMARY);
@@ -93,43 +96,50 @@ impl FormWidget for ButtonWidget {
             ("  ", self.bg_color, self.fg_color, false)
         };
 
-        // Ranh giới bảo vệ: Nếu nút có icon hoặc tiêu đề bắt đầu bằng icon '▶',
-        // loại bỏ tiền tố '▸ ' hoặc điều chỉnh để tránh xuất hiện 2 tam giác '▸ ▶' cạnh nhau
-        let has_run_icon = self.icon.is_some() || self.title.starts_with('▶');
-        let effective_prefix = if has_run_icon {
-            if self.bordered || self.centered { "" } else { "  " }
+        // Bóc tách icon: Ưu tiên icon được thiết lập tường minh, sau đó quét tiền tố '▶' trong title
+        let mut display_title = self.title.clone();
+        let icon_to_render = if let Some(ic) = &self.icon {
+            Some(ic.clone())
+        } else if let Some(stripped) = display_title.strip_prefix("▶ ") {
+            let res = Some("▶ ".to_string());
+            display_title = stripped.to_string();
+            res
+        } else if let Some(stripped) = display_title.strip_prefix('▶') {
+            let res = Some("▶ ".to_string());
+            display_title = stripped.trim_start().to_string();
+            res
+        } else {
+            None
+        };
+
+        let has_icon = icon_to_render.is_some();
+        let effective_prefix = if has_icon {
+            // Khi đã có icon, nút đóng khung/căn giữa không cần tiền tố; nút inline giữ lề 1 space
+            if self.bordered || self.centered { "" } else { " " }
         } else {
             prefix
         };
 
         let mut spans = Vec::new();
         if !effective_prefix.is_empty() {
-            spans.push(Span::styled(format!(" {}", effective_prefix), Style::default().fg(fg).bg(bg)));
+            spans.push(Span::styled(
+                format!(" {}", effective_prefix),
+                Style::default().fg(fg).bg(bg),
+            ));
         }
-
-        // Tách riêng icon nếu có để bảo vệ glyph không bị bold co rút
-        let mut display_title = self.title.as_str();
-        let icon_to_render = if let Some(ic) = &self.icon {
-            Some(ic.as_str())
-        } else if let Some(stripped) = display_title.strip_prefix("▶ ") {
-            display_title = stripped;
-            Some("▶ ")
-        } else if let Some(stripped) = display_title.strip_prefix('▶') {
-            display_title = stripped.trim_start();
-            Some("▶ ")
-        } else {
-            None
-        };
 
         if let Some(ic) = icon_to_render {
             let icon_str = if ic.ends_with(' ') {
-                ic.to_string()
+                ic
             } else {
                 format!("{} ", ic)
             };
             // Ranh giới bảo vệ thị giác: Icon tuyệt đối KHÔNG có Modifier::BOLD khi hover
             // để đảm bảo glyph 2-cell không bao giờ bị méo, co lại hay nhảy font trên terminal.
-            let icon_style = Style::default().fg(fg).bg(bg).remove_modifier(Modifier::BOLD);
+            let icon_style = Style::default()
+                .fg(fg)
+                .bg(bg)
+                .remove_modifier(Modifier::BOLD);
             spans.push(Span::styled(icon_str, icon_style));
         }
 
@@ -139,7 +149,25 @@ impl FormWidget for ButtonWidget {
         }
         spans.push(Span::styled(format!("{} ", display_title), title_style));
 
-        let content = Line::from(spans);
+        Line::from(spans)
+    }
+}
+
+impl FormWidget for ButtonWidget {
+    fn id(&self) -> &str {
+        &self.id
+    }
+
+    fn render(&self, area: Rect, frame: &mut Frame) {
+        let (bg, fg) = if self.focused {
+            let focused_bg = self.focused_bg_color.unwrap_or(crate::Theme::GRAY_33);
+            let focused_fg = self.focused_fg_color.unwrap_or(crate::Theme::PRIMARY);
+            (focused_bg, focused_fg)
+        } else {
+            (self.bg_color, self.fg_color)
+        };
+
+        let content = self.build_line();
         let mut paragraph = Paragraph::new(content);
 
         if self.centered {
@@ -183,5 +211,56 @@ impl FormWidget for ButtonWidget {
     fn is_focused(&self) -> bool { self.focused }
     fn preferred_height(&self) -> u16 {
         if self.bordered { 3 } else { 2 }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::Theme;
+
+    #[test]
+    fn test_button_icon_never_bold_while_text_is_bold() {
+        let mut btn = ButtonWidget::new(
+            "btn_test",
+            "▶ BẮT ĐẦU TẠO PODCAST (Enter)",
+            Theme::GRAY_22,
+            Theme::PRIMARY,
+        )
+        .with_bordered(true)
+        .with_centered(true);
+        btn.focus();
+
+        let line = btn.build_line();
+        let spans = line.spans;
+        assert!(spans.len() >= 2);
+
+        // Span 0 là icon "▶ " -> KHÔNG có BOLD, có cờ remove BOLD
+        let icon_span = &spans[0];
+        assert!(icon_span.content.contains('▶'));
+        assert!(!icon_span.style.add_modifier.contains(Modifier::BOLD));
+        assert!(icon_span.style.sub_modifier.contains(Modifier::BOLD));
+
+        // Span 1 là text -> BẮT BUỘC có BOLD
+        let text_span = &spans[1];
+        assert!(text_span.content.contains("BẮT ĐẦU TẠO PODCAST"));
+        assert!(text_span.style.add_modifier.contains(Modifier::BOLD));
+    }
+
+    #[test]
+    fn test_button_with_explicit_icon_separation() {
+        let mut btn = ButtonWidget::new("btn_run", "RUN JOB", Theme::BG, Theme::PRIMARY)
+            .with_icon("▶");
+        btn.focus();
+
+        let line = btn.build_line();
+        let spans = line.spans;
+        // Do không có bordered/centered, spans[0] là prefix lề, spans[1] là icon, spans[2] là text
+        let icon_span = spans.iter().find(|s| s.content.contains('▶')).expect("Icon span must exist");
+        assert!(!icon_span.style.add_modifier.contains(Modifier::BOLD));
+        assert!(icon_span.style.sub_modifier.contains(Modifier::BOLD));
+
+        let text_span = spans.iter().find(|s| s.content.contains("RUN JOB")).expect("Text span must exist");
+        assert!(text_span.style.add_modifier.contains(Modifier::BOLD));
     }
 }

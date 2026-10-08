@@ -174,8 +174,8 @@ impl Theme {
     // 5. BUTTON COLOR PRESETS (Bảng phối màu an toàn chống co glyph)
     // Mỗi tuple gồm: (blur_bg, blur_fg, focused_bg, focused_fg)
     // ----------------------------------------------------
-    /// Preset: Invert High-Contrast (Linear / Apple Dark Mode: Nền đen chữ sáng -> Hover nền trắng chữ đen)
-    pub const BTN_INVERT: (Color, Color, Color, Color) = (Self::BG, Self::FG, Self::PRIMARY, Self::BG);
+    /// Preset: Invert High-Contrast (Linear / Apple Dark Mode: Nền đen chữ xám -> Hover nền trắng chữ đen)
+    pub const BTN_INVERT: (Color, Color, Color, Color) = (Self::BG, Self::SECONDARY, Self::PRIMARY, Self::BG);
     /// Preset: Solid Vercel Blue (Nền xanh chữ trắng -> Hover nền trắng chữ xanh)
     pub const BTN_ACCENT: (Color, Color, Color, Color) = (Self::ACCENT, Self::WHITE, Self::PRIMARY, Self::ACCENT);
     /// Preset: AI Violet Neural (Nền tím chữ trắng -> Hover nền trắng chữ tím)

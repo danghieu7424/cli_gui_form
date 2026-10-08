@@ -53,13 +53,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with_selected(0),
     ));
 
-    // Nút 1: Kiểu Invert High-Contrast (Linear / Apple Dark Mode - Nền đen chữ sáng, hover nền trắng chữ đen)
+    // Nút 1: Kiểu Invert High-Contrast (Linear / Apple Dark Mode - Nền đen chữ xám, hover nền trắng chữ đen)
     form.add_widget(Box::new(
         ButtonWidget::new(
             "btn_invert",
             "BẮT ĐẦU TẠO PODCAST (Enter) ─ [Invert High-Contrast]",
             Theme::BG,
-            Theme::FG,
+            Theme::SECONDARY,
         )
         .with_icon(Icons::RUN)
         .with_preset(Theme::BTN_INVERT),

@@ -152,7 +152,7 @@ Single-line box drawing. Clean and lightweight.
 
 | Mã Preset | Phong cách | Màu Blur (Nghỉ) | Màu Focus (Hover) | Ngữ cảnh sử dụng |
 | :--- | :--- | :--- | :--- | :--- |
-| **`INVERT_APPLE`** | Invert High-Contrast | `Theme::BG` / `Theme::FG` | `Theme::PRIMARY` / `Theme::BG` | Nút hành động chính chuẩn Linear/Apple (Nền trắng, chữ đen). |
+| **`INVERT_APPLE`** | Invert High-Contrast | `Theme::BG` / `Theme::SECONDARY` | `Theme::PRIMARY` / `Theme::BG` | Nút hành động chính chuẩn Linear/Apple (Nền trắng, chữ đen). |
 | **`SOLID_VERCEL`** | Solid Vercel Blue | `Theme::ACCENT` / `Theme::WHITE` | `Theme::PRIMARY` / `Theme::ACCENT` | Nút triển khai, tạo mới (Primary CTA). |
 | **`AI_VIOLET`** | Neural Violet | `Theme::PURPLE` / `Theme::WHITE` | `Theme::PRIMARY` / `Theme::PURPLE` | Tính năng AI Agent, Dubbing, Podcast Generator. |
 | **`EMERALD_SUCCESS`**| Emerald Green | `Theme::BG` / `Theme::EMERALD` | `Theme::EMERALD` / `Theme::BLACK` | Nút hoàn tất, xác nhận lưu, xuất bản file. |

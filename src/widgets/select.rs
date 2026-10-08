@@ -175,6 +175,24 @@ impl SelectWidget {
     }
 }
 
+/****
+ * Function: truncate_with_ellipsis
+ * Chức năng: Cắt gọn văn bản nếu vượt quá chiều rộng hiển thị cho phép, thêm dấu '…' ở cuối.
+ * Ranh giới bảo vệ: Tránh panic trên UTF-8 bằng iterator chars, đảm bảo không đẩy rớt border hoặc scrollbar.
+ ****/
+fn truncate_with_ellipsis(text: &str, max_len: usize) -> String {
+    let char_count = text.chars().count();
+    if char_count <= max_len {
+        text.to_string()
+    } else if max_len <= 1 {
+        text.chars().take(max_len).collect()
+    } else {
+        let mut truncated: String = text.chars().take(max_len - 1).collect();
+        truncated.push('…');
+        truncated
+    }
+}
+
 impl FormWidget for SelectWidget {
     fn id(&self) -> &str {
         &self.id
@@ -237,11 +255,14 @@ impl FormWidget for SelectWidget {
 
         // Tính khoảng trống để đẩy mũi tên ▾ về sát mép phải
         let inner_width = (area.width as usize).saturating_sub(4); // 2 viền + 2 padding
-        let text_chars = display_text.chars().count();
+        // Chừa ít nhất 2 ký tự: 1 ký tự khoảng cách phân tách và 1 ký tự mũi tên '▾'
+        let max_text_len = inner_width.saturating_sub(2);
+        let display_text_safe = truncate_with_ellipsis(&display_text, max_text_len);
+        let text_chars = display_text_safe.chars().count();
         let spacing = inner_width.saturating_sub(text_chars + 1); // 1 char cho arrow
 
         let line = Line::from(vec![
-            Span::styled(display_text, text_style),
+            Span::styled(display_text_safe, text_style),
             Span::raw(" ".repeat(spacing)),
             Span::styled(arrow, Style::default().fg(arrow_color)),
         ]);
@@ -318,6 +339,7 @@ impl FormWidget for SelectWidget {
         let mut lines = Vec::new();
         let end_idx = (self.scroll_offset + visible_count).min(total_opts);
         let inner_w = (popup_w as usize).saturating_sub(4); // 2 viền + 2 padding
+        let scroll_col_width = if has_scroll { 2 } else { 0 }; // 1 char track/thumb + 1 space cách lề
 
         for (row_idx, idx) in (self.scroll_offset..end_idx).enumerate() {
             let opt = &self.options[idx];
@@ -325,6 +347,14 @@ impl FormWidget for SelectWidget {
             let is_selected = Some(idx) == self.selected;
 
             let mut spans = Vec::new();
+
+            // Tính toán trước độ rộng các thành phần cố định để bảo vệ scrollbar mép phải
+            let prefix_w = 2; // "▸ " hoặc "  "
+            let check_w = if is_selected { 2 } else { 0 }; // " ✔"
+            let disabled_w = if opt.disabled { 11 } else { 0 }; // " (disabled)"
+            let fixed_w = prefix_w + check_w + disabled_w + scroll_col_width;
+            let max_label_w = inner_w.saturating_sub(fixed_w);
+            let safe_label = truncate_with_ellipsis(&opt.label, max_label_w);
 
             if is_highlighted {
                 // Mục đang được rê qua: con trỏ ▸ và Primary BOLD
@@ -334,7 +364,7 @@ impl FormWidget for SelectWidget {
                 } else {
                     Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)
                 };
-                spans.push(Span::styled(&opt.label, text_style));
+                spans.push(Span::styled(safe_label, text_style));
             } else {
                 spans.push(Span::raw("  "));
                 let text_style = if opt.disabled {
@@ -342,7 +372,7 @@ impl FormWidget for SelectWidget {
                 } else {
                     Style::default().fg(Theme::FG)
                 };
-                spans.push(Span::styled(&opt.label, text_style));
+                spans.push(Span::styled(safe_label, text_style));
             }
 
             // Biểu tượng checkmark nếu đã được chọn
@@ -608,4 +638,14 @@ mod tests {
         assert!(!select.is_open());
         assert_eq!(select.value(), FormValue::Select(12, "Option 13".to_string()));
     }
+
+    #[test]
+    fn test_truncate_with_ellipsis_and_overflow_protection() {
+        assert_eq!(truncate_with_ellipsis("Short", 10), "Short");
+        assert_eq!(truncate_with_ellipsis("Exactly10chars", 14), "Exactly10chars");
+        assert_eq!(truncate_with_ellipsis("Very Long Text That Exceeds Width", 10), "Very Long…");
+        assert_eq!(truncate_with_ellipsis("A", 1), "A");
+        assert_eq!(truncate_with_ellipsis("ABC", 0), "");
+    }
 }
+

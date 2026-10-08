@@ -21,6 +21,9 @@ pub struct ButtonWidget {
     pub bordered: bool,
     pub centered: bool,
     pub full_width: bool,
+    pub bold_on_focus: bool,
+    pub first_char_unbold: bool,
+    pub double_space_icon: bool,
     focused: bool,
 }
 
@@ -37,6 +40,9 @@ impl ButtonWidget {
             bordered: false,
             centered: false,
             full_width: false,
+            bold_on_focus: true,
+            first_char_unbold: false,
+            double_space_icon: false,
             focused: false,
         }
     }
@@ -77,6 +83,25 @@ impl ButtonWidget {
         self.full_width = full_width;
         self
     }
+
+    /// Tùy chọn có bật BOLD khi hover/focus hay không (mặc định true)
+    pub fn with_bold(mut self, bold: bool) -> Self {
+        self.bold_on_focus = bold;
+        self
+    }
+
+    /// Giữ ký tự chữ đầu tiên KHÔNG BOLD để test chống va chạm bounding box font
+    pub fn with_first_char_unbold(mut self, enabled: bool) -> Self {
+        self.first_char_unbold = enabled;
+        self
+    }
+
+    /// Đệm 2 khoảng trắng (Double Space) sau Icon để glyph 2-cell không chạm text BOLD
+    pub fn with_double_space_icon(mut self, enabled: bool) -> Self {
+        self.double_space_icon = enabled;
+        self
+    }
+
     /****
      * Hàm: build_line
      * Chức năng: Xây dựng dòng hiển thị (Line) gồm các Span tách biệt hoàn toàn giữa Icon và Text.
@@ -129,11 +154,10 @@ impl ButtonWidget {
         }
 
         if let Some(ic) = icon_to_render {
-            let icon_str = if ic.ends_with(' ') {
-                ic
-            } else {
-                format!("{} ", ic)
-            };
+            let space_str = if self.double_space_icon { "  " } else { " " };
+            let raw_ic = ic.trim_end();
+            let icon_str = format!("{}{}", raw_ic, space_str);
+
             // Ranh giới bảo vệ thị giác: Icon tuyệt đối KHÔNG có Modifier::BOLD khi hover
             // để đảm bảo glyph 2-cell không bao giờ bị méo, co lại hay nhảy font trên terminal.
             let icon_style = Style::default()
@@ -143,11 +167,33 @@ impl ButtonWidget {
             spans.push(Span::styled(icon_str, icon_style));
         }
 
-        let mut title_style = Style::default().fg(fg).bg(bg);
-        if is_focused {
-            title_style = title_style.add_modifier(Modifier::BOLD);
+        let is_bold = is_focused && self.bold_on_focus;
+
+        if is_bold && self.first_char_unbold && !display_title.is_empty() {
+            // Tách ký tự chữ đầu tiên để KHÔNG BOLD theo đề xuất test của người dùng
+            let mut chars = display_title.chars();
+            if let Some(first_ch) = chars.next() {
+                let rest_str: String = chars.collect();
+
+                let first_style = Style::default()
+                    .fg(fg)
+                    .bg(bg)
+                    .remove_modifier(Modifier::BOLD);
+                spans.push(Span::styled(first_ch.to_string(), first_style));
+
+                let rest_style = Style::default()
+                    .fg(fg)
+                    .bg(bg)
+                    .add_modifier(Modifier::BOLD);
+                spans.push(Span::styled(format!("{} ", rest_str), rest_style));
+            }
+        } else {
+            let mut title_style = Style::default().fg(fg).bg(bg);
+            if is_bold {
+                title_style = title_style.add_modifier(Modifier::BOLD);
+            }
+            spans.push(Span::styled(format!("{} ", display_title), title_style));
         }
-        spans.push(Span::styled(format!("{} ", display_title), title_style));
 
         Line::from(spans)
     }

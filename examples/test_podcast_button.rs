@@ -53,11 +53,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with_selected(0),
     ));
 
-    // Nút 1: Kiểu Boxed Rounded (Viền bo tròn - Linear / Vercel TUI)
+    // Nút 1: [GỐC] Toàn bộ text BOLD khi focus (Tái hiện lỗi co glyph nếu có va chạm font)
     form.add_widget(Box::new(
         ButtonWidget::new(
-            "btn_podcast_boxed",
-            "▶ BẮT ĐẦU TẠO PODCAST (Enter)",
+            "btn_podcast_goc",
+            "▶ [GỐC: Text BOLD] BẮT ĐẦU TẠO PODCAST (Enter)",
             Theme::GRAY_22,
             Theme::PRIMARY,
         )
@@ -66,28 +66,46 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with_focused_colors(Theme::GRAY_33, Theme::PRIMARY),
     ));
 
-    // Nút 2: Kiểu Solid Accent CTA (Khối nền xanh Vercel nổi bật)
+    // Nút 2: [TEST 1 THEO ĐỀ XUẤT USER] Chữ đầu tiên KHÔNG BOLD, các chữ sau BOLD
     form.add_widget(Box::new(
         ButtonWidget::new(
-            "btn_podcast_accent",
-            "▶ BẮT ĐẦU TẠO PODCAST (Enter)",
+            "btn_podcast_unbold_first",
+            "▶ [TEST 1: Chữ đầu KHÔNG Bold] BẮT ĐẦU TẠO PODCAST (Enter)",
+            Theme::GRAY_22,
+            Theme::PRIMARY,
+        )
+        .with_bordered(true)
+        .with_centered(true)
+        .with_first_char_unbold(true)
+        .with_focused_colors(Theme::GRAY_33, Theme::PRIMARY),
+    ));
+
+    // Nút 3: [TEST 2 ĐỆM 2 SPACES] Icon cách text 2 khoảng trắng đệm
+    form.add_widget(Box::new(
+        ButtonWidget::new(
+            "btn_podcast_double_space",
+            "▶ [TEST 2: Đệm 2 Spaces] BẮT ĐẦU TẠO PODCAST (Enter)",
+            Theme::GRAY_22,
+            Theme::PRIMARY,
+        )
+        .with_bordered(true)
+        .with_centered(true)
+        .with_double_space_icon(true)
+        .with_focused_colors(Theme::GRAY_33, Theme::PRIMARY),
+    ));
+
+    // Nút 4: [TEST 3 CHUẨN UI VERCEL/LINEAR] Tắt hoàn toàn BOLD khi hover, chỉ highlight màu sắc
+    form.add_widget(Box::new(
+        ButtonWidget::new(
+            "btn_podcast_no_bold",
+            "▶ [TEST 3: Tắt BOLD khi Hover] BẮT ĐẦU TẠO PODCAST (Enter)",
             Theme::ACCENT,
             Theme::WHITE,
         )
         .with_full_width(true)
         .with_centered(true)
+        .with_bold(false)
         .with_focused_colors(Theme::PRIMARY, Theme::BG),
-    ));
-
-    // Nút 3: Kiểu Minimal Inline truyền thống
-    form.add_widget(Box::new(
-        ButtonWidget::new(
-            "btn_podcast_minimal",
-            "▶ BẮT ĐẦU TẠO PODCAST (Enter)",
-            Theme::BG,
-            Theme::SECONDARY,
-        )
-        .with_focused_colors(Theme::GRAY_33, Theme::PRIMARY),
     ));
 
     let mut last_action = String::from("Sẵn sàng. Dùng Tab / ↑ / ↓ để di chuyển focus vào các nút.");

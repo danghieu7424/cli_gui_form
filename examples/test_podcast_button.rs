@@ -115,6 +115,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with_preset(Theme::BTN_GHOST),
     ));
 
+    // Nút 6: [THEO YÊU CẦU BẠN] Bật BOLD cho Text nhưng Icon ▶ tuyệt đối KHÔNG BOLD (trên nền Solid Accent an toàn)
+    form.add_widget(Box::new(
+        ButtonWidget::new(
+            "btn_bold_text_only",
+            "BẮT ĐẦU TẠO PODCAST (Enter) ─ [Text BOLD / Icon Regular]",
+            Theme::ACCENT,
+            Theme::WHITE,
+        )
+        .with_icon(Icons::RUN)
+        .with_full_width(true)
+        .with_bold(true) // Kích hoạt BOLD cho text, Icon ▶ tự động được bóc tách và gỡ cờ BOLD
+        .with_preset(Theme::BTN_ACCENT),
+    ));
+
     let mut last_action = String::from("Sẵn sàng. Dùng Tab / ↑ / ↓ để di chuyển focus vào các nút.");
 
     loop {

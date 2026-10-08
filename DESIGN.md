@@ -159,6 +159,16 @@ Single-line box drawing. Clean and lightweight.
 | **`MINIMAL_GHOST`** | Subtle Ghost | `Theme::BG` / `Theme::SECONDARY` | `Theme::BG` / `Theme::ACCENT` | Nút phụ (Secondary/Cancel/Help) phong cách GitHub CLI. |
 | **`AMBER_WARN`** | Amber Pipeline | `Theme::BG` / `Theme::ORANGE` | `Theme::ORANGE` / `Theme::BLACK` | Nút cảnh báo, reset cache, hủy tiến trình. |
 
+#### ⚠️ Chú ý Kỹ thuật về TrueColor RGB / Hex và Antialiasing trên Terminal
+
+1. **TrueColor 24-bit (`Color::Rgb(r, g, b)`):** Hệ thống hỗ trợ 100% không gian màu TrueColor (16 triệu màu / Hex `#xxxxxx`), không bị gò bó trong 16 màu ANSI cơ bản. Các mã màu có sắc tố bão hòa (như Vercel Blue `#0070f3`, Linear Violet `#7928ca`, Emerald `#10b981`, Amber `#ff8800`) luôn đảm bảo glyph Unicode hiển thị sắc nét và chuẩn xác 100%.
+2. **Hiện tượng Mid-tone Gray Clipping:**
+   - Khi dùng màu nền là các sắc độ xám trung gian (Mid-tone Grays như `#222222`, `#333333`) đi cùng chữ trắng sáng (`#ffffff`, `#ededed`), bộ khử răng cưa của Windows Terminal (DirectWrite / ClearType) bị xung đột thuật toán Gamma Blend.
+   - Các pixel biên ở chóp nhọn của glyph `▶` bị hòa lẫn vào nền xám tối, làm mất nét hoặc gây cảm giác icon bị co rút dẹt lại.
+3. **2 Nguyên tắc Vàng khi chọn bất kỳ mã màu Hex / RGB tùy biến:**
+   - **Nút có nền khối (Solid Button):** Dùng bất kỳ màu RGB nổi bật nào làm nền (`#0070f3`, `#7928ca`, `#10b981`, `#e91e63`, `#ff5722`...) đi cùng chữ `Theme::WHITE` hoặc `Theme::BLACK`. Icon luôn to tròn 100%.
+   - **Nút không nền (Ghost/Outline):** Nền giữ nguyên nền tối sâu `Theme::BG` (`#0a0a0a`), chữ dùng màu RGB có sắc tố (Accent Blue, Cyan, Amber, Emerald...). Tránh dùng chữ trắng tinh `#ffffff` đơn độc trên nền đen.
+
 ### Input Fields `[x]` (`InputWidget`)
 
 ```

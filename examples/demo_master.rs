@@ -88,16 +88,29 @@ fn main() -> io::Result<()> {
     form.add_widget(Box::new(
         SelectWidget::new(
             "region",
-            "Hosting Region (HTML Select/Option Dropdown)",
+            "Hosting Datacenter (HTML Select/Option ─ 16 Regions)",
             vec![
                 ("us-east-1", "US East (N. Virginia)"),
+                ("us-east-2", "US East (Ohio)"),
+                ("us-west-1", "US West (N. California)"),
+                ("us-west-2", "US West (Oregon)"),
+                ("ca-central-1", "Canada (Central)"),
+                ("eu-west-1", "Europe (Ireland)"),
                 ("eu-central-1", "Europe (Frankfurt)"),
+                ("eu-west-2", "Europe (London)"),
+                ("eu-south-1", "Europe (Milan)"),
+                ("ap-northeast-1", "Asia Pacific (Tokyo)"),
+                ("ap-northeast-2", "Asia Pacific (Seoul)"),
                 ("ap-southeast-1", "Asia Pacific (Singapore)"),
+                ("ap-southeast-2", "Asia Pacific (Sydney)"),
+                ("ap-south-1", "Asia Pacific (Mumbai)"),
+                ("me-south-1", "Middle East (Bahrain)"),
                 ("sa-east-1", "South America (São Paulo)"),
             ],
         )
-        .with_placeholder("Select a deployment datacenter... ▾")
-        .with_selected(0),
+        .with_placeholder("Select deployment datacenter... ▾")
+        .with_selected(0)
+        .with_max_visible(6),
     ));
     form.add_widget(Box::new(
         ListWidget::new("route_menu")

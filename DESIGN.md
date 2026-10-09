@@ -341,6 +341,17 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | | `Icons::BULLSEYE` | `◎ ` | `U+25CE` | `((o))` |
 | | `Icons::CROSSHAIR` | `⌖ ` | `U+2316` | `(+)` |
 | | `Icons::APPROX` | `≈ ` | `U+2248` | `~` |
+| **Directional Arrows** | `Icons::ARROW_UP` | `↑ ` | `U+2191` | `^` |
+| | `Icons::ARROW_DOWN` | `↓ ` | `U+2193` | `v` |
+| | `Icons::ARROW_LEFT` | `← ` | `U+2190` | `<` |
+| | `Icons::ARROW_RIGHT` | `→ ` | `U+2192` | `>` |
+| | `Icons::ARROW_UP_DOWN` | `↕ ` | `U+2195` | `^v` |
+| | `Icons::ARROW_LEFT_RIGHT` | `↔ ` | `U+2194` | `<>` |
+| | `Icons::ENTER` | `↵ ` | `U+21B5` | `<-'` |
+| | `Icons::RELOAD` | `↻ ` | `U+21BB` | `@` |
+| | `Icons::UNDO` | `↺ ` | `U+21BA` | `@` |
+| | `Icons::ARROW_DOUBLE_RIGHT` | `⇒ ` | `U+21D2` | `=>` |
+| | `Icons::ARROW_DOUBLE_LEFT` | `⇐ ` | `U+21D0` | `<=` |
 
 > **Bảo vệ thị giác (Visual Protection)**:
 > 1. Toàn bộ icon được chuẩn hóa đúng 2 cell hiển thị (1 ký tự glyph + 1 khoảng trắng đệm) để tránh phân mảnh heap và thẳng hàng tuyệt đối.

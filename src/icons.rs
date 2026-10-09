@@ -38,13 +38,24 @@ impl Icons {
 
     // Bộ chỉ hướng & tiến trình (Progress & Pointers)
     pub const POINTER: &'static str = "▹ ";       // U+25B9 / U+25B8 White small triangle + space
-    pub const ARROW_RIGHT: &'static str = "→ ";   // U+2192 + space
-    pub const ARROW_UP: &'static str = "▲ ";      // U+25B2 + space (Black Up-Pointing Triangle)
     pub const BRANCH: &'static str = "⤷ ";        // U+21B3 + space
     pub const DIAMOND_EMPTY: &'static str = "◇ "; // U+25C7 + space (White Diamond)
     pub const SNOWFLAKE: &'static str = "❅ ";     // U+2745 + space (Snowflake)
     pub const PROGRESS_FILLED: &'static str = "━"; // U+2501 (Không space để nối thanh bar)
     pub const PROGRESS_EMPTY: &'static str = "─";  // U+2500 (Không space để nối thanh bar)
+
+    // Standard Directional Arrows (Bộ mũi tên định hướng chuẩn Unicode 2-cell)
+    pub const ARROW_UP: &'static str = "↑ ";      // U+2191 + space (Upwards Arrow)
+    pub const ARROW_DOWN: &'static str = "↓ ";    // U+2193 + space (Downwards Arrow)
+    pub const ARROW_LEFT: &'static str = "← ";    // U+2190 + space (Leftwards Arrow)
+    pub const ARROW_RIGHT: &'static str = "→ ";   // U+2192 + space (Rightwards Arrow)
+    pub const ARROW_UP_DOWN: &'static str = "↕ "; // U+2195 + space (Up Down Arrow / Vertical Axis)
+    pub const ARROW_LEFT_RIGHT: &'static str = "↔ "; // U+2194 + space (Left Right Arrow / Horizontal Axis)
+    pub const ENTER: &'static str = "↵ ";         // U+21B5 + space (Downwards Arrow with Corner Left / Return Key)
+    pub const RELOAD: &'static str = "↻ ";        // U+21BB + space (Clockwise Open Circle Arrow / Refresh)
+    pub const UNDO: &'static str = "↺ ";          // U+21BA + space (Anticlockwise Open Circle Arrow / Undo)
+    pub const ARROW_DOUBLE_RIGHT: &'static str = "⇒ "; // U+21D2 + space (Rightwards Double Arrow)
+    pub const ARROW_DOUBLE_LEFT: &'static str = "⇐ ";  // U+21D0 + space (Leftwards Double Arrow)
 
     // Safe Geometric Glyphs (Bộ glyph hình học an toàn, zero-clipping trên Windows/Linux Terminal)
     // 1. Squares & Checkboxes
@@ -189,8 +200,17 @@ mod tests {
         assert_eq!(Icons::SPARKLE_EMPTY, "✧ ");
         assert_eq!(Icons::STAR_OUTLINE, "⚝ ");
         assert_eq!(Icons::POINTER, "▹ ");
+        assert_eq!(Icons::ARROW_UP, "↑ ");
+        assert_eq!(Icons::ARROW_DOWN, "↓ ");
+        assert_eq!(Icons::ARROW_LEFT, "← ");
         assert_eq!(Icons::ARROW_RIGHT, "→ ");
-        assert_eq!(Icons::ARROW_UP, "▲ ");
+        assert_eq!(Icons::ARROW_UP_DOWN, "↕ ");
+        assert_eq!(Icons::ARROW_LEFT_RIGHT, "↔ ");
+        assert_eq!(Icons::ENTER, "↵ ");
+        assert_eq!(Icons::RELOAD, "↻ ");
+        assert_eq!(Icons::UNDO, "↺ ");
+        assert_eq!(Icons::ARROW_DOUBLE_RIGHT, "⇒ ");
+        assert_eq!(Icons::ARROW_DOUBLE_LEFT, "⇐ ");
         assert_eq!(Icons::BRANCH, "⤷ ");
         assert_eq!(Icons::DIAMOND_EMPTY, "◇ ");
         assert_eq!(Icons::SNOWFLAKE, "❅ ");

@@ -530,6 +530,18 @@ fn main() -> io::Result<()> {
                         (Icons::BULLSEYE, "Icons::BULLSEYE", "◎ (U+25CE)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
                         (Icons::CROSSHAIR, "Icons::CROSSHAIR", "⌖ (U+2316)", "Theme::SKY     (#38BDF8)", Theme::SKY),
                         (Icons::APPROX, "Icons::APPROX", "≈ (U+2248)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
+                        // 7. Directional Arrows
+                        (Icons::ARROW_UP, "Icons::ARROW_UP", "↑ (U+2191)", "Theme::SUCCESS (#25A249)", Theme::SUCCESS),
+                        (Icons::ARROW_DOWN, "Icons::ARROW_DOWN", "↓ (U+2193)", "Theme::ERROR   (#DA1E28)", Theme::ERROR),
+                        (Icons::ARROW_LEFT, "Icons::ARROW_LEFT", "← (U+2190)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
+                        (Icons::ARROW_RIGHT, "Icons::ARROW_RIGHT", "→ (U+2192)", "Theme::PRIMARY (#4589FF)", Theme::PRIMARY),
+                        (Icons::ARROW_UP_DOWN, "Icons::ARROW_UP_DOWN", "↕ (U+2195)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
+                        (Icons::ARROW_LEFT_RIGHT, "Icons::ARROW_LEFT_RIGHT", "↔ (U+2194)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
+                        (Icons::ENTER, "Icons::ENTER", "↵ (U+21B5)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
+                        (Icons::RELOAD, "Icons::RELOAD", "↻ (U+21BB)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
+                        (Icons::UNDO, "Icons::UNDO", "↺ (U+21BA)", "Theme::ORANGE  (#FF8800)", Theme::ORANGE),
+                        (Icons::ARROW_DOUBLE_RIGHT, "Icons::ARROW_DOUBLE_RIGHT", "⇒ (U+21D2)", "Theme::PURPLE  (#7928CA)", Theme::PURPLE),
+                        (Icons::ARROW_DOUBLE_LEFT, "Icons::ARROW_DOUBLE_LEFT", "⇐ (U+21D0)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
                     ];
 
                     for (glyph, const_name, unicode_char, color_name, color) in geometric_icons {
@@ -550,6 +562,18 @@ fn main() -> io::Result<()> {
                         Span::styled("  ─────────────────────────────────────────────────────────────────────────────", Style::default().fg(Theme::NEUTRAL_100)),
                     ]));
                     lines.push(Line::from(""));
+
+                    lines.push(Line::from(vec![
+                        Span::styled("    [Arrows/Flow]", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(format!(" {}", Icons::ARROW_UP), Style::default().fg(Theme::SUCCESS)),
+                        Span::styled("Metric +14%   ", Style::default().fg(Theme::SUCCESS)),
+                        Span::styled(Icons::ARROW_DOWN, Style::default().fg(Theme::ERROR)),
+                        Span::styled("Memory -3%    ", Style::default().fg(Theme::ERROR)),
+                        Span::styled(Icons::RELOAD, Style::default().fg(Theme::CYAN)),
+                        Span::styled("Sync Engine   ", Style::default().fg(Theme::CYAN)),
+                        Span::styled(Icons::ENTER, Style::default().fg(Theme::ACCENT)),
+                        Span::styled("Submit (Enter)", Style::default().fg(Theme::ACCENT)),
+                    ]));
 
                     lines.push(Line::from(vec![
                         Span::styled("    [Sensor/HW]  ", Style::default().fg(Theme::SECONDARY)),

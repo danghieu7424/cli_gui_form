@@ -540,6 +540,9 @@ fn main() -> io::Result<()> {
                         (Icons::ENTER, "Icons::ENTER", "↵ (U+21B5)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
                         (Icons::RELOAD, "Icons::RELOAD", "↻ (U+21BB)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
                         (Icons::UNDO, "Icons::UNDO", "↺ (U+21BA)", "Theme::ORANGE  (#FF8800)", Theme::ORANGE),
+                        // 8. Flags & Milestones
+                        (Icons::FLAG_FILLED, "Icons::FLAG_FILLED", "⚑ (U+2691)", "Theme::CRITICAL (#FF0055)", Theme::CRITICAL),
+                        (Icons::FLAG_EMPTY, "Icons::FLAG_EMPTY", "⚐ (U+2690)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
                     ];
 
                     for (glyph, const_name, unicode_char, color_name, color) in geometric_icons {
@@ -560,6 +563,14 @@ fn main() -> io::Result<()> {
                         Span::styled("  ─────────────────────────────────────────────────────────────────────────────", Style::default().fg(Theme::NEUTRAL_100)),
                     ]));
                     lines.push(Line::from(""));
+
+                    lines.push(Line::from(vec![
+                        Span::styled("    [Flags/Mark] ", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(format!(" {}", Icons::FLAG_FILLED), Style::default().fg(Theme::CRITICAL)),
+                        Span::styled("Release Milestone v1.0   ", Style::default().fg(Theme::FG)),
+                        Span::styled(Icons::FLAG_EMPTY, Style::default().fg(Theme::MUTED)),
+                        Span::styled("Roadmap Horizon v2.0", Style::default().fg(Theme::MUTED)),
+                    ]));
 
                     lines.push(Line::from(vec![
                         Span::styled("    [Arrows/Flow]", Style::default().fg(Theme::SECONDARY)),

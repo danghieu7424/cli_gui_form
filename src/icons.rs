@@ -93,6 +93,11 @@ impl Icons {
     pub const CROSSHAIR: &'static str = "⌖ ";             // U+2316 + space (Position Indicator / Crosshair / GPS)
     pub const APPROX: &'static str = "≈ ";                // U+2248 + space (Almost Equal To / ETA / Wave)
 
+    // 7. Flags & Milestones
+    pub const FLAG_FILLED: &'static str = "⚑ ";           // U+2691 + space (Black Flag / Priority Flag / Checkpoint)
+    pub const FLAG_EMPTY: &'static str = "⚐ ";            // U+2690 + space (White Flag / Milestone / Unflagged)
+    pub const FLAG: &'static str = "⚑ ";                  // Alias cho FLAG_FILLED
+
     /// Trả về chuỗi icon chuẩn ghép cùng text (Zero-overhead logic)
     #[inline]
     pub fn format(icon: &'static str, text: &str) -> String {
@@ -243,6 +248,11 @@ mod tests {
         assert_eq!(Icons::BULLSEYE, "◎ ");
         assert_eq!(Icons::CROSSHAIR, "⌖ ");
         assert_eq!(Icons::APPROX, "≈ ");
+
+        // Flags & Milestones
+        assert_eq!(Icons::FLAG_FILLED, "⚑ ");
+        assert_eq!(Icons::FLAG_EMPTY, "⚐ ");
+        assert_eq!(Icons::FLAG, "⚑ ");
     }
 
     #[test]

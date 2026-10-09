@@ -350,6 +350,8 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | | `Icons::ENTER` | `↵ ` | `U+21B5` | `<-'` |
 | | `Icons::RELOAD` | `↻ ` | `U+21BB` | `@` |
 | | `Icons::UNDO` | `↺ ` | `U+21BA` | `@` |
+| **Flags & Milestones** | `Icons::FLAG_FILLED` | `⚑ ` | `U+2691` | `[F]` |
+| | `Icons::FLAG_EMPTY` | `⚐ ` | `U+2690` | `[f]` |
 
 > **Bảo vệ thị giác (Visual Protection)**:
 > 1. Toàn bộ icon được chuẩn hóa đúng 2 cell hiển thị (1 ký tự glyph + 1 khoảng trắng đệm) để tránh phân mảnh heap và thẳng hàng tuyệt đối.

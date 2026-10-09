@@ -540,8 +540,6 @@ fn main() -> io::Result<()> {
                         (Icons::ENTER, "Icons::ENTER", "↵ (U+21B5)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
                         (Icons::RELOAD, "Icons::RELOAD", "↻ (U+21BB)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
                         (Icons::UNDO, "Icons::UNDO", "↺ (U+21BA)", "Theme::ORANGE  (#FF8800)", Theme::ORANGE),
-                        (Icons::ARROW_DOUBLE_RIGHT, "Icons::ARROW_DOUBLE_RIGHT", "⇒ (U+21D2)", "Theme::PURPLE  (#7928CA)", Theme::PURPLE),
-                        (Icons::ARROW_DOUBLE_LEFT, "Icons::ARROW_DOUBLE_LEFT", "⇐ (U+21D0)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
                     ];
 
                     for (glyph, const_name, unicode_char, color_name, color) in geometric_icons {

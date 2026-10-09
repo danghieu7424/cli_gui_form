@@ -54,8 +54,6 @@ impl Icons {
     pub const ENTER: &'static str = "↵ ";         // U+21B5 + space (Downwards Arrow with Corner Left / Return Key)
     pub const RELOAD: &'static str = "↻ ";        // U+21BB + space (Clockwise Open Circle Arrow / Refresh)
     pub const UNDO: &'static str = "↺ ";          // U+21BA + space (Anticlockwise Open Circle Arrow / Undo)
-    pub const ARROW_DOUBLE_RIGHT: &'static str = "⇒ "; // U+21D2 + space (Rightwards Double Arrow)
-    pub const ARROW_DOUBLE_LEFT: &'static str = "⇐ ";  // U+21D0 + space (Leftwards Double Arrow)
 
     // Safe Geometric Glyphs (Bộ glyph hình học an toàn, zero-clipping trên Windows/Linux Terminal)
     // 1. Squares & Checkboxes
@@ -209,8 +207,6 @@ mod tests {
         assert_eq!(Icons::ENTER, "↵ ");
         assert_eq!(Icons::RELOAD, "↻ ");
         assert_eq!(Icons::UNDO, "↺ ");
-        assert_eq!(Icons::ARROW_DOUBLE_RIGHT, "⇒ ");
-        assert_eq!(Icons::ARROW_DOUBLE_LEFT, "⇐ ");
         assert_eq!(Icons::BRANCH, "⤷ ");
         assert_eq!(Icons::DIAMOND_EMPTY, "◇ ");
         assert_eq!(Icons::SNOWFLAKE, "❅ ");

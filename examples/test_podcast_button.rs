@@ -75,6 +75,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         )
         .with_icon(Icons::RUN)
         .with_full_width(true)
+        .with_centered(true)
+        .with_bordered(true)
         .with_preset(Theme::BTN_ACCENT),
     ));
 

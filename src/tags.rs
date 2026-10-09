@@ -145,18 +145,20 @@ impl Tags {
         ])
     }
 
-    /// Trả về màu sắc Theme mặc định tương ứng với mức độ nghiêm trọng
+    /// Trả về màu sắc Theme mặc định tương ứng với mức độ nghiêm trọng (Zero-cost matching)
     #[inline]
-    pub fn color_for(tag: &'static str) -> Color {
+    pub fn color_for(tag: &str) -> Color {
         match tag {
             Self::INFO | Self::INFO_CHAR | Self::LINK | Self::APIS | Self::USER => crate::Theme::ACCENT,
-            Self::WARN | Self::ALERT_CHAR | Self::TIME => crate::Theme::WARNING,
+            Self::WARN | Self::ALERT_CHAR | Self::TIME | "[LOCK]" => crate::Theme::WARNING,
             Self::FAIL | Self::ERROR_CHAR | Self::KILL => crate::Theme::ERROR,
             Self::PASS | Self::DONE | Self::CHECKED => crate::Theme::SUCCESS,
-            Self::CONF | Self::CORE | Self::EXEC | Self::POINTER => crate::Theme::PRIMARY,
+            Self::CONF | Self::CORE | Self::EXEC | Self::POINTER | Self::INIT => crate::Theme::PRIMARY,
             Self::WAIT | Self::PAUS | Self::PAUSE_CHAR => crate::Theme::ORANGE,
-            Self::AUDI | Self::SONG | Self::VOIC => crate::Theme::CYAN,
-            Self::DEVS | Self::NODE | Self::CERT => crate::Theme::PURPLE,
+            Self::AUDI | Self::SONG | Self::VOIC | Self::SYNC => crate::Theme::CYAN,
+            Self::DEVS | Self::NODE | Self::CERT | Self::PACK | Self::ARCH | Self::NETW => crate::Theme::PURPLE,
+            Self::PROC | Self::PIPE => crate::Theme::INDIGO,
+            "[SKIP]" => crate::Theme::MUTED,
             _ => crate::Theme::SECONDARY,
         }
     }

@@ -69,6 +69,14 @@ impl Icons {
     // 4. Diamonds
     pub const DIAMOND_FILLED: &'static str = "◆ ";        // U+25C6 + space (Black Diamond)
 
+    // 5. Media, Navigation & System Glyphs
+    pub const HOURGLASS: &'static str = "⧗ ";             // U+29D7 + space (Black Hourglass / Waiting)
+    pub const TAB: &'static str = "⇥ ";                   // U+21E5 + space (Rightwards Arrow To Bar / Tab / Jump)
+    pub const MENU: &'static str = "≡ ";                  // U+2261 + space (Identical To / Hamburger Menu)
+    pub const MUSIC: &'static str = "♪ ";                 // U+266A + space (Eighth Note / Audio Track)
+    pub const MUSIC_DOUBLE: &'static str = "♫ ";          // U+266B + space (Beamed Eighth Notes / Playlist / Stereo)
+    pub const SQUARE_CONTAINED: &'static str = "▣ ";      // U+25A3 + space (White Square Containing Black Small Square)
+
     /// Trả về chuỗi icon chuẩn ghép cùng text (Zero-overhead logic)
     #[inline]
     pub fn format(icon: &'static str, text: &str) -> String {
@@ -197,6 +205,14 @@ mod tests {
         assert_eq!(Icons::TRIANGLE_RIGHT_SMALL, "▸ ");
         assert_eq!(Icons::POINTER_FILLED, "▸ ");
         assert_eq!(Icons::DIAMOND_FILLED, "◆ ");
+
+        // Media, Navigation & System Glyphs
+        assert_eq!(Icons::HOURGLASS, "⧗ ");
+        assert_eq!(Icons::TAB, "⇥ ");
+        assert_eq!(Icons::MENU, "≡ ");
+        assert_eq!(Icons::MUSIC, "♪ ");
+        assert_eq!(Icons::MUSIC_DOUBLE, "♫ ");
+        assert_eq!(Icons::SQUARE_CONTAINED, "▣ ");
     }
 
     #[test]

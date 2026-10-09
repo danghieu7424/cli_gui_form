@@ -330,6 +330,12 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | | `Icons::TRIANGLE_RIGHT_SMALL` / `POINTER_FILLED` | `▸ ` | `U+25B8` | `>` |
 | **Diamonds** | `Icons::DIAMOND_FILLED` | `◆ ` | `U+25C6` | `<*>` |
 | | `Icons::DIAMOND_EMPTY` | `◇ ` | `U+25C7` | `<>` |
+| **Media & Audio** | `Icons::MUSIC` | `♪ ` | `U+266A` | `[~]` |
+| | `Icons::MUSIC_DOUBLE` | `♫ ` | `U+266B` | `[~~]` |
+| **Navigation & System** | `Icons::TAB` | `⇥ ` | `U+21E5` | `->\|` |
+| | `Icons::MENU` | `≡ ` | `U+2261` | `==` |
+| | `Icons::HOURGLASS` | `⧗ ` | `U+29D7` | `X` |
+| | `Icons::SQUARE_CONTAINED` | `▣ ` | `U+25A3` | `[+]` |
 
 > **Bảo vệ thị giác (Visual Protection)**:
 > 1. Toàn bộ icon được chuẩn hóa đúng 2 cell hiển thị (1 ký tự glyph + 1 khoảng trắng đệm) để tránh phân mảnh heap và thẳng hàng tuyệt đối.

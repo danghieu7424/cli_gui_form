@@ -517,6 +517,13 @@ fn main() -> io::Result<()> {
                         // 4. Diamonds
                         (Icons::DIAMOND_FILLED, "Icons::DIAMOND_FILLED", "◆ (U+25C6)", "Theme::PURPLE  (#7928CA)", Theme::PURPLE),
                         (Icons::DIAMOND_EMPTY, "Icons::DIAMOND_EMPTY", "◇ (U+25C7)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
+                        // 5. Media, Navigation & System
+                        (Icons::MUSIC, "Icons::MUSIC", "♪ (U+266A)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
+                        (Icons::MUSIC_DOUBLE, "Icons::MUSIC_DOUBLE", "♫ (U+266B)", "Theme::PURPLE  (#7928CA)", Theme::PURPLE),
+                        (Icons::TAB, "Icons::TAB", "⇥ (U+21E5)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
+                        (Icons::MENU, "Icons::MENU", "≡ (U+2261)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
+                        (Icons::HOURGLASS, "Icons::HOURGLASS", "⧗ (U+29D7)", "Theme::ORANGE  (#FF8800)", Theme::ORANGE),
+                        (Icons::SQUARE_CONTAINED, "Icons::SQUARE_CONTAINED", "▣ (U+25A3)", "Theme::EMERALD (#10B981)", Theme::EMERALD),
                     ];
 
                     for (glyph, const_name, unicode_char, color_name, color) in geometric_icons {
@@ -531,7 +538,7 @@ fn main() -> io::Result<()> {
                     // Showcase ứng dụng trực tiếp các glyph hình học vào UI
                     lines.push(Line::from(""));
                     lines.push(Line::from(vec![
-                        Span::styled("  Live Geometric UI Components Demo", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                        Span::styled("  Live Geometric & Media UI Components Demo", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
                     ]));
                     lines.push(Line::from(vec![
                         Span::styled("  ─────────────────────────────────────────────────────────────────────────────", Style::default().fg(Theme::NEUTRAL_100)),
@@ -539,28 +546,52 @@ fn main() -> io::Result<()> {
                     lines.push(Line::from(""));
 
                     lines.push(Line::from(vec![
+                        Span::styled("    [Media/Audio]", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(format!(" {}", Icons::MUSIC), Style::default().fg(Theme::CYAN)),
+                        Span::styled("Voice Dub Track 01        ", Style::default().fg(Theme::FG)),
+                        Span::styled(Icons::MUSIC_DOUBLE, Style::default().fg(Theme::PURPLE)),
+                        Span::styled("Master Stereo BGM (Active)", Style::default().fg(Theme::FG)),
+                    ]));
+
+                    lines.push(Line::from(vec![
+                        Span::styled("    [Nav/Menu]   ", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(format!(" {}", Icons::MENU), Style::default().fg(Theme::SECONDARY)),
+                        Span::styled("Root Actions Menu         ", Style::default().fg(Theme::FG)),
+                        Span::styled(Icons::TAB, Style::default().fg(Theme::ACCENT)),
+                        Span::styled("Tab / Next Widget Field", Style::default().fg(Theme::ACCENT)),
+                    ]));
+
+                    lines.push(Line::from(vec![
+                        Span::styled("    [Wait/Box]   ", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(format!(" {}", Icons::HOURGLASS), Style::default().fg(Theme::ORANGE)),
+                        Span::styled("Rendering Pipeline (42s)  ", Style::default().fg(Theme::FG)),
+                        Span::styled(Icons::SQUARE_CONTAINED, Style::default().fg(Theme::EMERALD)),
+                        Span::styled("Nested Container Frame", Style::default().fg(Theme::EMERALD)),
+                    ]));
+
+                    lines.push(Line::from(vec![
                         Span::styled("    [Squares]    ", Style::default().fg(Theme::SECONDARY)),
-                        Span::styled(Icons::SQUARE_FILLED, Style::default().fg(Theme::SUCCESS)),
-                        Span::styled("Cluster Isolation: Active    ", Style::default().fg(Theme::FG)),
+                        Span::styled(format!(" {}", Icons::SQUARE_FILLED), Style::default().fg(Theme::SUCCESS)),
+                        Span::styled("Cluster Isolation: Active ", Style::default().fg(Theme::FG)),
                         Span::styled(Icons::SQUARE_EMPTY, Style::default().fg(Theme::MUTED)),
-                        Span::styled("WebGPU Pipeline: Idle    ", Style::default().fg(Theme::MUTED)),
+                        Span::styled("WebGPU Pipeline: Idle     ", Style::default().fg(Theme::MUTED)),
                         Span::styled(Icons::SQUARE_SMALL_FILLED, Style::default().fg(Theme::SECONDARY)),
                         Span::styled("Sub-process worker", Style::default().fg(Theme::SECONDARY)),
                     ]));
 
                     lines.push(Line::from(vec![
                         Span::styled("    [Radio/Node] ", Style::default().fg(Theme::SECONDARY)),
-                        Span::styled(Icons::CIRCLE_TARGET, Style::default().fg(Theme::CYAN)),
-                        Span::styled("Leader Node (Coordinator)    ", Style::default().fg(Theme::FG)),
+                        Span::styled(format!(" {}", Icons::CIRCLE_TARGET), Style::default().fg(Theme::CYAN)),
+                        Span::styled("Leader Node (Coordinator) ", Style::default().fg(Theme::FG)),
                         Span::styled(Icons::CIRCLE_EMPTY, Style::default().fg(Theme::MUTED)),
-                        Span::styled("Standby Replica #01          ", Style::default().fg(Theme::MUTED)),
+                        Span::styled("Standby Replica #01       ", Style::default().fg(Theme::MUTED)),
                         Span::styled(Icons::CIRCLE_FILLED, Style::default().fg(Theme::ACCENT)),
                         Span::styled("Quorum Acked", Style::default().fg(Theme::ACCENT)),
                     ]));
 
                     lines.push(Line::from(vec![
                         Span::styled("    [Breadcrumb] ", Style::default().fg(Theme::SECONDARY)),
-                        Span::styled("Workspace ", Style::default().fg(Theme::MUTED)),
+                        Span::styled(" Workspace ", Style::default().fg(Theme::MUTED)),
                         Span::styled(Icons::TRIANGLE_RIGHT_SMALL, Style::default().fg(Theme::PRIMARY)),
                         Span::styled("cli_gui_form ", Style::default().fg(Theme::MUTED)),
                         Span::styled(Icons::TRIANGLE_RIGHT_SMALL, Style::default().fg(Theme::PRIMARY)),
@@ -571,7 +602,7 @@ fn main() -> io::Result<()> {
 
                     lines.push(Line::from(vec![
                         Span::styled("    [Sort/Order] ", Style::default().fg(Theme::SECONDARY)),
-                        Span::styled("Sort: Latency ", Style::default().fg(Theme::FG)),
+                        Span::styled(" Sort: Latency ", Style::default().fg(Theme::FG)),
                         Span::styled(Icons::TRIANGLE_UP, Style::default().fg(Theme::WARNING)),
                         Span::styled("Ascending (18ms)  │  Error Rate ", Style::default().fg(Theme::MUTED)),
                         Span::styled(Icons::TRIANGLE_DOWN, Style::default().fg(Theme::ERROR)),
@@ -580,8 +611,8 @@ fn main() -> io::Result<()> {
 
                     lines.push(Line::from(vec![
                         Span::styled("    [Diamonds]   ", Style::default().fg(Theme::SECONDARY)),
-                        Span::styled(Icons::DIAMOND_FILLED, Style::default().fg(Theme::PURPLE)),
-                        Span::styled("Tier 1: Mission-Critical    ", Style::default().fg(Theme::FG)),
+                        Span::styled(format!(" {}", Icons::DIAMOND_FILLED), Style::default().fg(Theme::PURPLE)),
+                        Span::styled("Tier 1: Mission-Critical  ", Style::default().fg(Theme::FG)),
                         Span::styled(Icons::DIAMOND_EMPTY, Style::default().fg(Theme::SECONDARY)),
                         Span::styled("Tier 2: Asynchronous Backlog", Style::default().fg(Theme::SECONDARY)),
                     ]));

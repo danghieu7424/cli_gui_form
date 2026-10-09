@@ -357,6 +357,61 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 > 1. Toàn bộ icon được chuẩn hóa đúng 2 cell hiển thị (1 ký tự glyph + 1 khoảng trắng đệm) để tránh phân mảnh heap và thẳng hàng tuyệt đối.
 > 2. `Icons::span()` và `Icons::line()` tự động triệt tiêu cờ `Modifier::BOLD` riêng cho ký tự icon, ngăn chặn hiện tượng co rút 1 cell trên Windows Terminal / conhost.
 
+### 7.1. Hệ Thống Tiền Tố Cố Định (Fixed-Width Tag System `[Tags]`) `[x]`
+
+Nhằm giải quyết triệt để bài toán **Layout Shift (giật dòng răng cưa)** khi render streaming logs, status bar, tree view, hệ thống quy chuẩn thành 2 form cố định:
+
+#### 1. Chuẩn Text-based 4 chữ: `[XXXX]` (Độ rộng chính xác: 6 cell)
+
+| Danh mục | Tag `[XXXX]` | Hằng số Rust | Ý nghĩa / Ngữ cảnh |
+| :--- | :--- | :--- | :--- |
+| **Trạng thái & Sự kiện** | `[INFO]` | `Tags::INFO` | Thông tin điều hướng chung |
+| | `[WARN]` | `Tags::WARN` | Cảnh báo tài nguyên / nghiệp vụ |
+| | `[FAIL]` | `Tags::FAIL` | Thất bại / Lỗi nghiêm trọng |
+| | `[PASS]` | `Tags::PASS` | Hợp lệ / Kiểm thử thành công |
+| | `[DONE]` | `Tags::DONE` | Hoàn tất tác vụ |
+| | `[WAIT]` | `Tags::WAIT` | Đang xếp hàng / Chờ tài nguyên |
+| | `[IDLE]` | `Tags::IDLE` | Trạng thái nghỉ / Sẵn sàng |
+| | `[BUSY]` | `Tags::BUSY` | Đang bận xử lý dữ liệu |
+| **Cấu hình & Hệ thống** | `[CONF]` | `Tags::CONF` | Cài đặt / Tệp cấu hình |
+| | `[CORE]` | `Tags::CORE` | Luồng nhân lõi / Engine |
+| | `[DEVS]` | `Tags::DEVS` | Môi trường Dev / Thiết bị |
+| | `[TEST]` | `Tags::TEST` | Kiểm thử tự động / Benchmark |
+| | `[EXEC]` | `Tags::EXEC` | Lệnh thực thi / Binary run |
+| **Tệp tin & Lưu trữ** | `[DIRS]` | `Tags::DIRS` | Thư mục phân cấp |
+| | `[FILE]` | `Tags::FILE` | Tệp dữ liệu đơn |
+| | `[DOCS]` | `Tags::DOCS` | Tài liệu / Ghi chú |
+| | `[PACK]` | `Tags::PACK` | Gói cài đặt / Dependencies |
+| | `[ARCH]` | `Tags::ARCH` | Kho lưu trữ / File nén |
+| **Media & Âm thanh** | `[MEDA]` | `Tags::MEDA` | Đa phương tiện chung |
+| | `[AUDI]` | `Tags::AUDI` | Luồng âm thanh / Track nhạc |
+| | `[RECD]` | `Tags::RECD` | Đang thu âm / Micro bật |
+| | `[SONG]` | `Tags::SONG` | Bài hát / Danh sách phát |
+| | `[VOIC]` | `Tags::VOIC` | Giọng nói AI / Dubbing |
+| **Mạng & Bảo mật** | `[NETW]` | `Tags::NETW` | Kết nối mạng / Socket |
+| | `[APIS]` | `Tags::APIS` | Endpoint REST / RPC |
+| | `[AUTH]` | `Tags::AUTH` | Xác thực / Quyền hạn / Token |
+| | `[NODE]` | `Tags::NODE` | Máy chủ Node / Cluster |
+| | `[PORT]` | `Tags::PORT` | Cổng dịch vụ kết nối |
+
+#### 2. Chuẩn Symbol-based 1 ký tự: `[X]` (Độ rộng chính xác: 3 cell)
+
+| Danh mục | Tag `[X]` | Hằng số Rust | Ý nghĩa / Ngữ cảnh |
+| :--- | :--- | :--- | :--- |
+| **Điều hướng & Cây** | `[>]` | `Tags::POINTER` | Con trỏ chọn / Active |
+| | `[+]` | `Tags::EXPAND` | Thư mục đóng (bấm mở) |
+| | `[-]` | `Tags::COLLAPSE` | Thư mục mở (bấm thu) |
+| | `[/]` | `Tags::PATH` | Thư mục con phân cấp |
+| | `[~]` | `Tags::HOME` | Thư mục gốc / Home |
+| **Lựa chọn Form** | `[x]` | `Tags::CHECKED` | Checkbox đã chọn |
+| | `[ ]` | `Tags::UNCHECKED` | Checkbox chưa chọn |
+| | `[*]` | `Tags::RADIO_ACTIVE` | Radio đã chọn |
+| | `[.]` | `Tags::RADIO_INACTIVE` | Radio chưa chọn |
+| **Thông báo & Trợ giúp** | `[i]` | `Tags::INFO_CHAR` | Trợ giúp thông tin |
+| | `[!]` | `Tags::ALERT_CHAR` | Cảnh báo khẩn cấp |
+| | `[?]` | `Tags::HELP_CHAR` | Câu hỏi xác nhận |
+| | `[#]` | `Tags::ERROR_CHAR` | Lỗi xung đột / Mã số |
+
 ---
 
 ## 8. Animation & Motion `[x]`

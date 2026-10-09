@@ -3,7 +3,7 @@
 use cli_gui_form::{
     ButtonWidget, CardWidget, CheckboxWidget, EditableListWidget, EventResult, FormManager, FormWidget, Icons,
     InputMode, InputWidget, ListWidget, RadioWidget, SelectWidget, ShimmerWidget, SpinnerType, StatusBarWidget, TabsWidget,
-    TaskWidget, Theme,
+    Tags, TaskWidget, Theme,
 };
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode, KeyEventKind, KeyModifiers},
@@ -260,17 +260,17 @@ fn main() -> io::Result<()> {
     let mut live_logs: Vec<Line<'static>> = vec![
         Line::from(vec![
             Span::styled("14:22:01 ", Style::default().fg(Theme::MUTED)),
-            Span::styled("[INFO] ", Style::default().fg(Theme::ACCENT)),
+            Span::styled(format!("{} ", Tags::INFO), Style::default().fg(Tags::color_for(Tags::INFO))),
             Span::styled("HTTP server listening at 127.0.0.1:3000", Style::default().fg(Theme::FG)),
         ]),
         Line::from(vec![
             Span::styled("14:22:05 ", Style::default().fg(Theme::MUTED)),
-            Span::styled("[OK]   ", Style::default().fg(Theme::SUCCESS)),
+            Span::styled(format!("{} ", Tags::DONE), Style::default().fg(Tags::color_for(Tags::DONE))),
             Span::styled("Database schema migrations verified", Style::default().fg(Theme::FG)),
         ]),
         Line::from(vec![
             Span::styled("14:22:18 ", Style::default().fg(Theme::MUTED)),
-            Span::styled("[BUILD]", Style::default().fg(Theme::PRIMARY)),
+            Span::styled(format!("{} ", Tags::EXEC), Style::default().fg(Tags::color_for(Tags::EXEC))),
             Span::styled("Native Rust backend compiled in 480ms", Style::default().fg(Theme::FG)),
         ]),
     ];
@@ -292,17 +292,17 @@ fn main() -> io::Result<()> {
         if last_log_stream.elapsed() >= Duration::from_millis(1600) {
             let sec = 25 + log_id * 2;
             let time_str = format!("14:23:{:02}", sec % 60);
-            let (level, color, msg) = match log_id % 5 {
-                0 => ("[OK]   ", Theme::SUCCESS, format!("Event stream batch #{} acknowledged", log_id)),
-                1 => ("[INFO] ", Theme::ACCENT, format!("Client session #{} authenticated via JWT", log_id)),
-                2 => ("[DEBUG]", Theme::SECONDARY, format!("Redis cache hit for key 'cluster_metrics_{}'", log_id)),
-                3 => ("[WARN] ", Theme::WARNING, format!("Garbage collection took 14.2ms on worker #{}", (log_id % 3) + 1)),
-                _ => ("[BUILD]", Theme::PRIMARY, format!("WASM bundle hot-reloaded for client #{}", log_id)),
+            let (tag, msg) = match log_id % 5 {
+                0 => (Tags::DONE, format!("Event stream batch #{} acknowledged", log_id)),
+                1 => (Tags::INFO, format!("Client session #{} authenticated via JWT", log_id)),
+                2 => (Tags::CONF, format!("Redis cache hit for key 'cluster_metrics_{}'", log_id)),
+                3 => (Tags::WARN, format!("Garbage collection took 14.2ms on worker #{}", (log_id % 3) + 1)),
+                _ => (Tags::EXEC, format!("WASM bundle hot-reloaded for client #{}", log_id)),
             };
 
             live_logs.push(Line::from(vec![
                 Span::styled(format!("{} ", time_str), Style::default().fg(Theme::MUTED)),
-                Span::styled(format!("{} ", level), Style::default().fg(color)),
+                Span::styled(format!("{} ", tag), Style::default().fg(Tags::color_for(tag))),
                 Span::styled(msg, Style::default().fg(Theme::FG)),
             ]));
 
@@ -671,6 +671,47 @@ fn main() -> io::Result<()> {
                         Span::styled("Tier 1: Mission-Critical  ", Style::default().fg(Theme::FG)),
                         Span::styled(Icons::DIAMOND_EMPTY, Style::default().fg(Theme::SECONDARY)),
                         Span::styled("Tier 2: Asynchronous Backlog", Style::default().fg(Theme::SECONDARY)),
+                    ]));
+
+                    // Fixed-Width Tag System Showcase (DESIGN.md Mục 7.1)
+                    lines.push(Line::from(""));
+                    lines.push(Line::from(vec![
+                        Span::styled("  Fixed-Width Tag System Matrix (6-Cell [XXXX] & 3-Cell [X])", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                    ]));
+                    lines.push(Line::from(vec![
+                        Span::styled("  ─────────────────────────────────────────────────────────────────────────────", Style::default().fg(Theme::NEUTRAL_100)),
+                    ]));
+                    lines.push(Line::from(""));
+
+                    let tag_examples = [
+                        (Tags::INFO, "Tags::INFO", "Information notice", Tags::color_for(Tags::INFO)),
+                        (Tags::WARN, "Tags::WARN", "Warning threshold", Tags::color_for(Tags::WARN)),
+                        (Tags::FAIL, "Tags::FAIL", "Fatal error / Panic", Tags::color_for(Tags::FAIL)),
+                        (Tags::PASS, "Tags::PASS", "Test passed / Verified", Tags::color_for(Tags::PASS)),
+                        (Tags::DONE, "Tags::DONE", "Task job completed", Tags::color_for(Tags::DONE)),
+                        (Tags::WAIT, "Tags::WAIT", "Queued in scheduler", Tags::color_for(Tags::WAIT)),
+                        (Tags::EXEC, "Tags::EXEC", "Process execution", Tags::color_for(Tags::EXEC)),
+                        (Tags::CONF, "Tags::CONF", "Config file parsed", Tags::color_for(Tags::CONF)),
+                        (Tags::DEVS, "Tags::DEVS", "Hardware / Dev env", Tags::color_for(Tags::DEVS)),
+                        (Tags::NETW, "Tags::NETW", "Socket connection", Tags::color_for(Tags::NETW)),
+                        (Tags::AUDI, "Tags::AUDI", "Audio stream dubbing", Tags::color_for(Tags::AUDI)),
+                    ];
+
+                    for (tag, name, desc, color) in tag_examples {
+                        lines.push(Line::from(vec![
+                            Span::styled(format!("    {} ", tag), Style::default().fg(color).add_modifier(Modifier::BOLD)),
+                            Span::styled(format!("{:<14} ", name), Style::default().fg(Theme::FG)),
+                            Span::styled(desc, Style::default().fg(Theme::SECONDARY)),
+                        ]));
+                    }
+
+                    lines.push(Line::from(""));
+                    lines.push(Line::from(vec![
+                        Span::styled("    [Compact 3-Cell] ", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(format!("{} Checkbox  ", Tags::CHECKED), Style::default().fg(Theme::SUCCESS)),
+                        Span::styled(format!("{} Unchecked  ", Tags::UNCHECKED), Style::default().fg(Theme::MUTED)),
+                        Span::styled(format!("{} Radio Active  ", Tags::RADIO_ACTIVE), Style::default().fg(Theme::ACCENT)),
+                        Span::styled(format!("{} Folder Closed", Tags::EXPAND), Style::default().fg(Theme::PRIMARY)),
                     ]));
 
                     // Bảng màu mở rộng Extended Palette Swatches

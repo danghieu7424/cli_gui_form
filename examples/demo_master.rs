@@ -524,6 +524,12 @@ fn main() -> io::Result<()> {
                         (Icons::MENU, "Icons::MENU", "≡ (U+2261)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
                         (Icons::HOURGLASS, "Icons::HOURGLASS", "⧗ (U+29D7)", "Theme::ORANGE  (#FF8800)", Theme::ORANGE),
                         (Icons::SQUARE_CONTAINED, "Icons::SQUARE_CONTAINED", "▣ (U+25A3)", "Theme::EMERALD (#10B981)", Theme::EMERALD),
+                        // 6. Technical, Hardware & Targeting
+                        (Icons::PIN, "Icons::PIN", "⚲ (U+26B2)", "Theme::CRITICAL (#FF0055)", Theme::CRITICAL),
+                        (Icons::SPARK, "Icons::SPARK", "⌁ (U+2301)", "Theme::WARNING (#F1C21B)", Theme::WARNING),
+                        (Icons::BULLSEYE, "Icons::BULLSEYE", "◎ (U+25CE)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
+                        (Icons::CROSSHAIR, "Icons::CROSSHAIR", "⌖ (U+2316)", "Theme::SKY     (#38BDF8)", Theme::SKY),
+                        (Icons::APPROX, "Icons::APPROX", "≈ (U+2248)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
                     ];
 
                     for (glyph, const_name, unicode_char, color_name, color) in geometric_icons {
@@ -538,12 +544,29 @@ fn main() -> io::Result<()> {
                     // Showcase ứng dụng trực tiếp các glyph hình học vào UI
                     lines.push(Line::from(""));
                     lines.push(Line::from(vec![
-                        Span::styled("  Live Geometric & Media UI Components Demo", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                        Span::styled("  Live Geometric & Technical UI Components Demo", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
                     ]));
                     lines.push(Line::from(vec![
                         Span::styled("  ─────────────────────────────────────────────────────────────────────────────", Style::default().fg(Theme::NEUTRAL_100)),
                     ]));
                     lines.push(Line::from(""));
+
+                    lines.push(Line::from(vec![
+                        Span::styled("    [Sensor/HW]  ", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(format!(" {}", Icons::SPARK), Style::default().fg(Theme::WARNING)),
+                        Span::styled("High Voltage: 3.3V Active ", Style::default().fg(Theme::FG)),
+                        Span::styled(Icons::PIN, Style::default().fg(Theme::CRITICAL)),
+                        Span::styled("GPIO Pin 12 (Anchor)", Style::default().fg(Theme::CRITICAL)),
+                    ]));
+
+                    lines.push(Line::from(vec![
+                        Span::styled("    [Radar/Aim]  ", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(format!(" {}", Icons::BULLSEYE), Style::default().fg(Theme::CYAN)),
+                        Span::styled("Radar Lock: Focused       ", Style::default().fg(Theme::FG)),
+                        Span::styled(Icons::CROSSHAIR, Style::default().fg(Theme::SKY)),
+                        Span::styled("GPS Target Calibrated", Style::default().fg(Theme::SKY)),
+                        Span::styled(format!("  {} 12.4ms", Icons::APPROX), Style::default().fg(Theme::MUTED)),
+                    ]));
 
                     lines.push(Line::from(vec![
                         Span::styled("    [Media/Audio]", Style::default().fg(Theme::SECONDARY)),

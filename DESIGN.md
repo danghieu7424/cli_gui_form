@@ -336,6 +336,11 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | | `Icons::MENU` | `≡ ` | `U+2261` | `==` |
 | | `Icons::HOURGLASS` | `⧗ ` | `U+29D7` | `X` |
 | | `Icons::SQUARE_CONTAINED` | `▣ ` | `U+25A3` | `[+]` |
+| **Technical & Target** | `Icons::PIN` | `⚲ ` | `U+26B2` | `!` |
+| | `Icons::SPARK` | `⌁ ` | `U+2301` | `/` |
+| | `Icons::BULLSEYE` | `◎ ` | `U+25CE` | `((o))` |
+| | `Icons::CROSSHAIR` | `⌖ ` | `U+2316` | `(+)` |
+| | `Icons::APPROX` | `≈ ` | `U+2248` | `~` |
 
 > **Bảo vệ thị giác (Visual Protection)**:
 > 1. Toàn bộ icon được chuẩn hóa đúng 2 cell hiển thị (1 ký tự glyph + 1 khoảng trắng đệm) để tránh phân mảnh heap và thẳng hàng tuyệt đối.

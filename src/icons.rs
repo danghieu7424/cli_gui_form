@@ -77,6 +77,13 @@ impl Icons {
     pub const MUSIC_DOUBLE: &'static str = "♫ ";          // U+266B + space (Beamed Eighth Notes / Playlist / Stereo)
     pub const SQUARE_CONTAINED: &'static str = "▣ ";      // U+25A3 + space (White Square Containing Black Small Square)
 
+    // 6. Technical, Hardware & Targeting Glyphs
+    pub const PIN: &'static str = "⚲ ";                   // U+26B2 + space (Location Pin / Anchor Marker)
+    pub const SPARK: &'static str = "⌁ ";                 // U+2301 + space (Electric Spark / Volt / Fast Trigger)
+    pub const BULLSEYE: &'static str = "◎ ";              // U+25CE + space (Bullseye / Concentric Circle / Target)
+    pub const CROSSHAIR: &'static str = "⌖ ";             // U+2316 + space (Position Indicator / Crosshair / GPS)
+    pub const APPROX: &'static str = "≈ ";                // U+2248 + space (Almost Equal To / ETA / Wave)
+
     /// Trả về chuỗi icon chuẩn ghép cùng text (Zero-overhead logic)
     #[inline]
     pub fn format(icon: &'static str, text: &str) -> String {
@@ -213,6 +220,13 @@ mod tests {
         assert_eq!(Icons::MUSIC, "♪ ");
         assert_eq!(Icons::MUSIC_DOUBLE, "♫ ");
         assert_eq!(Icons::SQUARE_CONTAINED, "▣ ");
+
+        // Technical, Hardware & Targeting Glyphs
+        assert_eq!(Icons::PIN, "⚲ ");
+        assert_eq!(Icons::SPARK, "⌁ ");
+        assert_eq!(Icons::BULLSEYE, "◎ ");
+        assert_eq!(Icons::CROSSHAIR, "⌖ ");
+        assert_eq!(Icons::APPROX, "≈ ");
     }
 
     #[test]

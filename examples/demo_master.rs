@@ -219,7 +219,8 @@ fn main() -> io::Result<()> {
         .with_title_color(Theme::PURPLE)
         .with_item("PostgreSQL", Some(Icons::SUCCESS), "Healthy", Theme::EMERALD)
         .with_item("Redis Cluster", Some(Icons::WARNING), "Degraded", Theme::ORANGE)
-        .with_item("Edge Router", Some(Icons::RUN), "Active", Theme::SKY);
+        .with_item("Kafka Stream", Some(Icons::CIRCLE_TARGET), "Leader", Theme::CYAN)
+        .with_item("Edge Router", Some(Icons::DIAMOND_FILLED), "Active", Theme::SKY);
 
     // 4. TASKS & ANIMATIONS (TAB 3)
     let mut pulse_task = TaskWidget::new_loading(
@@ -463,28 +464,22 @@ fn main() -> io::Result<()> {
                     ]));
                     lines.push(Line::from(""));
 
-                    let icon_matrix = [
+                    let status_icons = [
                         (Icons::SUCCESS, "Icons::SUCCESS", "✔ (U+2714)", "Theme::SUCCESS (#25A249)", Theme::SUCCESS),
                         (Icons::ERROR, "Icons::ERROR", "✗ (U+2716)", "Theme::ERROR   (#DA1E28)", Theme::ERROR),
                         (Icons::WARNING, "Icons::WARNING", "⚠ (U+26A0)", "Theme::WARNING (#F1C21B)", Theme::WARNING),
                         (Icons::RUN, "Icons::RUN", "▶ (U+25B6)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
                         (Icons::BUILD, "Icons::BUILD", "⚙ (U+2699)", "Theme::PRIMARY (#4589FF)", Theme::PRIMARY),
+                        (Icons::INFO, "Icons::INFO", "ℹ (U+2139)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
                         (Icons::PAUSE, "Icons::PAUSE", "⏸ (U+23F8)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
                         (Icons::STOP, "Icons::STOP", "■ (U+25A0)", "Theme::ERROR   (#DA1E28)", Theme::ERROR),
-                        (Icons::CHECKBOX_ON, "Icons::CHECKBOX_ON", "☑ (U+2611)", "Theme::SUCCESS (#25A249)", Theme::SUCCESS),
-                        (Icons::CHECKBOX_OFF, "Icons::CHECKBOX_OFF", "☐ (U+2610)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
-                        (Icons::RADIO_ON, "Icons::RADIO_ON", "● (U+25CF)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
-                        (Icons::RADIO_OFF, "Icons::RADIO_OFF", "○ (U+25CB)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
                         (Icons::SPARKLE_FILLED, "Icons::SPARKLE_FILLED", "✦ (U+2726)", "Theme::WARNING (#F1C21B)", Theme::WARNING),
                         (Icons::STAR_OUTLINE, "Icons::STAR_OUTLINE", "⚝ (U+269D)", "Theme::PRIMARY (#4589FF)", Theme::PRIMARY),
-                        (Icons::DIAMOND_EMPTY, "Icons::DIAMOND_EMPTY", "◇ (U+25C7)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
                         (Icons::SNOWFLAKE, "Icons::SNOWFLAKE", "❅ (U+2745)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
-                        (Icons::POINTER, "Icons::POINTER", "▹ (U+25B8)", "Theme::PRIMARY (#4589FF)", Theme::PRIMARY),
-                        (Icons::ARROW_RIGHT, "Icons::ARROW_RIGHT", "→ (U+2192)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
                         (Icons::BRANCH, "Icons::BRANCH", "⤷ (U+21B3)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
                     ];
 
-                    for (glyph, const_name, unicode_char, color_name, color) in icon_matrix {
+                    for (glyph, const_name, unicode_char, color_name, color) in status_icons {
                         lines.push(Line::from(vec![
                             Span::styled(format!("    {}", glyph), Style::default().fg(color)),
                             Span::styled(format!("{:<22} ", const_name), Style::default().fg(Theme::FG)),
@@ -492,6 +487,104 @@ fn main() -> io::Result<()> {
                             Span::styled(color_name, Style::default().fg(color)),
                         ]));
                     }
+
+                    // Bộ hình học an toàn (Safe Geometric Glyphs - Windows Terminal Verified)
+                    lines.push(Line::from(""));
+                    lines.push(Line::from(vec![
+                        Span::styled("  Safe Geometric Glyphs Matrix (Windows/Linux Terminal Zero-Clipping)", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                    ]));
+                    lines.push(Line::from(vec![
+                        Span::styled("  ─────────────────────────────────────────────────────────────────────────────", Style::default().fg(Theme::NEUTRAL_100)),
+                    ]));
+                    lines.push(Line::from(""));
+
+                    let geometric_icons = [
+                        // 1. Squares & Checkboxes
+                        (Icons::SQUARE_FILLED, "Icons::SQUARE_FILLED", "■ (U+25A0)", "Theme::SUCCESS (#25A249)", Theme::SUCCESS),
+                        (Icons::SQUARE_EMPTY, "Icons::SQUARE_EMPTY", "□ (U+25A1)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
+                        (Icons::SQUARE_MEDIUM_FILLED, "Icons::SQUARE_MEDIUM_FILLED", "◼ (U+25FC)", "Theme::PRIMARY (#4589FF)", Theme::PRIMARY),
+                        (Icons::SQUARE_MEDIUM_EMPTY, "Icons::SQUARE_MEDIUM_EMPTY", "◻ (U+25FB)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
+                        (Icons::SQUARE_SMALL_FILLED, "Icons::SQUARE_SMALL_FILLED", "▪ (U+25AA)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
+                        // 2. Circles & Radio Targets
+                        (Icons::CIRCLE_FILLED, "Icons::CIRCLE_FILLED", "● (U+25CF)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
+                        (Icons::CIRCLE_EMPTY, "Icons::CIRCLE_EMPTY", "○ (U+25CB)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
+                        (Icons::CIRCLE_TARGET, "Icons::CIRCLE_TARGET", "◉ (U+25C9)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
+                        // 3. Pointers & Triangles
+                        (Icons::TRIANGLE_UP, "Icons::TRIANGLE_UP", "▲ (U+25B2)", "Theme::WARNING (#F1C21B)", Theme::WARNING),
+                        (Icons::TRIANGLE_DOWN, "Icons::TRIANGLE_DOWN", "▼ (U+25BC)", "Theme::ERROR   (#DA1E28)", Theme::ERROR),
+                        (Icons::TRIANGLE_RIGHT_SMALL, "Icons::TRIANGLE_RIGHT_SMALL", "▸ (U+25B8)", "Theme::INDIGO  (#5E6AD2)", Theme::INDIGO),
+                        (Icons::POINTER, "Icons::POINTER", "▹ (U+25B9)", "Theme::PRIMARY (#4589FF)", Theme::PRIMARY),
+                        // 4. Diamonds
+                        (Icons::DIAMOND_FILLED, "Icons::DIAMOND_FILLED", "◆ (U+25C6)", "Theme::PURPLE  (#7928CA)", Theme::PURPLE),
+                        (Icons::DIAMOND_EMPTY, "Icons::DIAMOND_EMPTY", "◇ (U+25C7)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
+                    ];
+
+                    for (glyph, const_name, unicode_char, color_name, color) in geometric_icons {
+                        lines.push(Line::from(vec![
+                            Span::styled(format!("    {}", glyph), Style::default().fg(color)),
+                            Span::styled(format!("{:<26} ", const_name), Style::default().fg(Theme::FG)),
+                            Span::styled(format!("{:<15} ", unicode_char), Style::default().fg(Theme::SECONDARY)),
+                            Span::styled(color_name, Style::default().fg(color)),
+                        ]));
+                    }
+
+                    // Showcase ứng dụng trực tiếp các glyph hình học vào UI
+                    lines.push(Line::from(""));
+                    lines.push(Line::from(vec![
+                        Span::styled("  Live Geometric UI Components Demo", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                    ]));
+                    lines.push(Line::from(vec![
+                        Span::styled("  ─────────────────────────────────────────────────────────────────────────────", Style::default().fg(Theme::NEUTRAL_100)),
+                    ]));
+                    lines.push(Line::from(""));
+
+                    lines.push(Line::from(vec![
+                        Span::styled("    [Squares]    ", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(Icons::SQUARE_FILLED, Style::default().fg(Theme::SUCCESS)),
+                        Span::styled("Cluster Isolation: Active    ", Style::default().fg(Theme::FG)),
+                        Span::styled(Icons::SQUARE_EMPTY, Style::default().fg(Theme::MUTED)),
+                        Span::styled("WebGPU Pipeline: Idle    ", Style::default().fg(Theme::MUTED)),
+                        Span::styled(Icons::SQUARE_SMALL_FILLED, Style::default().fg(Theme::SECONDARY)),
+                        Span::styled("Sub-process worker", Style::default().fg(Theme::SECONDARY)),
+                    ]));
+
+                    lines.push(Line::from(vec![
+                        Span::styled("    [Radio/Node] ", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(Icons::CIRCLE_TARGET, Style::default().fg(Theme::CYAN)),
+                        Span::styled("Leader Node (Coordinator)    ", Style::default().fg(Theme::FG)),
+                        Span::styled(Icons::CIRCLE_EMPTY, Style::default().fg(Theme::MUTED)),
+                        Span::styled("Standby Replica #01          ", Style::default().fg(Theme::MUTED)),
+                        Span::styled(Icons::CIRCLE_FILLED, Style::default().fg(Theme::ACCENT)),
+                        Span::styled("Quorum Acked", Style::default().fg(Theme::ACCENT)),
+                    ]));
+
+                    lines.push(Line::from(vec![
+                        Span::styled("    [Breadcrumb] ", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled("Workspace ", Style::default().fg(Theme::MUTED)),
+                        Span::styled(Icons::TRIANGLE_RIGHT_SMALL, Style::default().fg(Theme::PRIMARY)),
+                        Span::styled("cli_gui_form ", Style::default().fg(Theme::MUTED)),
+                        Span::styled(Icons::TRIANGLE_RIGHT_SMALL, Style::default().fg(Theme::PRIMARY)),
+                        Span::styled("src ", Style::default().fg(Theme::MUTED)),
+                        Span::styled(Icons::TRIANGLE_RIGHT_SMALL, Style::default().fg(Theme::PRIMARY)),
+                        Span::styled("icons.rs", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                    ]));
+
+                    lines.push(Line::from(vec![
+                        Span::styled("    [Sort/Order] ", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled("Sort: Latency ", Style::default().fg(Theme::FG)),
+                        Span::styled(Icons::TRIANGLE_UP, Style::default().fg(Theme::WARNING)),
+                        Span::styled("Ascending (18ms)  │  Error Rate ", Style::default().fg(Theme::MUTED)),
+                        Span::styled(Icons::TRIANGLE_DOWN, Style::default().fg(Theme::ERROR)),
+                        Span::styled("Descending (0.01%)", Style::default().fg(Theme::ERROR)),
+                    ]));
+
+                    lines.push(Line::from(vec![
+                        Span::styled("    [Diamonds]   ", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(Icons::DIAMOND_FILLED, Style::default().fg(Theme::PURPLE)),
+                        Span::styled("Tier 1: Mission-Critical    ", Style::default().fg(Theme::FG)),
+                        Span::styled(Icons::DIAMOND_EMPTY, Style::default().fg(Theme::SECONDARY)),
+                        Span::styled("Tier 2: Asynchronous Backlog", Style::default().fg(Theme::SECONDARY)),
+                    ]));
 
                     // Bảng màu mở rộng Extended Palette Swatches
                     lines.push(Line::from(""));

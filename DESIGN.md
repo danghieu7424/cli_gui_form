@@ -313,6 +313,24 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | Arrow Right | `Icons::ARROW_RIGHT` | `→ ` | `U+2192` | `->` |
 | Branch Sub-level | `Icons::BRANCH` | `⤷ ` | `U+21B3` | `\_` |
 
+#### Safe Geometric Glyphs (Kiểm chứng Windows Terminal & Linux / Zero-Clipping)
+
+| Danh mục | Hằng số Rust | Glyph | Unicode | Fallback ASCII |
+| :--- | :--- | :---: | :--- | :--- |
+| **Squares** | `Icons::SQUARE_FILLED` | `■ ` | `U+25A0` | `[#]` |
+| | `Icons::SQUARE_EMPTY` | `□ ` | `U+25A1` | `[ ]` |
+| | `Icons::SQUARE_MEDIUM_FILLED` | `◼ ` | `U+25FC` | `[#]` |
+| | `Icons::SQUARE_MEDIUM_EMPTY` | `◻ ` | `U+25FB` | `[ ]` |
+| | `Icons::SQUARE_SMALL_FILLED` | `▪ ` | `U+25AA` | `*` |
+| **Circles / Target** | `Icons::CIRCLE_FILLED` | `● ` | `U+25CF` | `(•)` |
+| | `Icons::CIRCLE_EMPTY` | `○ ` | `U+25CB` | `( )` |
+| | `Icons::CIRCLE_TARGET` / `RADIO_TARGET` | `◉ ` | `U+25C9` | `(@)` |
+| **Triangles / Pointers** | `Icons::TRIANGLE_UP` | `▲ ` | `U+25B2` | `^` |
+| | `Icons::TRIANGLE_DOWN` | `▼ ` | `U+25BC` | `v` |
+| | `Icons::TRIANGLE_RIGHT_SMALL` / `POINTER_FILLED` | `▸ ` | `U+25B8` | `>` |
+| **Diamonds** | `Icons::DIAMOND_FILLED` | `◆ ` | `U+25C6` | `<*>` |
+| | `Icons::DIAMOND_EMPTY` | `◇ ` | `U+25C7` | `<>` |
+
 > **Bảo vệ thị giác (Visual Protection)**:
 > 1. Toàn bộ icon được chuẩn hóa đúng 2 cell hiển thị (1 ký tự glyph + 1 khoảng trắng đệm) để tránh phân mảnh heap và thẳng hàng tuyệt đối.
 > 2. `Icons::span()` và `Icons::line()` tự động triệt tiêu cờ `Modifier::BOLD` riêng cho ký tự icon, ngăn chặn hiện tượng co rút 1 cell trên Windows Terminal / conhost.

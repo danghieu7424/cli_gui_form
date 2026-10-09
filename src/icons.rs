@@ -37,7 +37,7 @@ impl Icons {
     pub const STAR_OUTLINE: &'static str = "⚝ ";   // U+269D + space (Outlined White Star)
 
     // Bộ chỉ hướng & tiến trình (Progress & Pointers)
-    pub const POINTER: &'static str = "▹ ";       // U+25B8 + space
+    pub const POINTER: &'static str = "▹ ";       // U+25B9 / U+25B8 White small triangle + space
     pub const ARROW_RIGHT: &'static str = "→ ";   // U+2192 + space
     pub const ARROW_UP: &'static str = "▲ ";      // U+25B2 + space (Black Up-Pointing Triangle)
     pub const BRANCH: &'static str = "⤷ ";        // U+21B3 + space
@@ -45,6 +45,29 @@ impl Icons {
     pub const SNOWFLAKE: &'static str = "❅ ";     // U+2745 + space (Snowflake)
     pub const PROGRESS_FILLED: &'static str = "━"; // U+2501 (Không space để nối thanh bar)
     pub const PROGRESS_EMPTY: &'static str = "─";  // U+2500 (Không space để nối thanh bar)
+
+    // Safe Geometric Glyphs (Bộ glyph hình học an toàn, zero-clipping trên Windows/Linux Terminal)
+    // 1. Squares & Checkboxes
+    pub const SQUARE_FILLED: &'static str = "■ ";         // U+25A0 + space (Black Square)
+    pub const SQUARE_EMPTY: &'static str = "□ ";          // U+25A1 + space (White Square)
+    pub const SQUARE_MEDIUM_FILLED: &'static str = "◼ ";  // U+25FC + space (Black Medium Square)
+    pub const SQUARE_MEDIUM_EMPTY: &'static str = "◻ ";   // U+25FB + space (White Medium Square)
+    pub const SQUARE_SMALL_FILLED: &'static str = "▪ ";   // U+25AA + space (Black Small Square)
+
+    // 2. Circles & Radio Targets
+    pub const CIRCLE_FILLED: &'static str = "● ";         // U+25CF + space (Black Circle)
+    pub const CIRCLE_EMPTY: &'static str = "○ ";          // U+25CB + space (White Circle)
+    pub const CIRCLE_TARGET: &'static str = "◉ ";         // U+25C9 + space (Fisheye / Bullseye Target)
+    pub const RADIO_TARGET: &'static str = "◉ ";          // Alias cho CIRCLE_TARGET
+
+    // 3. Pointers & Triangles
+    pub const TRIANGLE_UP: &'static str = "▲ ";           // U+25B2 + space (Black Up Triangle)
+    pub const TRIANGLE_DOWN: &'static str = "▼ ";         // U+25BC + space (Black Down Triangle)
+    pub const TRIANGLE_RIGHT_SMALL: &'static str = "▸ ";  // U+25B8 + space (Black Right Small Triangle)
+    pub const POINTER_FILLED: &'static str = "▸ ";        // Alias cho TRIANGLE_RIGHT_SMALL
+
+    // 4. Diamonds
+    pub const DIAMOND_FILLED: &'static str = "◆ ";        // U+25C6 + space (Black Diamond)
 
     /// Trả về chuỗi icon chuẩn ghép cùng text (Zero-overhead logic)
     #[inline]
@@ -158,6 +181,22 @@ mod tests {
         assert_eq!(Icons::SNOWFLAKE, "❅ ");
         assert_eq!(Icons::PROGRESS_FILLED, "━");
         assert_eq!(Icons::PROGRESS_EMPTY, "─");
+
+        // Safe Geometric Glyphs
+        assert_eq!(Icons::SQUARE_FILLED, "■ ");
+        assert_eq!(Icons::SQUARE_EMPTY, "□ ");
+        assert_eq!(Icons::SQUARE_MEDIUM_FILLED, "◼ ");
+        assert_eq!(Icons::SQUARE_MEDIUM_EMPTY, "◻ ");
+        assert_eq!(Icons::SQUARE_SMALL_FILLED, "▪ ");
+        assert_eq!(Icons::CIRCLE_FILLED, "● ");
+        assert_eq!(Icons::CIRCLE_EMPTY, "○ ");
+        assert_eq!(Icons::CIRCLE_TARGET, "◉ ");
+        assert_eq!(Icons::RADIO_TARGET, "◉ ");
+        assert_eq!(Icons::TRIANGLE_UP, "▲ ");
+        assert_eq!(Icons::TRIANGLE_DOWN, "▼ ");
+        assert_eq!(Icons::TRIANGLE_RIGHT_SMALL, "▸ ");
+        assert_eq!(Icons::POINTER_FILLED, "▸ ");
+        assert_eq!(Icons::DIAMOND_FILLED, "◆ ");
     }
 
     #[test]

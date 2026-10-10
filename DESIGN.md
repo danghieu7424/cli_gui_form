@@ -352,6 +352,12 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | | `Icons::UNDO` | `↺ ` | `U+21BA` | `@` |
 | **Flags & Milestones** | `Icons::FLAG_FILLED` | `⚑ ` | `U+2691` | `[F]` |
 | | `Icons::FLAG_EMPTY` | `⚐ ` | `U+2690` | `[f]` |
+| **Celestial & Stars** | `Icons::SUN` | `☼ ` | `U+263C` | `*` |
+| | `Icons::STAR_FILLED` | `★ ` | `U+2605` | `[*]` |
+| | `Icons::STAR_EMPTY` | `☆ ` | `U+2606` | `[ ]` |
+| | `Icons::LIGHTNING` | `☇ ` | `U+2607` | `/` |
+| **Topology & Links** | `Icons::NODE_LINK` | `☌ ` | `U+260C` | `o-` |
+| | `Icons::PEER_LINK` | `☍ ` | `U+260D` | `o-o` |
 
 > **Bảo vệ thị giác (Visual Protection)**:
 > 1. Toàn bộ icon được chuẩn hóa đúng 2 cell hiển thị (1 ký tự glyph + 1 khoảng trắng đệm) để tránh phân mảnh heap và thẳng hàng tuyệt đối.

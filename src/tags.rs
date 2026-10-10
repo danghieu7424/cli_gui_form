@@ -93,8 +93,8 @@ impl Tags {
     // Trạng thái lựa chọn (Selection & Form Controls)
     pub const CHECKED: &'static str = "[x]"; // Checkbox: Đã chọn
     pub const UNCHECKED: &'static str = "[ ]"; // Checkbox: Chưa chọn
-    pub const RADIO_ACTIVE: &'static str = "(•)"; // Radio: Đang chọn / Star
-    pub const RADIO_INACTIVE: &'static str = "( )"; // Radio: Chưa chọn
+    pub const RADIO_ACTIVE: &'static str = "[*]"; // Radio: Đang chọn / Star
+    pub const RADIO_INACTIVE: &'static str = "[.]"; // Radio: Chưa chọn
 
     // Thông báo & Cảnh báo (Prompts & Notices)
     pub const INFO_CHAR: &'static str = "[i]"; // Trợ giúp thông tin

@@ -98,6 +98,15 @@ impl Icons {
     pub const FLAG_EMPTY: &'static str = "⚐ ";            // U+2690 + space (White Flag / Milestone / Unflagged)
     pub const FLAG: &'static str = "⚑ ";                  // Alias cho FLAG_FILLED
 
+    // 8. Celestial, Stars & Links
+    pub const SUN: &'static str = "☼ ";                   // U+263C + space (White Sun with Rays / Daylight / Energy)
+    pub const STAR_FILLED: &'static str = "★ ";           // U+2605 + space (Black Star / Favorite / Rating)
+    pub const STAR_EMPTY: &'static str = "☆ ";            // U+2606 + space (White Star / Unrated)
+    pub const STAR: &'static str = "★ ";                  // Alias cho STAR_FILLED
+    pub const LIGHTNING: &'static str = "☇ ";             // U+2607 + space (Lightning / Quick Action / Flash)
+    pub const NODE_LINK: &'static str = "☌ ";             // U+260C + space (Conjunction / Node Link / Socket)
+    pub const PEER_LINK: &'static str = "☍ ";             // U+260D + space (Opposition / Peer Link / Bridge)
+
     /// Trả về chuỗi icon chuẩn ghép cùng text (Zero-overhead logic)
     #[inline]
     pub fn format(icon: &'static str, text: &str) -> String {
@@ -253,6 +262,15 @@ mod tests {
         assert_eq!(Icons::FLAG_FILLED, "⚑ ");
         assert_eq!(Icons::FLAG_EMPTY, "⚐ ");
         assert_eq!(Icons::FLAG, "⚑ ");
+
+        // Celestial, Stars & Links
+        assert_eq!(Icons::SUN, "☼ ");
+        assert_eq!(Icons::STAR_FILLED, "★ ");
+        assert_eq!(Icons::STAR_EMPTY, "☆ ");
+        assert_eq!(Icons::STAR, "★ ");
+        assert_eq!(Icons::LIGHTNING, "☇ ");
+        assert_eq!(Icons::NODE_LINK, "☌ ");
+        assert_eq!(Icons::PEER_LINK, "☍ ");
     }
 
     #[test]

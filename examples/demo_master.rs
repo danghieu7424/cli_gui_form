@@ -543,6 +543,13 @@ fn main() -> io::Result<()> {
                         // 8. Flags & Milestones
                         (Icons::FLAG_FILLED, "Icons::FLAG_FILLED", "⚑ (U+2691)", "Theme::CRITICAL (#FF0055)", Theme::CRITICAL),
                         (Icons::FLAG_EMPTY, "Icons::FLAG_EMPTY", "⚐ (U+2690)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
+                        // 9. Celestial, Stars & Links
+                        (Icons::SUN, "Icons::SUN", "☼ (U+263C)", "Theme::WARNING (#F1C21B)", Theme::WARNING),
+                        (Icons::STAR_FILLED, "Icons::STAR_FILLED", "★ (U+2605)", "Theme::WARNING (#F1C21B)", Theme::WARNING),
+                        (Icons::STAR_EMPTY, "Icons::STAR_EMPTY", "☆ (U+2606)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
+                        (Icons::LIGHTNING, "Icons::LIGHTNING", "☇ (U+2607)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
+                        (Icons::NODE_LINK, "Icons::NODE_LINK", "☌ (U+260C)", "Theme::PRIMARY (#4589FF)", Theme::PRIMARY),
+                        (Icons::PEER_LINK, "Icons::PEER_LINK", "☍ (U+260D)", "Theme::PURPLE  (#7928CA)", Theme::PURPLE),
                     ];
 
                     for (glyph, const_name, unicode_char, color_name, color) in geometric_icons {
@@ -563,6 +570,28 @@ fn main() -> io::Result<()> {
                         Span::styled("  ─────────────────────────────────────────────────────────────────────────────", Style::default().fg(Theme::NEUTRAL_100)),
                     ]));
                     lines.push(Line::from(""));
+
+                    lines.push(Line::from(vec![
+                        Span::styled("    [Stars/Sun]  ", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(format!(" {}", Icons::SUN), Style::default().fg(Theme::WARNING)),
+                        Span::styled("Daylight Engine Active    ", Style::default().fg(Theme::FG)),
+                        Span::styled(Icons::STAR_FILLED, Style::default().fg(Theme::WARNING)),
+                        Span::styled(Icons::STAR_FILLED, Style::default().fg(Theme::WARNING)),
+                        Span::styled(Icons::STAR_FILLED, Style::default().fg(Theme::WARNING)),
+                        Span::styled(Icons::STAR_EMPTY, Style::default().fg(Theme::MUTED)),
+                        Span::styled(Icons::STAR_EMPTY, Style::default().fg(Theme::MUTED)),
+                        Span::styled(" Rating (3/5)", Style::default().fg(Theme::MUTED)),
+                    ]));
+
+                    lines.push(Line::from(vec![
+                        Span::styled("    [Links/Node] ", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(format!(" {}", Icons::LIGHTNING), Style::default().fg(Theme::CYAN)),
+                        Span::styled("Fast Flash Trigger        ", Style::default().fg(Theme::FG)),
+                        Span::styled(Icons::NODE_LINK, Style::default().fg(Theme::PRIMARY)),
+                        Span::styled("Socket Pair  │  ", Style::default().fg(Theme::MUTED)),
+                        Span::styled(Icons::PEER_LINK, Style::default().fg(Theme::PURPLE)),
+                        Span::styled("P2P Mesh Link", Style::default().fg(Theme::PURPLE)),
+                    ]));
 
                     lines.push(Line::from(vec![
                         Span::styled("    [Flags/Mark] ", Style::default().fg(Theme::SECONDARY)),

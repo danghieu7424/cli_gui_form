@@ -109,8 +109,6 @@ impl Icons {
     pub const ARROW_TO_BAR_BOTTOM: &'static str = "⤓ ";   // U+2913 + space (Downwards Arrow to Bar / Page Bottom)
     pub const ARROW_DIAGONAL_NW_SE: &'static str = "⤡ ";  // U+2921 + space (North West and South East Arrow)
     pub const ARROW_DIAGONAL_NE_SW: &'static str = "⤢ ";  // U+2922 + space (North East and South West Arrow)
-    pub const ARROW_CURVE_UP: &'static str = "⤴\u{FE0E} "; // U+2934 + VS15 + space (Curving Upwards Arrow / Protected text)
-    pub const ARROW_CURVE_DOWN: &'static str = "⤵\u{FE0E} "; // U+2935 + VS15 + space (Curving Downwards Arrow / Protected text)
     pub const ARROW_CURVE_DOWN_LEFT: &'static str = "⤶ "; // U+2936 + space (Curving Downwards Left)
     pub const ARROW_CURVE_DOWN_RIGHT: &'static str = "⤷ ";// U+2937 + space (Curving Downwards Right)
 
@@ -370,8 +368,6 @@ mod tests {
         assert_eq!(Icons::ARROW_TO_BAR_BOTTOM, "⤓ ");
         assert_eq!(Icons::ARROW_DIAGONAL_NW_SE, "⤡ ");
         assert_eq!(Icons::ARROW_DIAGONAL_NE_SW, "⤢ ");
-        assert_eq!(Icons::ARROW_CURVE_UP, "⤴\u{FE0E} ");
-        assert_eq!(Icons::ARROW_CURVE_DOWN, "⤵\u{FE0E} ");
         assert_eq!(Icons::ARROW_CURVE_DOWN_LEFT, "⤶ ");
         assert_eq!(Icons::ARROW_CURVE_DOWN_RIGHT, "⤷ ");
         assert_eq!(Icons::BRANCH, "⤷ ");

@@ -676,8 +676,6 @@ fn main() -> io::Result<()> {
                         (Icons::ARROW_TO_BAR_BOTTOM, "Icons::ARROW_TO_BAR_BOT", "⤓ (U+2913)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
                         (Icons::ARROW_DIAGONAL_NW_SE, "Icons::ARROW_DIAG_NW_SE", "⤡ (U+2921)", "Theme::SKY     (#38BDF8)", Theme::SKY),
                         (Icons::ARROW_DIAGONAL_NE_SW, "Icons::ARROW_DIAG_NE_SW", "⤢ (U+2922)", "Theme::SKY     (#38BDF8)", Theme::SKY),
-                        (Icons::ARROW_CURVE_UP, "Icons::ARROW_CURVE_UP", "⤴ (U+2934)", "Theme::WARNING (#F1C21B)", Theme::WARNING),
-                        (Icons::ARROW_CURVE_DOWN, "Icons::ARROW_CURVE_DOWN", "⤵ (U+2935)", "Theme::WARNING (#F1C21B)", Theme::WARNING),
                         (Icons::ARROW_CURVE_DOWN_LEFT, "Icons::ARROW_CURVE_DL", "⤶ (U+2936)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
                         (Icons::ARROW_CURVE_DOWN_RIGHT, "Icons::ARROW_CURVE_DR", "⤷ (U+2937)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
                         // 8. Flags & Milestones
@@ -790,9 +788,7 @@ fn main() -> io::Result<()> {
                         Span::styled("Sync  ", Style::default().fg(Theme::FG)),
                         Span::styled(Icons::HARPOON_UP_DOWN, Style::default().fg(Theme::SKY)),
                         Span::styled("Duplex Stream │ ", Style::default().fg(Theme::SKY)),
-                        Span::styled("Curved: ", Style::default().fg(Theme::SECONDARY)),
-                        Span::styled(Icons::ARROW_CURVE_UP, Style::default().fg(Theme::WARNING)),
-                        Span::styled(Icons::ARROW_CURVE_DOWN, Style::default().fg(Theme::WARNING)),
+                        Span::styled("Branch: ", Style::default().fg(Theme::SECONDARY)),
                         Span::styled(Icons::BRANCH, Style::default().fg(Theme::SECONDARY)),
                     ]));
 

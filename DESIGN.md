@@ -394,8 +394,6 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | | `Icons::ARROW_TO_BAR_BOTTOM` | `⤓ ` | `U+2913` | `\|v` |
 | | `Icons::ARROW_DIAGONAL_NW_SE` | `⤡ ` | `U+2921` | `\` |
 | | `Icons::ARROW_DIAGONAL_NE_SW` | `⤢ ` | `U+2922` | `/` |
-| | `Icons::ARROW_CURVE_UP` | `⤴ ` | `U+2934` (VS15) | `^'` |
-| | `Icons::ARROW_CURVE_DOWN` | `⤵ ` | `U+2935` (VS15) | `,v` |
 | | `Icons::ARROW_CURVE_DOWN_LEFT` | `⤶ ` | `U+2936` | `<,` |
 | | `Icons::ARROW_CURVE_DOWN_RIGHT` | `⤷ ` | `U+2937` | `,>` |
 | **Flags & Milestones** | `Icons::FLAG_FILLED` | `⚑ ` | `U+2691` | `[F]` |

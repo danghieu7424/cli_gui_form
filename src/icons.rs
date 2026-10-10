@@ -102,6 +102,27 @@ impl Icons {
     pub const HARPOON_RIGHT_LEFT: &'static str = "⇌ ";   // U+21CC + space (Rightwards Harpoon Over Leftwards Harpoon / Equilibrium / State Sync)
     pub const HARPOON_EXCHANGE: &'static str = "⇌ ";     // Alias cho HARPOON_RIGHT_LEFT
 
+    // 7. Mũi tên bổ sung Supplemental Arrows-B (Block U+2900..U+297F)
+    pub const HARPOON_UP_DOWN: &'static str = "⥮ ";       // U+296E + space (Upwards Harpoon Beside Downwards Harpoon)
+    pub const HARPOON_DOWN_UP: &'static str = "⥯ ";       // U+296F + space (Downwards Harpoon Beside Upwards Harpoon)
+    pub const ARROW_DASHED_DOUBLE_LEFT: &'static str = "⤌ "; // U+290C + space (Leftwards Double Dash Arrow)
+    pub const ARROW_DASHED_DOUBLE_RIGHT: &'static str = "⤍ ";// U+290D + space (Rightwards Double Dash Arrow)
+    pub const ARROW_DASHED_TRIPLE_LEFT: &'static str = "⤎ "; // U+290E + space (Leftwards Triple Dash Arrow)
+    pub const ARROW_DASHED_TRIPLE_RIGHT: &'static str = "⤏ ";// U+290F + space (Rightwards Triple Dash Arrow)
+    pub const ARROW_DASHED_STEM_RIGHT: &'static str = "⤑ ";  // U+2911 + space (Rightwards Arrow with Dashed Stem)
+    pub const ARROW_TO_BAR_TOP: &'static str = "⤒ ";      // U+2912 + space (Upwards Arrow to Bar / Page Top)
+    pub const ARROW_TO_BAR_BOTTOM: &'static str = "⤓ ";   // U+2913 + space (Downwards Arrow to Bar / Page Bottom)
+    pub const ARROW_TO_CIRCLE_LEFT: &'static str = "⤝ ";  // U+291D + space (Leftwards Arrow to Black Circle)
+    pub const ARROW_TO_CIRCLE_RIGHT: &'static str = "⤞ "; // U+291E + space (Rightwards Arrow to Black Circle)
+    pub const ARROW_FROM_CIRCLE_LEFT: &'static str = "⤟ ";// U+291F + space (Leftwards Arrow from Black Circle)
+    pub const ARROW_FROM_CIRCLE_RIGHT: &'static str = "⤠ ";// U+2920 + space (Rightwards Arrow from Black Circle)
+    pub const ARROW_DIAGONAL_NW_SE: &'static str = "⤡ ";  // U+2921 + space (North West and South East Arrow)
+    pub const ARROW_DIAGONAL_NE_SW: &'static str = "⤢ ";  // U+2922 + space (North East and South West Arrow)
+    pub const ARROW_CURVE_UP: &'static str = "⤴\u{FE0E} "; // U+2934 + VS15 + space (Curving Upwards Arrow / Protected text)
+    pub const ARROW_CURVE_DOWN: &'static str = "⤵\u{FE0E} "; // U+2935 + VS15 + space (Curving Downwards Arrow / Protected text)
+    pub const ARROW_CURVE_DOWN_LEFT: &'static str = "⤶ "; // U+2936 + space (Curving Downwards Left)
+    pub const ARROW_CURVE_DOWN_RIGHT: &'static str = "⤷ ";// U+2937 + space (Curving Downwards Right)
+
     // Safe Geometric Glyphs (Bộ glyph hình học an toàn, zero-clipping trên Windows/Linux Terminal)
     // 1. Squares & Checkboxes
     pub const SQUARE_FILLED: &'static str = "■ ";         // U+25A0 + space (Black Square)
@@ -350,6 +371,25 @@ mod tests {
         assert_eq!(Icons::HARPOON_LEFT_RIGHT, "⇋ ");
         assert_eq!(Icons::HARPOON_RIGHT_LEFT, "⇌ ");
         assert_eq!(Icons::HARPOON_EXCHANGE, "⇌ ");
+        assert_eq!(Icons::HARPOON_UP_DOWN, "⥮ ");
+        assert_eq!(Icons::HARPOON_DOWN_UP, "⥯ ");
+        assert_eq!(Icons::ARROW_DASHED_DOUBLE_LEFT, "⤌ ");
+        assert_eq!(Icons::ARROW_DASHED_DOUBLE_RIGHT, "⤍ ");
+        assert_eq!(Icons::ARROW_DASHED_TRIPLE_LEFT, "⤎ ");
+        assert_eq!(Icons::ARROW_DASHED_TRIPLE_RIGHT, "⤏ ");
+        assert_eq!(Icons::ARROW_DASHED_STEM_RIGHT, "⤑ ");
+        assert_eq!(Icons::ARROW_TO_BAR_TOP, "⤒ ");
+        assert_eq!(Icons::ARROW_TO_BAR_BOTTOM, "⤓ ");
+        assert_eq!(Icons::ARROW_TO_CIRCLE_LEFT, "⤝ ");
+        assert_eq!(Icons::ARROW_TO_CIRCLE_RIGHT, "⤞ ");
+        assert_eq!(Icons::ARROW_FROM_CIRCLE_LEFT, "⤟ ");
+        assert_eq!(Icons::ARROW_FROM_CIRCLE_RIGHT, "⤠ ");
+        assert_eq!(Icons::ARROW_DIAGONAL_NW_SE, "⤡ ");
+        assert_eq!(Icons::ARROW_DIAGONAL_NE_SW, "⤢ ");
+        assert_eq!(Icons::ARROW_CURVE_UP, "⤴\u{FE0E} ");
+        assert_eq!(Icons::ARROW_CURVE_DOWN, "⤵\u{FE0E} ");
+        assert_eq!(Icons::ARROW_CURVE_DOWN_LEFT, "⤶ ");
+        assert_eq!(Icons::ARROW_CURVE_DOWN_RIGHT, "⤷ ");
         assert_eq!(Icons::BRANCH, "⤷ ");
         assert_eq!(Icons::DIAMOND_EMPTY, "◇ ");
         assert_eq!(Icons::SNOWFLAKE, "❅ ");

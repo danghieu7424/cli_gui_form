@@ -387,6 +387,25 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | | `Icons::ARROW_DUPLEX_VERT_REV` | `⇵ ` | `U+21F5` | `v^` |
 | | `Icons::HARPOON_LEFT_RIGHT` | `⇋ ` | `U+21CB` | `<->` |
 | | `Icons::HARPOON_RIGHT_LEFT` / `HARPOON_EXCHANGE` | `⇌ ` | `U+21CC` | `<->` |
+| **Supplemental Arrows-B** | `Icons::HARPOON_UP_DOWN` | `⥮ ` | `U+296E` | `^v` |
+| | `Icons::HARPOON_DOWN_UP` | `⥯ ` | `U+296F` | `v^` |
+| | `Icons::ARROW_DASHED_DOUBLE_LEFT` | `⤌ ` | `U+290C` | `<--` |
+| | `Icons::ARROW_DASHED_DOUBLE_RIGHT` | `⤍ ` | `U+290D` | `-->` |
+| | `Icons::ARROW_DASHED_TRIPLE_LEFT` | `⤎ ` | `U+290E` | `<---` |
+| | `Icons::ARROW_DASHED_TRIPLE_RIGHT` | `⤏ ` | `U+290F` | `--->` |
+| | `Icons::ARROW_DASHED_STEM_RIGHT` | `⤑ ` | `U+2911` | `-->` |
+| | `Icons::ARROW_TO_BAR_TOP` | `⤒ ` | `U+2912` | `\|^` |
+| | `Icons::ARROW_TO_BAR_BOTTOM` | `⤓ ` | `U+2913` | `\|v` |
+| | `Icons::ARROW_TO_CIRCLE_LEFT` | `⤝ ` | `U+291D` | `<o` |
+| | `Icons::ARROW_TO_CIRCLE_RIGHT` | `⤞ ` | `U+291E` | `o>` |
+| | `Icons::ARROW_FROM_CIRCLE_LEFT` | `⤟ ` | `U+291F` | `o<` |
+| | `Icons::ARROW_FROM_CIRCLE_RIGHT` | `⤠ ` | `U+2920` | `>o` |
+| | `Icons::ARROW_DIAGONAL_NW_SE` | `⤡ ` | `U+2921` | `\` |
+| | `Icons::ARROW_DIAGONAL_NE_SW` | `⤢ ` | `U+2922` | `/` |
+| | `Icons::ARROW_CURVE_UP` | `⤴ ` | `U+2934` (VS15) | `^'` |
+| | `Icons::ARROW_CURVE_DOWN` | `⤵ ` | `U+2935` (VS15) | `,v` |
+| | `Icons::ARROW_CURVE_DOWN_LEFT` | `⤶ ` | `U+2936` | `<,` |
+| | `Icons::ARROW_CURVE_DOWN_RIGHT` | `⤷ ` | `U+2937` | `,>` |
 | **Flags & Milestones** | `Icons::FLAG_FILLED` | `⚑ ` | `U+2691` | `[F]` |
 | | `Icons::FLAG_EMPTY` | `⚐ ` | `U+2690` | `[f]` |
 | **Celestial & Stars** | `Icons::SUN` | `☼ ` | `U+263C` | `*` |

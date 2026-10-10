@@ -365,6 +365,19 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | | `Icons::ARROW_RIGHT` | `→ ` | `U+2192` | `>` |
 | | `Icons::ARROW_UP_DOWN` | `↕ ` | `U+2195` | `^v` |
 | | `Icons::ARROW_LEFT_RIGHT` | `↔ ` | `U+2194` | `<>` |
+| | `Icons::ARROW_DOUBLE_RIGHT` | `⇒ ` | `U+21D2` | `=>` |
+| | `Icons::ARROW_DOUBLE_LEFT` | `⇐ ` | `U+21D0` | `<=` |
+| | `Icons::ARROW_DOUBLE_UP` | `⇑ ` | `U+21D1` | `^^` |
+| | `Icons::ARROW_DOUBLE_DOWN` | `⇓ ` | `U+21D3` | `vv` |
+| | `Icons::ARROW_DOUBLE_BOTH` | `⇔ ` | `U+21D4` | `<=>` |
+| | `Icons::ARROW_FAST_RIGHT` | `↠ ` | `U+21A0` | `>>` |
+| | `Icons::ARROW_FAST_LEFT` | `↞ ` | `U+219E` | `<<` |
+| | `Icons::ARROW_HOOK_RIGHT` | `↪ ` | `U+21AA` | `\_>` |
+| | `Icons::ARROW_HOOK_LEFT` | `↩ ` | `U+21A9` | `<_/` |
+| | `Icons::ARROW_TO_BAR_LEFT` | `⇤ ` | `U+21E4` | `\|<` |
+| | `Icons::ARROW_TO_BAR_RIGHT` | `⇥ ` | `U+21E5` | `>\|` |
+| | `Icons::ARROW_UP_RIGHT` / `EXTERNAL_LINK` | `↗ ` | `U+2197` | `/^` |
+| | `Icons::ARROW_DOWN_RIGHT` | `↘ ` | `U+2198` | `\v` |
 | | `Icons::ENTER` | `↵ ` | `U+21B5` | `<-'` |
 | | `Icons::RELOAD` | `↻ ` | `U+21BB` | `@` |
 | | `Icons::UNDO` | `↺ ` | `U+21BA` | `@` |

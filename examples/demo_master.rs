@@ -650,6 +650,10 @@ fn main() -> io::Result<()> {
                         (Icons::ENTER, "Icons::ENTER", "↵ (U+21B5)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
                         (Icons::RELOAD, "Icons::RELOAD", "↻ (U+21BB)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
                         (Icons::UNDO, "Icons::UNDO", "↺ (U+21BA)", "Theme::ORANGE  (#FF8800)", Theme::ORANGE),
+                        (Icons::ARROW_DOUBLE_RIGHT, "Icons::ARROW_DOUBLE_RIGHT", "⇒ (U+21D2)", "Theme::PRIMARY (#4589FF)", Theme::PRIMARY),
+                        (Icons::ARROW_FAST_RIGHT, "Icons::ARROW_FAST_RIGHT", "↠ (U+21A0)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
+                        (Icons::ARROW_HOOK_RIGHT, "Icons::ARROW_HOOK_RIGHT", "↪ (U+21AA)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
+                        (Icons::EXTERNAL_LINK, "Icons::EXTERNAL_LINK", "↗ (U+2197)", "Theme::WARNING (#F1C21B)", Theme::WARNING),
                         // 8. Flags & Milestones
                         (Icons::FLAG_FILLED, "Icons::FLAG_FILLED", "⚑ (U+2691)", "Theme::CRITICAL (#FF0055)", Theme::CRITICAL),
                         (Icons::FLAG_EMPTY, "Icons::FLAG_EMPTY", "⚐ (U+2690)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),

@@ -76,6 +76,22 @@ impl Icons {
     pub const RELOAD: &'static str = "↻ ";        // U+21BB + space (Clockwise Open Circle Arrow / Refresh)
     pub const UNDO: &'static str = "↺ ";          // U+21BA + space (Anticlockwise Open Circle Arrow / Undo)
 
+    // Advanced Arrows from Block U+2190..U+21FF (Mũi tên đôi, hai đầu, móc & chéo góc đơn sắc)
+    pub const ARROW_DOUBLE_RIGHT: &'static str = "⇒ ";   // U+21D2 + space (Rightwards Double Arrow / Next / Implies)
+    pub const ARROW_DOUBLE_LEFT: &'static str = "⇐ ";    // U+21D0 + space (Leftwards Double Arrow / Prev)
+    pub const ARROW_DOUBLE_UP: &'static str = "⇑ ";      // U+21D1 + space (Upwards Double Arrow / Top)
+    pub const ARROW_DOUBLE_DOWN: &'static str = "⇓ ";    // U+21D3 + space (Downwards Double Arrow / Bottom)
+    pub const ARROW_DOUBLE_BOTH: &'static str = "⇔ ";    // U+21D4 + space (Left Right Double Arrow / Both)
+    pub const ARROW_FAST_RIGHT: &'static str = "↠ ";     // U+21A0 + space (Rightwards Two Headed Arrow / Fast Forward)
+    pub const ARROW_FAST_LEFT: &'static str = "↞ ";      // U+219E + space (Leftwards Two Headed Arrow / Fast Rewind)
+    pub const ARROW_HOOK_RIGHT: &'static str = "↪ ";     // U+21AA + space (Rightwards Arrow with Hook / Sub-route)
+    pub const ARROW_HOOK_LEFT: &'static str = "↩ ";      // U+21A9 + space (Leftwards Arrow with Hook / Return)
+    pub const ARROW_TO_BAR_LEFT: &'static str = "⇤ ";    // U+21E4 + space (Leftwards Arrow to Bar / Jump to Start)
+    pub const ARROW_TO_BAR_RIGHT: &'static str = "⇥ ";   // U+21E5 + space (Rightwards Arrow to Bar / Tab / Jump to End)
+    pub const ARROW_UP_RIGHT: &'static str = "↗ ";       // U+2197 + space (North East Arrow / External Link)
+    pub const ARROW_DOWN_RIGHT: &'static str = "↘ ";     // U+2198 + space (South East Arrow / Expand)
+    pub const EXTERNAL_LINK: &'static str = "↗ ";        // Alias cho ARROW_UP_RIGHT
+
     // Safe Geometric Glyphs (Bộ glyph hình học an toàn, zero-clipping trên Windows/Linux Terminal)
     // 1. Squares & Checkboxes
     pub const SQUARE_FILLED: &'static str = "■ ";         // U+25A0 + space (Black Square)
@@ -299,6 +315,20 @@ mod tests {
         assert_eq!(Icons::ENTER, "↵ ");
         assert_eq!(Icons::RELOAD, "↻ ");
         assert_eq!(Icons::UNDO, "↺ ");
+        assert_eq!(Icons::ARROW_DOUBLE_RIGHT, "⇒ ");
+        assert_eq!(Icons::ARROW_DOUBLE_LEFT, "⇐ ");
+        assert_eq!(Icons::ARROW_DOUBLE_UP, "⇑ ");
+        assert_eq!(Icons::ARROW_DOUBLE_DOWN, "⇓ ");
+        assert_eq!(Icons::ARROW_DOUBLE_BOTH, "⇔ ");
+        assert_eq!(Icons::ARROW_FAST_RIGHT, "↠ ");
+        assert_eq!(Icons::ARROW_FAST_LEFT, "↞ ");
+        assert_eq!(Icons::ARROW_HOOK_RIGHT, "↪ ");
+        assert_eq!(Icons::ARROW_HOOK_LEFT, "↩ ");
+        assert_eq!(Icons::ARROW_TO_BAR_LEFT, "⇤ ");
+        assert_eq!(Icons::ARROW_TO_BAR_RIGHT, "⇥ ");
+        assert_eq!(Icons::ARROW_UP_RIGHT, "↗ ");
+        assert_eq!(Icons::ARROW_DOWN_RIGHT, "↘ ");
+        assert_eq!(Icons::EXTERNAL_LINK, "↗ ");
         assert_eq!(Icons::BRANCH, "⤷ ");
         assert_eq!(Icons::DIAMOND_EMPTY, "◇ ");
         assert_eq!(Icons::SNOWFLAKE, "❅ ");

@@ -255,6 +255,14 @@ fn main() -> io::Result<()> {
     )
     .with_spinner_type(SpinnerType::Arc);
 
+    let mut radar_task = TaskWidget::new_loading(
+        "task_radar",
+        "Rotating Radar Ellipsis (4-Frame 3-Dots)",
+        "Synchronizing telemetry matrix (U+22EE ─ U+22F1)...",
+        Theme::CYAN,
+    )
+    .with_spinner_type(SpinnerType::Radar);
+
     let progress_parallelogram = TaskWidget::new_progress(
         "task_progress_para",
         "Cyberpunk Parallelogram Bar",
@@ -339,6 +347,7 @@ fn main() -> io::Result<()> {
             braille_task.tick();
             moon_task.tick();
             arc_task.tick();
+            radar_task.tick();
             shimmer_bar.tick();
             last_tick_60fps = Instant::now();
         }
@@ -505,9 +514,17 @@ fn main() -> io::Result<()> {
                     };
                     arc_task.render(card_area_arc, f);
 
-                    let card_area_para = Rect {
+                    let card_area_radar = Rect {
                         x: main_chunks[1].x + 3,
                         y: main_chunks[1].y + 15,
+                        width: main_chunks[1].width.saturating_sub(6),
+                        height: 2,
+                    };
+                    radar_task.render(card_area_radar, f);
+
+                    let card_area_para = Rect {
+                        x: main_chunks[1].x + 3,
+                        y: main_chunks[1].y + 18,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 2,
                     };
@@ -515,7 +532,7 @@ fn main() -> io::Result<()> {
 
                     let card_area_rect = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 18,
+                        y: main_chunks[1].y + 21,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 2,
                     };
@@ -523,7 +540,7 @@ fn main() -> io::Result<()> {
 
                     let card_area_square = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 21,
+                        y: main_chunks[1].y + 24,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 2,
                     };
@@ -531,7 +548,7 @@ fn main() -> io::Result<()> {
 
                     let card_area_line = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 24,
+                        y: main_chunks[1].y + 27,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 2,
                     };
@@ -539,7 +556,7 @@ fn main() -> io::Result<()> {
 
                     let shimmer_area = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 27,
+                        y: main_chunks[1].y + 30,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 1,
                     };
@@ -654,6 +671,33 @@ fn main() -> io::Result<()> {
                         (Icons::ARROW_FAST_RIGHT, "Icons::ARROW_FAST_RIGHT", "↠ (U+21A0)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
                         (Icons::ARROW_HOOK_RIGHT, "Icons::ARROW_HOOK_RIGHT", "↪ (U+21AA)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
                         (Icons::EXTERNAL_LINK, "Icons::EXTERNAL_LINK", "↗ (U+2197)", "Theme::WARNING (#F1C21B)", Theme::WARNING),
+                        // 7b. Exchange & Harpoons (Block U+2190..U+21FF)
+                        (Icons::ARROW_SWAP, "Icons::ARROW_SWAP", "⇄ (U+21C4)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
+                        (Icons::ARROW_TRANSFER, "Icons::ARROW_TRANSFER", "⇆ (U+21C6)", "Theme::SKY     (#38BDF8)", Theme::SKY),
+                        (Icons::ARROW_DUPLEX_VERT, "Icons::ARROW_DUPLEX_VERT", "⇅ (U+21C5)", "Theme::PRIMARY (#4589FF)", Theme::PRIMARY),
+                        (Icons::ARROW_DUPLEX_VERT_REV, "Icons::ARROW_DUPLEX_REV", "⇵ (U+21F5)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
+                        (Icons::HARPOON_LEFT_RIGHT, "Icons::HARPOON_LEFT_RIGHT", "⇋ (U+21CB)", "Theme::EMERALD (#10B981)", Theme::EMERALD),
+                        (Icons::HARPOON_RIGHT_LEFT, "Icons::HARPOON_RIGHT_LEFT", "⇌ (U+21CC)", "Theme::SUCCESS (#25A249)", Theme::SUCCESS),
+                        // 7c. Supplemental Arrows-B (Block U+2900..U+297F)
+                        (Icons::HARPOON_UP_DOWN, "Icons::HARPOON_UP_DOWN", "⥮ (U+296E)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
+                        (Icons::HARPOON_DOWN_UP, "Icons::HARPOON_DOWN_UP", "⥯ (U+296F)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
+                        (Icons::ARROW_DASHED_DOUBLE_LEFT, "Icons::ARROW_DASH_2L", "⤌ (U+290C)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
+                        (Icons::ARROW_DASHED_DOUBLE_RIGHT, "Icons::ARROW_DASH_2R", "⤍ (U+290D)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
+                        (Icons::ARROW_DASHED_TRIPLE_LEFT, "Icons::ARROW_DASH_3L", "⤎ (U+290E)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
+                        (Icons::ARROW_DASHED_TRIPLE_RIGHT, "Icons::ARROW_DASH_3R", "⤏ (U+290F)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
+                        (Icons::ARROW_DASHED_STEM_RIGHT, "Icons::ARROW_DASH_STEM", "⤑ (U+2911)", "Theme::PRIMARY (#4589FF)", Theme::PRIMARY),
+                        (Icons::ARROW_TO_BAR_TOP, "Icons::ARROW_TO_BAR_TOP", "⤒ (U+2912)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
+                        (Icons::ARROW_TO_BAR_BOTTOM, "Icons::ARROW_TO_BAR_BOT", "⤓ (U+2913)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
+                        (Icons::ARROW_TO_CIRCLE_LEFT, "Icons::ARROW_TO_CIRC_L", "⤝ (U+291D)", "Theme::PURPLE  (#7928CA)", Theme::PURPLE),
+                        (Icons::ARROW_TO_CIRCLE_RIGHT, "Icons::ARROW_TO_CIRC_R", "⤞ (U+291E)", "Theme::PURPLE  (#7928CA)", Theme::PURPLE),
+                        (Icons::ARROW_FROM_CIRCLE_LEFT, "Icons::ARROW_FROM_CIRC_L", "⤟ (U+291F)", "Theme::PURPLE  (#7928CA)", Theme::PURPLE),
+                        (Icons::ARROW_FROM_CIRCLE_RIGHT, "Icons::ARROW_FROM_CIRC_R", "⤠ (U+2920)", "Theme::PURPLE  (#7928CA)", Theme::PURPLE),
+                        (Icons::ARROW_DIAGONAL_NW_SE, "Icons::ARROW_DIAG_NW_SE", "⤡ (U+2921)", "Theme::SKY     (#38BDF8)", Theme::SKY),
+                        (Icons::ARROW_DIAGONAL_NE_SW, "Icons::ARROW_DIAG_NE_SW", "⤢ (U+2922)", "Theme::SKY     (#38BDF8)", Theme::SKY),
+                        (Icons::ARROW_CURVE_UP, "Icons::ARROW_CURVE_UP", "⤴ (U+2934)", "Theme::WARNING (#F1C21B)", Theme::WARNING),
+                        (Icons::ARROW_CURVE_DOWN, "Icons::ARROW_CURVE_DOWN", "⤵ (U+2935)", "Theme::WARNING (#F1C21B)", Theme::WARNING),
+                        (Icons::ARROW_CURVE_DOWN_LEFT, "Icons::ARROW_CURVE_DL", "⤶ (U+2936)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
+                        (Icons::ARROW_CURVE_DOWN_RIGHT, "Icons::ARROW_CURVE_DR", "⤷ (U+2937)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
                         // 8. Flags & Milestones
                         (Icons::FLAG_FILLED, "Icons::FLAG_FILLED", "⚑ (U+2691)", "Theme::CRITICAL (#FF0055)", Theme::CRITICAL),
                         (Icons::FLAG_EMPTY, "Icons::FLAG_EMPTY", "⚐ (U+2690)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
@@ -754,6 +798,24 @@ fn main() -> io::Result<()> {
                         Span::styled("Socket Pair  │  ", Style::default().fg(Theme::MUTED)),
                         Span::styled(Icons::PEER_LINK, Style::default().fg(Theme::PURPLE)),
                         Span::styled("P2P Mesh Link", Style::default().fg(Theme::PURPLE)),
+                    ]));
+
+                    lines.push(Line::from(vec![
+                        Span::styled("    [Arrows/Stream]", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(format!(" {}", Icons::ARROW_SWAP), Style::default().fg(Theme::CYAN)),
+                        Span::styled("Swap  ", Style::default().fg(Theme::FG)),
+                        Span::styled(Icons::HARPOON_EXCHANGE, Style::default().fg(Theme::EMERALD)),
+                        Span::styled("Sync  ", Style::default().fg(Theme::FG)),
+                        Span::styled(Icons::HARPOON_UP_DOWN, Style::default().fg(Theme::SKY)),
+                        Span::styled("Duplex │ ", Style::default().fg(Theme::SKY)),
+                        Span::styled("Dashed: ", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(Icons::ARROW_DASHED_DOUBLE_RIGHT, Style::default().fg(Theme::MUTED)),
+                        Span::styled(Icons::ARROW_DASHED_TRIPLE_RIGHT, Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(Icons::ARROW_DASHED_STEM_RIGHT, Style::default().fg(Theme::PRIMARY)),
+                        Span::styled(" │ Curved: ", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(Icons::ARROW_CURVE_UP, Style::default().fg(Theme::WARNING)),
+                        Span::styled(Icons::ARROW_CURVE_DOWN, Style::default().fg(Theme::WARNING)),
+                        Span::styled(Icons::BRANCH, Style::default().fg(Theme::SECONDARY)),
                     ]));
 
                     lines.push(Line::from(vec![

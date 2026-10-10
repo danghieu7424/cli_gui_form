@@ -300,7 +300,7 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | Info | `Icons::INFO` | `i ` | `U+0069` | `i` |
 | Running / Play | `Icons::RUN` / `PLAY` | `▶ ` | `U+25B6` | `>` |
 | Pointer Right | `Icons::POINTER_RIGHT` | `► ` | `U+25BA` | `>` |
-| Build / Work | `Icons::BUILD` | `⚙ ` | `U+2699` | `*` |
+| Build / Work | `Icons::BUILD` | `⛯ ` | `U+26EF` | `*` |
 | Stop | `Icons::STOP` | `■ ` | `U+25A0` | `[#]` |
 | Pause | `Icons::PAUSE` | `॥ ` | `U+0965` | `\|\|` |
 | Checkbox on | `Icons::CHECKBOX_ON` | `[✓]` | `U+2713` | `[x]` |

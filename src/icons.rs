@@ -23,8 +23,8 @@ impl Icons {
     pub const RUN: &'static str = "▶ ";           // U+25B6 + space (Black Right-Pointing Triangle - Cân đối chuẩn)
     pub const PLAY: &'static str = "▶ ";          // Alias cho RUN
     pub const POINTER_RIGHT: &'static str = "► "; // U+25BA + space (Black Right-Pointing Pointer)
-    pub const RUN_TRIANGLE: &'static str = "▶ ";  // Alias cho RUN
-    pub const BUILD: &'static str = "⚙ ";         // U+2699 + space
+    pub const BUILD: &'static str = "⛯ ";         // U+26EF + space (Map Symbol / Cogwheel - Zero-Emoji)
+    pub const GEAR: &'static str = "⛯ ";          // Alias cho BUILD
     pub const INFO: &'static str = "i ";          // U+0069 + space (Lower Info / Zero-Noise)
     pub const INFO_SIGN: &'static str = "ℹ ";     // U+2139 + space (Info Sign legacy)
     pub const PAUSE: &'static str = "॥ ";         // U+0965 + space (Double Danda / Pause Bar)
@@ -270,8 +270,8 @@ mod tests {
         assert_eq!(Icons::RUN, "▶ ");
         assert_eq!(Icons::PLAY, "▶ ");
         assert_eq!(Icons::POINTER_RIGHT, "► ");
-        assert_eq!(Icons::RUN_TRIANGLE, "▶ ");
-        assert_eq!(Icons::BUILD, "⚙ ");
+        assert_eq!(Icons::BUILD, "⛯ ");
+        assert_eq!(Icons::GEAR, "⛯ ");
         assert_eq!(Icons::INFO, "i ");
         assert_eq!(Icons::INFO_SIGN, "ℹ ");
         assert_eq!(Icons::PAUSE, "॥ ");

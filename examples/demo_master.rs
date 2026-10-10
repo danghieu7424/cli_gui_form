@@ -566,7 +566,7 @@ fn main() -> io::Result<()> {
                         (Icons::WARNING, "Icons::WARNING", "! (U+0021)", "Theme::WARNING (#F1C21B)", Theme::WARNING),
                         (Icons::RUN, "Icons::RUN", "▶ (U+25B6)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
                         (Icons::POINTER_RIGHT, "Icons::POINTER_RIGHT", "► (U+25BA)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
-                        (Icons::BUILD, "Icons::BUILD", "⚙ (U+2699)", "Theme::PRIMARY (#4589FF)", Theme::PRIMARY),
+                        (Icons::BUILD, "Icons::BUILD", "⛯ (U+26EF)", "Theme::PRIMARY (#4589FF)", Theme::PRIMARY),
                         (Icons::INFO, "Icons::INFO", "i (U+0069)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
                         (Icons::PAUSE, "Icons::PAUSE", "॥ (U+0965)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
                         (Icons::STOP, "Icons::STOP", "■ (U+25A0)", "Theme::ERROR   (#DA1E28)", Theme::ERROR),

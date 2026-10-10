@@ -121,6 +121,8 @@ impl Icons {
     pub const TRIANGLE_DOWN: &'static str = "▼ ";         // U+25BC + space (Black Down Triangle)
     pub const TRIANGLE_RIGHT_SMALL: &'static str = "▸ ";  // U+25B8 + space (Black Right Small Triangle)
     pub const POINTER_FILLED: &'static str = "▸ ";        // Alias cho TRIANGLE_RIGHT_SMALL
+    pub const ARROWHEAD_RIGHT: &'static str = "⮞ ";       // U+2B9E + space (Black Rightwards Arrowhead / Prompt Pointer)
+    pub const PROMPT_ARROW: &'static str = "⮞ ";          // Alias cho ARROWHEAD_RIGHT
 
     // 4. Diamonds
     pub const DIAMOND_FILLED: &'static str = "◆ ";        // U+25C6 + space (Black Diamond)
@@ -139,6 +141,8 @@ impl Icons {
     pub const BULLSEYE: &'static str = "◎ ";              // U+25CE + space (Bullseye / Concentric Circle / Target)
     pub const CROSSHAIR: &'static str = "⌖ ";             // U+2316 + space (Position Indicator / Crosshair / GPS)
     pub const APPROX: &'static str = "≈ ";                // U+2248 + space (Almost Equal To / ETA / Wave)
+    pub const SEARCH: &'static str = "⌕ ";                // U+2315 + space (Telephone Recorder / Search Magnifier / Zero-Emoji)
+    pub const FIND: &'static str = "⌕ ";                  // Alias cho SEARCH
 
     // 7. Flags & Milestones
     pub const FLAG_FILLED: &'static str = "⚑ ";           // U+2691 + space (Black Flag / Priority Flag / Checkpoint)
@@ -342,6 +346,8 @@ mod tests {
         assert_eq!(Icons::TRIANGLE_DOWN, "▼ ");
         assert_eq!(Icons::TRIANGLE_RIGHT_SMALL, "▸ ");
         assert_eq!(Icons::POINTER_FILLED, "▸ ");
+        assert_eq!(Icons::ARROWHEAD_RIGHT, "⮞ ");
+        assert_eq!(Icons::PROMPT_ARROW, "⮞ ");
         assert_eq!(Icons::DIAMOND_FILLED, "◆ ");
 
         // Media, Navigation & System Glyphs
@@ -358,6 +364,8 @@ mod tests {
         assert_eq!(Icons::BULLSEYE, "◎ ");
         assert_eq!(Icons::CROSSHAIR, "⌖ ");
         assert_eq!(Icons::APPROX, "≈ ");
+        assert_eq!(Icons::SEARCH, "⌕ ");
+        assert_eq!(Icons::FIND, "⌕ ");
 
         // Flags & Milestones
         assert_eq!(Icons::FLAG_FILLED, "⚑ ");

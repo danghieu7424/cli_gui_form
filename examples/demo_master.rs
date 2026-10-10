@@ -622,6 +622,7 @@ fn main() -> io::Result<()> {
                         (Icons::TRIANGLE_DOWN, "Icons::TRIANGLE_DOWN", "▼ (U+25BC)", "Theme::ERROR   (#DA1E28)", Theme::ERROR),
                         (Icons::TRIANGLE_RIGHT_SMALL, "Icons::TRIANGLE_RIGHT_SMALL", "▸ (U+25B8)", "Theme::INDIGO  (#5E6AD2)", Theme::INDIGO),
                         (Icons::POINTER, "Icons::POINTER", "▹ (U+25B9)", "Theme::PRIMARY (#4589FF)", Theme::PRIMARY),
+                        (Icons::ARROWHEAD_RIGHT, "Icons::ARROWHEAD_RIGHT", "⮞ (U+2B9E)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
                         // 4. Diamonds
                         (Icons::DIAMOND_FILLED, "Icons::DIAMOND_FILLED", "◆ (U+25C6)", "Theme::PURPLE  (#7928CA)", Theme::PURPLE),
                         (Icons::DIAMOND_EMPTY, "Icons::DIAMOND_EMPTY", "◇ (U+25C7)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
@@ -638,6 +639,7 @@ fn main() -> io::Result<()> {
                         (Icons::BULLSEYE, "Icons::BULLSEYE", "◎ (U+25CE)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
                         (Icons::CROSSHAIR, "Icons::CROSSHAIR", "⌖ (U+2316)", "Theme::SKY     (#38BDF8)", Theme::SKY),
                         (Icons::APPROX, "Icons::APPROX", "≈ (U+2248)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
+                        (Icons::SEARCH, "Icons::SEARCH", "⌕ (U+2315)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
                         // 7. Directional Arrows
                         (Icons::ARROW_UP, "Icons::ARROW_UP", "↑ (U+2191)", "Theme::SUCCESS (#25A249)", Theme::SUCCESS),
                         (Icons::ARROW_DOWN, "Icons::ARROW_DOWN", "↓ (U+2193)", "Theme::ERROR   (#DA1E28)", Theme::ERROR),

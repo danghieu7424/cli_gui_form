@@ -344,6 +344,7 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | **Triangles / Pointers** | `Icons::TRIANGLE_UP` | `▲ ` | `U+25B2` | `^` |
 | | `Icons::TRIANGLE_DOWN` | `▼ ` | `U+25BC` | `v` |
 | | `Icons::TRIANGLE_RIGHT_SMALL` / `POINTER_FILLED` | `▸ ` | `U+25B8` | `>` |
+| | `Icons::ARROWHEAD_RIGHT` / `PROMPT_ARROW` | `⮞ ` | `U+2B9E` | `>` |
 | **Diamonds** | `Icons::DIAMOND_FILLED` | `◆ ` | `U+25C6` | `<*>` |
 | | `Icons::DIAMOND_EMPTY` | `◇ ` | `U+25C7` | `<>` |
 | **Media & Audio** | `Icons::MUSIC` | `♪ ` | `U+266A` | `[~]` |
@@ -357,6 +358,7 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | | `Icons::BULLSEYE` | `◎ ` | `U+25CE` | `((o))` |
 | | `Icons::CROSSHAIR` | `⌖ ` | `U+2316` | `(+)` |
 | | `Icons::APPROX` | `≈ ` | `U+2248` | `~` |
+| | `Icons::SEARCH` / `FIND` | `⌕ ` | `U+2315` | `(?)` |
 | **Directional Arrows** | `Icons::ARROW_UP` | `↑ ` | `U+2191` | `^` |
 | | `Icons::ARROW_DOWN` | `↓ ` | `U+2193` | `v` |
 | | `Icons::ARROW_LEFT` | `← ` | `U+2190` | `<` |

@@ -50,18 +50,14 @@ impl SpinnerType {
 /****
  * Module: ProgressStyle
  * Chức năng: Định nghĩa kiểu ký tự hiển thị thanh tiến trình (Progress Bar).
- * - Line: Thanh vạch mảnh chuẩn ("━" / "─")
+ * - Line: Thanh vạch mảnh chuẩn tối giản Vercel ("━" / "─")
  * - Parallelogram: Hình bình hành xiên phong cách Hiện đại / Cyberpunk ("▰" / "▱")
- * - Rectangle: Thanh chữ nhật liền khối ("▬" / "▭")
- * - Square: Khối vuông phân khúc ("◼" / "◻")
  ****/
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum ProgressStyle {
     #[default]
     Line,
     Parallelogram,
-    Rectangle,
-    Square,
 }
 
 impl ProgressStyle {
@@ -70,8 +66,6 @@ impl ProgressStyle {
         match self {
             ProgressStyle::Line => crate::Icons::PROGRESS_CHARS_LINE,
             ProgressStyle::Parallelogram => crate::Icons::PROGRESS_CHARS_PARALLELOGRAM,
-            ProgressStyle::Rectangle => crate::Icons::PROGRESS_CHARS_RECT,
-            ProgressStyle::Square => crate::Icons::PROGRESS_CHARS_SQUARE,
         }
     }
 }
@@ -341,8 +335,6 @@ mod tests {
     fn test_progress_style_chars() {
         assert_eq!(ProgressStyle::Line.chars(), ("━", "─"));
         assert_eq!(ProgressStyle::Parallelogram.chars(), ("▰", "▱"));
-        assert_eq!(ProgressStyle::Rectangle.chars(), ("▬", "▭"));
-        assert_eq!(ProgressStyle::Square.chars(), ("◼", "◻"));
     }
 
     #[test]

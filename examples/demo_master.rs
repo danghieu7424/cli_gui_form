@@ -267,30 +267,6 @@ fn main() -> io::Result<()> {
     )
     .with_progress_style(ProgressStyle::Parallelogram);
 
-    let progress_rect = TaskWidget::new_progress(
-        "task_progress_rect",
-        "Solid Rectangle Pill Bar",
-        420,
-        500,
-        "chunks",
-        "84%",
-        "Downloading runtime assets archive (U+25AC / U+25AD)...",
-        Theme::ORANGE,
-    )
-    .with_progress_style(ProgressStyle::Rectangle);
-
-    let progress_square = TaskWidget::new_progress(
-        "task_progress_square",
-        "Segmented Square Block Bar",
-        280,
-        500,
-        "units",
-        "56%",
-        "Compiling LLVM machine code objects (U+25FC / U+25FB)...",
-        Theme::PURPLE,
-    )
-    .with_progress_style(ProgressStyle::Square);
-
     let progress_line = TaskWidget::new_progress(
         "task_progress_line",
         "Minimal Vercel Line Bar",
@@ -506,18 +482,12 @@ fn main() -> io::Result<()> {
                         let area_arc = Rect { x: left_x, y: main_chunks[1].y + 12, width: col_w, height: 2 };
                         if render_guard(area_arc) { arc_task.render(area_arc, f); }
 
-                        // Cột 2: 4 Progress Bars
+                        // Cột 2: 2 Progress Bars chuẩn hóa
                         let area_line = Rect { x: right_x, y: main_chunks[1].y + 3, width: col_w, height: 2 };
                         if render_guard(area_line) { progress_line.render(area_line, f); }
 
-                        let area_para = Rect { x: right_x, y: main_chunks[1].y + 6, width: col_w, height: 2 };
+                        let area_para = Rect { x: right_x, y: main_chunks[1].y + 7, width: col_w, height: 2 };
                         if render_guard(area_para) { progress_parallelogram.render(area_para, f); }
-
-                        let area_rect = Rect { x: right_x, y: main_chunks[1].y + 9, width: col_w, height: 2 };
-                        if render_guard(area_rect) { progress_rect.render(area_rect, f); }
-
-                        let area_square = Rect { x: right_x, y: main_chunks[1].y + 12, width: col_w, height: 2 };
-                        if render_guard(area_square) { progress_square.render(area_square, f); }
 
                         // Dưới cùng: Shimmer Bar trải dài
                         let area_shimmer = Rect { x: left_x, y: main_chunks[1].y + 16, width: panel_w, height: 1 };
@@ -525,15 +495,13 @@ fn main() -> io::Result<()> {
                     } else {
                         // Màn hình hẹp: Xếp 1 cột đơn, chỉ render các widget còn trong vùng an toàn
                         let mut curr_y = main_chunks[1].y + 3;
-                        let single_tasks: [&dyn FormWidget; 8] = [
+                        let single_tasks: [&dyn FormWidget; 6] = [
                             &pulse_task,
                             &moon_task,
                             &braille_task,
                             &arc_task,
                             &progress_line,
                             &progress_parallelogram,
-                            &progress_rect,
-                            &progress_square,
                         ];
 
                         for t in single_tasks {
@@ -734,13 +702,9 @@ fn main() -> io::Result<()> {
                     lines.push(Line::from(vec![
                         Span::styled("    [Progress/Bar] ", Style::default().fg(Theme::SECONDARY)),
                         Span::styled("▰▰▰▱▱ ", Style::default().fg(Theme::CYAN)),
-                        Span::styled("Para │ ", Style::default().fg(Theme::MUTED)),
-                        Span::styled("▬▬▬▭▭ ", Style::default().fg(Theme::ORANGE)),
-                        Span::styled("Rect │ ", Style::default().fg(Theme::MUTED)),
-                        Span::styled("◼◼◼◻◻ ", Style::default().fg(Theme::PURPLE)),
-                        Span::styled("Square │ ", Style::default().fg(Theme::MUTED)),
+                        Span::styled("Parallelogram │ ", Style::default().fg(Theme::MUTED)),
                         Span::styled("━━━── ", Style::default().fg(Theme::EMERALD)),
-                        Span::styled("Line", Style::default().fg(Theme::MUTED)),
+                        Span::styled("Line (Vercel Minimal)", Style::default().fg(Theme::MUTED)),
                     ]));
 
                     lines.push(Line::from(vec![

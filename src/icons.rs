@@ -54,16 +54,10 @@ impl Icons {
     pub const PROGRESS_EMPTY: &'static str = "─";  // U+2500 (Clean Line Empty)
     pub const PROGRESS_PARALLELOGRAM_FILLED: &'static str = "▰"; // U+25B0 (Black Parallelogram Filled)
     pub const PROGRESS_PARALLELOGRAM_EMPTY: &'static str = "▱";  // U+25B1 (White Parallelogram Empty)
-    pub const PROGRESS_RECT_FILLED: &'static str = "▬";          // U+25AC (Black Rectangle Filled)
-    pub const PROGRESS_RECT_EMPTY: &'static str = "▭";           // U+25AD (White Rectangle Empty)
-    pub const PROGRESS_SQUARE_FILLED: &'static str = "◼";        // U+25FC (Black Medium Square Filled)
-    pub const PROGRESS_SQUARE_EMPTY: &'static str = "◻";         // U+25FB (White Medium Square Empty)
 
     // Cặp ký tự tiến trình chuẩn hóa (Filled, Empty)
     pub const PROGRESS_CHARS_LINE: (&'static str, &'static str) = (Self::PROGRESS_FILLED, Self::PROGRESS_EMPTY);
     pub const PROGRESS_CHARS_PARALLELOGRAM: (&'static str, &'static str) = (Self::PROGRESS_PARALLELOGRAM_FILLED, Self::PROGRESS_PARALLELOGRAM_EMPTY);
-    pub const PROGRESS_CHARS_RECT: (&'static str, &'static str) = (Self::PROGRESS_RECT_FILLED, Self::PROGRESS_RECT_EMPTY);
-    pub const PROGRESS_CHARS_SQUARE: (&'static str, &'static str) = (Self::PROGRESS_SQUARE_FILLED, Self::PROGRESS_SQUARE_EMPTY);
 
     // Standard Directional Arrows (Bộ mũi tên định hướng chuẩn Unicode 2-cell)
     pub const ARROW_UP: &'static str = "↑ ";      // U+2191 + space (Upwards Arrow)
@@ -377,14 +371,8 @@ mod tests {
         assert_eq!(Icons::PROGRESS_EMPTY, "─");
         assert_eq!(Icons::PROGRESS_PARALLELOGRAM_FILLED, "▰");
         assert_eq!(Icons::PROGRESS_PARALLELOGRAM_EMPTY, "▱");
-        assert_eq!(Icons::PROGRESS_RECT_FILLED, "▬");
-        assert_eq!(Icons::PROGRESS_RECT_EMPTY, "▭");
-        assert_eq!(Icons::PROGRESS_SQUARE_FILLED, "◼");
-        assert_eq!(Icons::PROGRESS_SQUARE_EMPTY, "◻");
         assert_eq!(Icons::PROGRESS_CHARS_LINE, ("━", "─"));
         assert_eq!(Icons::PROGRESS_CHARS_PARALLELOGRAM, ("▰", "▱"));
-        assert_eq!(Icons::PROGRESS_CHARS_RECT, ("▬", "▭"));
-        assert_eq!(Icons::PROGRESS_CHARS_SQUARE, ("◼", "◻"));
 
         // Safe Geometric Glyphs
         assert_eq!(Icons::SQUARE_FILLED, "■ ");

@@ -316,8 +316,6 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | Branch Sub-level | `Icons::BRANCH` | `⤷ ` | `U+21B3` | `\_` |
 | Progress Line | `Icons::PROGRESS_FILLED` / `EMPTY` | `━` / `─` | `U+2501` / `U+2500` | `=` / `-` |
 | Progress Parallelogram | `Icons::PROGRESS_PARALLELOGRAM_FILLED` / `EMPTY` | `▰` / `▱` | `U+25B0` / `U+25B1` | `#` / `-` |
-| Progress Rectangle | `Icons::PROGRESS_RECT_FILLED` / `EMPTY` | `▬` / `▭` | `U+25AC` / `U+25AD` | `=` / `-` |
-| Progress Square | `Icons::PROGRESS_SQUARE_FILLED` / `EMPTY` | `◼` / `◻` | `U+25FC` / `U+25FB` | `*` / `.` |
 
 #### Safe Geometric Glyphs (Kiểm chứng Windows Terminal & Linux / Zero-Clipping)
 
@@ -478,23 +476,18 @@ Nhằm giải quyết triệt để bài toán **Layout Shift (giật dòng răn
 - **Braille 10-Frame Spinner (Docker)**: Chu kỳ 80ms qua các khung hình `⠋`, `⠙`, `⠹`, `⠸`, `⠼`, `⠴`, `⠦`, `⠧`, `⠇`, `⠏` (`SpinnerType::Dots`).
 - **Moon Spinner (Clockwise Rotating Circle)**: Chu kỳ 120ms qua 4 pha bán cầu xoay tròn `◐` → `◒` → `◑` → `◓` (`SpinnerType::Moon`). Khớp chuẩn 1 cell monospace trên Windows Terminal / Powershell.
 - **Arc Spinner (Quadrant Circular Arc)**: Chu kỳ 100ms qua 4 góc cung tròn `◜` → `◝` → `◞` → `◟` (`SpinnerType::Arc`). Khớp chuẩn 1 cell monospace trên Windows Terminal / Powershell.
-- **Radar Spinner (Rotating Ellipsis)**: Chu kỳ 110ms qua 4 trục xoay 360 độ `⋮` → `⋰` → `⋯` → `⋱` (`SpinnerType::Radar`). Chuẩn hình học 3 chấm đồng nhất 100% độ sáng.
 
 ### Progress Bars `[x]` (`TaskWidget`)
 
 ```
   Line:           ━━━━━━━━━━────────── 50% [250/500 units] ─ 12s
   Parallelogram:  ▰▰▰▰▰▰▰▰▰▰▱▱▱▱▱▱▱▱▱▱ 50% [250/500 units] ─ 12s
-  Rectangle:      ▬▬▬▬▬▬▬▬▬▬▭▭▭▭▭▭▭▭▭▭ 50% [250/500 units] ─ 12s
-  Square:         ◼◼◼◼◼◼◼◼◼◼◻◻◻◻◻◻◻◻◻◻ 50% [250/500 units] ─ 12s
 ```
 
 - Thanh đo lường tiến trình chính xác, hỗ trợ chuyển đổi mượt mà từ Spinner bất định sang Progress có đo lường.
-- Hỗ trợ 4 kiểu ký tự qua enum `ProgressStyle`:
+- Hỗ trợ 2 kiểu ký tự chuẩn hóa qua enum `ProgressStyle`:
   - `ProgressStyle::Line`: `━` / `─` (Vạch mảnh thanh thoát, tối giản Vercel).
   - `ProgressStyle::Parallelogram`: `▰` / `▱` (Hình bình hành xiên hiện đại, phong cách Cyberpunk/CLI).
-  - `ProgressStyle::Rectangle`: `▬` / `▭` (Khối chữ nhật liền mạch dải ngang).
-  - `ProgressStyle::Square`: `◼` / `◻` (Khối vuông phân khúc phân cấp rõ rệt).
 
 ### Shimmer Bar `[x]` (`ShimmerWidget`)
 

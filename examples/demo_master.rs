@@ -233,11 +233,11 @@ fn main() -> io::Result<()> {
 
     let mut braille_task = TaskWidget::new_loading(
         "task_braille",
-        "Docker Layer Builder (8-Frame Braille)",
+        "Docker Layer Builder (6-Frame Braille)",
         "Exporting image snapshot sha256:7f8a9...",
         Theme::PRIMARY,
     )
-    .with_spinner_type(SpinnerType::Braille8);
+    .with_spinner_type(SpinnerType::Braille6);
 
     let mut moon_task = TaskWidget::new_loading(
         "task_moon",

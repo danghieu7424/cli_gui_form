@@ -440,7 +440,7 @@ Nhằm giải quyết triệt để bài toán **Layout Shift (giật dòng răn
 ### Spinners `[x]` (`TaskWidget`)
 
 - **Pulse Spinner (Thinking/AI)**: Chu kỳ 150ms qua các trạng thái `· ` → `• ` → `● ` → `• ` → `· `.
-- **Braille 8-Frame Spinner (Build/IO)**: Chu kỳ 80ms qua 8 khung hình kinh điển `⣾` → `⣽` → `⣻` → `⢿` → `⡿` → `⣟` → `⣯` → `⣷` (`SpinnerType::Braille8`).
+- **Braille 6-Frame Spinner (Build/IO)**: Chu kỳ 80ms qua 6 khung viền kinh điển `⠋` → `⠙` → `⠸` → `⠴` → `⠦` → `⠇` (`SpinnerType::Braille6`).
 - **Braille 10-Frame Spinner (Docker)**: Chu kỳ 80ms qua các khung hình `⠋`, `⠙`, `⠹`, `⠸`, `⠼`, `⠴`, `⠦`, `⠧`, `⠇`, `⠏` (`SpinnerType::Dots`).
 - **Moon Spinner (Clockwise Rotating Circle)**: Chu kỳ 120ms qua 4 pha bán cầu xoay tròn `◐` → `◒` → `◑` → `◓` (`SpinnerType::Moon`). Khớp chuẩn 1 cell monospace trên Windows Terminal / Powershell.
 

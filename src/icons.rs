@@ -103,8 +103,8 @@ impl Icons {
     // Chuỗi hoạt họa vòng xoay 4 pha bán cầu (Moon Spinner / Clockwise rotating circle)
     pub const SPINNER_MOON_FRAMES: &'static [&'static str] = &["◐", "◒", "◑", "◓"];
 
-    // Chuỗi hoạt họa 8 khung hình Braille kinh điển (8-frame Clockwise Dots Spinner)
-    pub const SPINNER_BRAILLE_8_FRAMES: &'static [&'static str] = &["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"];
+    // Chuỗi hoạt họa 6 khung hình Braille kinh điển xoay tròn viền ngoài (6-frame Clockwise Dots Spinner)
+    pub const SPINNER_BRAILLE_6_FRAMES: &'static [&'static str] = &["⠋", "⠙", "⠸", "⠴", "⠦", "⠇"];
 
     // 3. Pointers & Triangles
     pub const TRIANGLE_UP: &'static str = "▲ ";           // U+25B2 + space (Black Up Triangle)
@@ -320,8 +320,8 @@ mod tests {
         assert_eq!(Icons::CIRCLE_HALF_RIGHT, "◑ ");
         assert_eq!(Icons::CIRCLE_HALF_TOP, "◓ ");
         assert_eq!(Icons::SPINNER_MOON_FRAMES, &["◐", "◒", "◑", "◓"]);
-        assert_eq!(Icons::SPINNER_BRAILLE_8_FRAMES, &["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"]);
-        assert_eq!(Icons::SPINNER_BRAILLE_8_FRAMES.len(), 8);
+        assert_eq!(Icons::SPINNER_BRAILLE_6_FRAMES, &["⠋", "⠙", "⠸", "⠴", "⠦", "⠇"]);
+        assert_eq!(Icons::SPINNER_BRAILLE_6_FRAMES.len(), 6);
         assert_eq!(Icons::TRIANGLE_UP, "▲ ");
         assert_eq!(Icons::TRIANGLE_DOWN, "▼ ");
         assert_eq!(Icons::TRIANGLE_RIGHT_SMALL, "▸ ");

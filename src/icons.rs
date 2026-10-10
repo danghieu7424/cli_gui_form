@@ -92,6 +92,16 @@ impl Icons {
     pub const ARROW_DOWN_RIGHT: &'static str = "↘ ";     // U+2198 + space (South East Arrow / Expand)
     pub const EXTERNAL_LINK: &'static str = "↗ ";        // Alias cho ARROW_UP_RIGHT
 
+    // 6. Mũi tên trao đổi & truyền dẫn dữ liệu (Exchange, Duplex & Harpoon Arrows)
+    pub const ARROW_SWAP: &'static str = "⇄ ";           // U+21C4 + space (Rightwards Arrow Over Leftwards Arrow / Exchange / Sync)
+    pub const ARROW_EXCHANGE: &'static str = "⇄ ";       // Alias cho ARROW_SWAP
+    pub const ARROW_TRANSFER: &'static str = "⇆ ";       // U+21C6 + space (Leftwards Arrow Over Rightwards Arrow / Transfer)
+    pub const ARROW_DUPLEX_VERT: &'static str = "⇅ ";    // U+21C5 + space (Upwards Arrow Leftwards of Downwards Arrow / Full Duplex)
+    pub const ARROW_DUPLEX_VERT_REV: &'static str = "⇵ ";// U+21F5 + space (Downwards Arrow Leftwards of Upwards Arrow)
+    pub const HARPOON_LEFT_RIGHT: &'static str = "⇋ ";   // U+21CB + space (Leftwards Harpoon Over Rightwards Harpoon / Reversible Balance)
+    pub const HARPOON_RIGHT_LEFT: &'static str = "⇌ ";   // U+21CC + space (Rightwards Harpoon Over Leftwards Harpoon / Equilibrium / State Sync)
+    pub const HARPOON_EXCHANGE: &'static str = "⇌ ";     // Alias cho HARPOON_RIGHT_LEFT
+
     // Safe Geometric Glyphs (Bộ glyph hình học an toàn, zero-clipping trên Windows/Linux Terminal)
     // 1. Squares & Checkboxes
     pub const SQUARE_FILLED: &'static str = "■ ";         // U+25A0 + space (Black Square)
@@ -131,6 +141,9 @@ impl Icons {
 
     // Chuỗi hoạt họa vòng xoay cung tròn 4 khung hình (4-frame Quadrant Arc Spinner)
     pub const SPINNER_ARC_FRAMES: &'static [&'static str] = &["◜", "◝", "◞", "◟"];
+
+    // Chuỗi hoạt họa xoay trục 4 khung hình (4-frame Rotating Ellipsis / Radar Spinner)
+    pub const SPINNER_RADAR_FRAMES: &'static [&'static str] = &["⋮", "⋰", "⋯", "⋱"];
 
     // 3. Pointers & Triangles
     pub const TRIANGLE_UP: &'static str = "▲ ";           // U+25B2 + space (Black Up Triangle)
@@ -329,6 +342,14 @@ mod tests {
         assert_eq!(Icons::ARROW_UP_RIGHT, "↗ ");
         assert_eq!(Icons::ARROW_DOWN_RIGHT, "↘ ");
         assert_eq!(Icons::EXTERNAL_LINK, "↗ ");
+        assert_eq!(Icons::ARROW_SWAP, "⇄ ");
+        assert_eq!(Icons::ARROW_EXCHANGE, "⇄ ");
+        assert_eq!(Icons::ARROW_TRANSFER, "⇆ ");
+        assert_eq!(Icons::ARROW_DUPLEX_VERT, "⇅ ");
+        assert_eq!(Icons::ARROW_DUPLEX_VERT_REV, "⇵ ");
+        assert_eq!(Icons::HARPOON_LEFT_RIGHT, "⇋ ");
+        assert_eq!(Icons::HARPOON_RIGHT_LEFT, "⇌ ");
+        assert_eq!(Icons::HARPOON_EXCHANGE, "⇌ ");
         assert_eq!(Icons::BRANCH, "⤷ ");
         assert_eq!(Icons::DIAMOND_EMPTY, "◇ ");
         assert_eq!(Icons::SNOWFLAKE, "❅ ");
@@ -372,6 +393,8 @@ mod tests {
         assert_eq!(Icons::ARC_BOTTOM_LEFT, "◟ ");
         assert_eq!(Icons::SPINNER_ARC_FRAMES, &["◜", "◝", "◞", "◟"]);
         assert_eq!(Icons::SPINNER_ARC_FRAMES.len(), 4);
+        assert_eq!(Icons::SPINNER_RADAR_FRAMES, &["⋮", "⋰", "⋯", "⋱"]);
+        assert_eq!(Icons::SPINNER_RADAR_FRAMES.len(), 4);
         assert_eq!(Icons::TRIANGLE_UP, "▲ ");
         assert_eq!(Icons::TRIANGLE_DOWN, "▼ ");
         assert_eq!(Icons::TRIANGLE_RIGHT_SMALL, "▸ ");

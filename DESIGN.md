@@ -381,6 +381,12 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | | `Icons::ENTER` | `↵ ` | `U+21B5` | `<-'` |
 | | `Icons::RELOAD` | `↻ ` | `U+21BB` | `@` |
 | | `Icons::UNDO` | `↺ ` | `U+21BA` | `@` |
+| **Exchange & Harpoons** | `Icons::ARROW_SWAP` / `ARROW_EXCHANGE` | `⇄ ` | `U+21C4` | `<=>` |
+| | `Icons::ARROW_TRANSFER` | `⇆ ` | `U+21C6` | `<=>` |
+| | `Icons::ARROW_DUPLEX_VERT` | `⇅ ` | `U+21C5` | `^v` |
+| | `Icons::ARROW_DUPLEX_VERT_REV` | `⇵ ` | `U+21F5` | `v^` |
+| | `Icons::HARPOON_LEFT_RIGHT` | `⇋ ` | `U+21CB` | `<->` |
+| | `Icons::HARPOON_RIGHT_LEFT` / `HARPOON_EXCHANGE` | `⇌ ` | `U+21CC` | `<->` |
 | **Flags & Milestones** | `Icons::FLAG_FILLED` | `⚑ ` | `U+2691` | `[F]` |
 | | `Icons::FLAG_EMPTY` | `⚐ ` | `U+2690` | `[f]` |
 | **Celestial & Stars** | `Icons::SUN` | `☼ ` | `U+263C` | `*` |
@@ -463,6 +469,7 @@ Nhằm giải quyết triệt để bài toán **Layout Shift (giật dòng răn
 - **Braille 10-Frame Spinner (Docker)**: Chu kỳ 80ms qua các khung hình `⠋`, `⠙`, `⠹`, `⠸`, `⠼`, `⠴`, `⠦`, `⠧`, `⠇`, `⠏` (`SpinnerType::Dots`).
 - **Moon Spinner (Clockwise Rotating Circle)**: Chu kỳ 120ms qua 4 pha bán cầu xoay tròn `◐` → `◒` → `◑` → `◓` (`SpinnerType::Moon`). Khớp chuẩn 1 cell monospace trên Windows Terminal / Powershell.
 - **Arc Spinner (Quadrant Circular Arc)**: Chu kỳ 100ms qua 4 góc cung tròn `◜` → `◝` → `◞` → `◟` (`SpinnerType::Arc`). Khớp chuẩn 1 cell monospace trên Windows Terminal / Powershell.
+- **Radar Spinner (Rotating Ellipsis)**: Chu kỳ 110ms qua 4 trục xoay 360 độ `⋮` → `⋰` → `⋯` → `⋱` (`SpinnerType::Radar`). Chuẩn hình học 3 chấm đồng nhất 100% độ sáng.
 
 ### Progress Bars `[x]` (`TaskWidget`)
 

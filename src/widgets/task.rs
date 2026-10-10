@@ -15,6 +15,7 @@ const SPINNER_FRAMES_BRAILLE_6: &[&str] = crate::icons::Icons::SPINNER_BRAILLE_6
 const SPINNER_FRAMES_PULSE: &[&str] = &["·", "•", "●", "•", "·", " "];
 const SPINNER_FRAMES_MOON: &[&str] = crate::icons::Icons::SPINNER_MOON_FRAMES;
 const SPINNER_FRAMES_ARC: &[&str] = crate::icons::Icons::SPINNER_ARC_FRAMES;
+const SPINNER_FRAMES_RADAR: &[&str] = crate::icons::Icons::SPINNER_RADAR_FRAMES;
 
 /****
  * Module: SpinnerType
@@ -24,6 +25,7 @@ const SPINNER_FRAMES_ARC: &[&str] = crate::icons::Icons::SPINNER_ARC_FRAMES;
  * - Pulse: Hiệu ứng chấm nhịp đập / Thinking ("·", "•", "●", "•", "·", " ")
  * - Moon: Vòng xoay 4 pha bán cầu xuôi chiều kim đồng hồ ("◐", "◒", "◑", "◓")
  * - Arc: Vòng xoay cung phần tư tròn 4 khung hình ("◜", "◝", "◞", "◟")
+ * - Radar: Vòng xoay trục 4 khung hình xoay 360 độ ("⋮", "⋰", "⋯", "⋱")
  ****/
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum SpinnerType {
@@ -33,6 +35,7 @@ pub enum SpinnerType {
     Pulse,
     Moon,
     Arc,
+    Radar,
 }
 
 impl SpinnerType {
@@ -43,6 +46,7 @@ impl SpinnerType {
             SpinnerType::Pulse => SPINNER_FRAMES_PULSE,
             SpinnerType::Moon => SPINNER_FRAMES_MOON,
             SpinnerType::Arc => SPINNER_FRAMES_ARC,
+            SpinnerType::Radar => SPINNER_FRAMES_RADAR,
         }
     }
 }
@@ -335,6 +339,8 @@ mod tests {
         assert_eq!(SpinnerType::Moon.frames(), &["◐", "◒", "◑", "◓"]);
         assert_eq!(SpinnerType::Arc.frames(), &["◜", "◝", "◞", "◟"]);
         assert_eq!(SpinnerType::Arc.frames().len(), 4);
+        assert_eq!(SpinnerType::Radar.frames(), &["⋮", "⋰", "⋯", "⋱"]);
+        assert_eq!(SpinnerType::Radar.frames().len(), 4);
     }
 
     #[test]

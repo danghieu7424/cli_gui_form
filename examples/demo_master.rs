@@ -2,7 +2,7 @@
 
 use cli_gui_form::{
     ButtonWidget, CardWidget, CheckboxWidget, EditableListWidget, EventResult, FormManager, FormWidget, Icons,
-    InputMode, InputWidget, ListWidget, RadioWidget, SelectWidget, ShimmerWidget, SpinnerType, StatusBarWidget, TabsWidget,
+    InputMode, InputWidget, ListWidget, ProgressStyle, RadioWidget, SelectWidget, ShimmerWidget, SpinnerType, StatusBarWidget, TabsWidget,
     Tags, TaskWidget, Theme,
 };
 use crossterm::{
@@ -247,16 +247,53 @@ fn main() -> io::Result<()> {
     )
     .with_spinner_type(SpinnerType::Moon);
 
-    let progress_task = TaskWidget::new_progress(
-        "task_progress",
-        "WASM Optimization",
-        340,
+    let progress_parallelogram = TaskWidget::new_progress(
+        "task_progress_para",
+        "Cyberpunk Parallelogram Bar",
+        350,
+        500,
+        "blocks",
+        "70%",
+        "Syncing distributed ledger blocks (U+25B0 / U+25B1)...",
+        Theme::CYAN,
+    )
+    .with_progress_style(ProgressStyle::Parallelogram);
+
+    let progress_rect = TaskWidget::new_progress(
+        "task_progress_rect",
+        "Solid Rectangle Pill Bar",
+        420,
         500,
         "chunks",
-        "12s",
-        "Applying link-time dead code elimination...",
-        Theme::SUCCESS,
-    );
+        "84%",
+        "Downloading runtime assets archive (U+25AC / U+25AD)...",
+        Theme::ORANGE,
+    )
+    .with_progress_style(ProgressStyle::Rectangle);
+
+    let progress_square = TaskWidget::new_progress(
+        "task_progress_square",
+        "Segmented Square Block Bar",
+        280,
+        500,
+        "units",
+        "56%",
+        "Compiling LLVM machine code objects (U+25FC / U+25FB)...",
+        Theme::PURPLE,
+    )
+    .with_progress_style(ProgressStyle::Square);
+
+    let progress_line = TaskWidget::new_progress(
+        "task_progress_line",
+        "Minimal Vercel Line Bar",
+        480,
+        500,
+        "files",
+        "96%",
+        "Deploying edge functions to 24 datacenters (U+2501 / U+2500)...",
+        Theme::EMERALD,
+    )
+    .with_progress_style(ProgressStyle::Line);
 
     let mut shimmer_bar = ShimmerWidget::new(
         "shimmer_bar",
@@ -426,41 +463,58 @@ fn main() -> io::Result<()> {
                     tabs.render_container(main_chunks[1], lines, f);
 
                     // Render các Tasks lồng nhau trong panel
+
                     let card_area = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 4,
+                        y: main_chunks[1].y + 3,
                         width: main_chunks[1].width.saturating_sub(6),
-                        height: 3,
+                        height: 2,
                     };
                     pulse_task.render(card_area, f);
 
-                    let card_area2 = Rect {
-                        x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 8,
-                        width: main_chunks[1].width.saturating_sub(6),
-                        height: 3,
-                    };
-                    braille_task.render(card_area2, f);
-
                     let card_area_moon = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 12,
+                        y: main_chunks[1].y + 6,
                         width: main_chunks[1].width.saturating_sub(6),
-                        height: 3,
+                        height: 2,
                     };
                     moon_task.render(card_area_moon, f);
 
-                    let card_area3 = Rect {
+                    let card_area_para = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 16,
+                        y: main_chunks[1].y + 9,
                         width: main_chunks[1].width.saturating_sub(6),
-                        height: 3,
+                        height: 2,
                     };
-                    progress_task.render(card_area3, f);
+                    progress_parallelogram.render(card_area_para, f);
+
+                    let card_area_rect = Rect {
+                        x: main_chunks[1].x + 3,
+                        y: main_chunks[1].y + 12,
+                        width: main_chunks[1].width.saturating_sub(6),
+                        height: 2,
+                    };
+                    progress_rect.render(card_area_rect, f);
+
+                    let card_area_square = Rect {
+                        x: main_chunks[1].x + 3,
+                        y: main_chunks[1].y + 15,
+                        width: main_chunks[1].width.saturating_sub(6),
+                        height: 2,
+                    };
+                    progress_square.render(card_area_square, f);
+
+                    let card_area_line = Rect {
+                        x: main_chunks[1].x + 3,
+                        y: main_chunks[1].y + 18,
+                        width: main_chunks[1].width.saturating_sub(6),
+                        height: 2,
+                    };
+                    progress_line.render(card_area_line, f);
 
                     let shimmer_area = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 20,
+                        y: main_chunks[1].y + 21,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 1,
                     };
@@ -606,6 +660,18 @@ fn main() -> io::Result<()> {
                         Span::styled(Icons::CIRCLE_HALF_BOTTOM, Style::default().fg(Theme::CYAN)),
                         Span::styled(Icons::CIRCLE_HALF_RIGHT, Style::default().fg(Theme::CYAN)),
                         Span::styled(Icons::CIRCLE_HALF_TOP, Style::default().fg(Theme::CYAN)),
+                    ]));
+
+                    lines.push(Line::from(vec![
+                        Span::styled("    [Progress/Bar] ", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled("▰▰▰▱▱ ", Style::default().fg(Theme::CYAN)),
+                        Span::styled("Para │ ", Style::default().fg(Theme::MUTED)),
+                        Span::styled("▬▬▬▭▭ ", Style::default().fg(Theme::ORANGE)),
+                        Span::styled("Rect │ ", Style::default().fg(Theme::MUTED)),
+                        Span::styled("◼◼◼◻◻ ", Style::default().fg(Theme::PURPLE)),
+                        Span::styled("Square │ ", Style::default().fg(Theme::MUTED)),
+                        Span::styled("━━━── ", Style::default().fg(Theme::EMERALD)),
+                        Span::styled("Line", Style::default().fg(Theme::MUTED)),
                     ]));
 
                     lines.push(Line::from(vec![

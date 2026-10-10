@@ -312,6 +312,10 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | Pointer / Arrow | `Icons::POINTER` | `▹ ` | `U+25B8` | `>` |
 | Arrow Right | `Icons::ARROW_RIGHT` | `→ ` | `U+2192` | `->` |
 | Branch Sub-level | `Icons::BRANCH` | `⤷ ` | `U+21B3` | `\_` |
+| Progress Line | `Icons::PROGRESS_FILLED` / `EMPTY` | `━` / `─` | `U+2501` / `U+2500` | `=` / `-` |
+| Progress Parallelogram | `Icons::PROGRESS_PARALLELOGRAM_FILLED` / `EMPTY` | `▰` / `▱` | `U+25B0` / `U+25B1` | `#` / `-` |
+| Progress Rectangle | `Icons::PROGRESS_RECT_FILLED` / `EMPTY` | `▬` / `▭` | `U+25AC` / `U+25AD` | `=` / `-` |
+| Progress Square | `Icons::PROGRESS_SQUARE_FILLED` / `EMPTY` | `◼` / `◻` | `U+25FC` / `U+25FB` | `*` / `.` |
 
 #### Safe Geometric Glyphs (Kiểm chứng Windows Terminal & Linux / Zero-Clipping)
 
@@ -436,10 +440,18 @@ Nhằm giải quyết triệt để bài toán **Layout Shift (giật dòng răn
 ### Progress Bars `[x]` (`TaskWidget`)
 
 ```
-  ━━━━━━━━━━────────── 50% [250/500 units] ─ 12s
+  Line:           ━━━━━━━━━━────────── 50% [250/500 units] ─ 12s
+  Parallelogram:  ▰▰▰▰▰▰▰▰▰▰▱▱▱▱▱▱▱▱▱▱ 50% [250/500 units] ─ 12s
+  Rectangle:      ▬▬▬▬▬▬▬▬▬▬▭▭▭▭▭▭▭▭▭▭ 50% [250/500 units] ─ 12s
+  Square:         ◼◼◼◼◼◼◼◼◼◼◻◻◻◻◻◻◻◻◻◻ 50% [250/500 units] ─ 12s
 ```
 
 - Thanh đo lường tiến trình chính xác, hỗ trợ chuyển đổi mượt mà từ Spinner bất định sang Progress có đo lường.
+- Hỗ trợ 4 kiểu ký tự qua enum `ProgressStyle`:
+  - `ProgressStyle::Line`: `━` / `─` (Vạch mảnh thanh thoát, tối giản Vercel).
+  - `ProgressStyle::Parallelogram`: `▰` / `▱` (Hình bình hành xiên hiện đại, phong cách Cyberpunk/CLI).
+  - `ProgressStyle::Rectangle`: `▬` / `▭` (Khối chữ nhật liền mạch dải ngang).
+  - `ProgressStyle::Square`: `◼` / `◻` (Khối vuông phân khúc phân cấp rõ rệt).
 
 ### Shimmer Bar `[x]` (`ShimmerWidget`)
 

@@ -39,6 +39,35 @@ impl SpinnerType {
     }
 }
 
+/****
+ * Module: ProgressStyle
+ * Chức năng: Định nghĩa kiểu ký tự hiển thị thanh tiến trình (Progress Bar).
+ * - Line: Thanh vạch mảnh chuẩn ("━" / "─")
+ * - Parallelogram: Hình bình hành xiên phong cách Hiện đại / Cyberpunk ("▰" / "▱")
+ * - Rectangle: Thanh chữ nhật liền khối ("▬" / "▭")
+ * - Square: Khối vuông phân khúc ("◼" / "◻")
+ ****/
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum ProgressStyle {
+    #[default]
+    Line,
+    Parallelogram,
+    Rectangle,
+    Square,
+}
+
+impl ProgressStyle {
+    #[inline]
+    pub const fn chars(&self) -> (&'static str, &'static str) {
+        match self {
+            ProgressStyle::Line => crate::Icons::PROGRESS_CHARS_LINE,
+            ProgressStyle::Parallelogram => crate::Icons::PROGRESS_CHARS_PARALLELOGRAM,
+            ProgressStyle::Rectangle => crate::Icons::PROGRESS_CHARS_RECT,
+            ProgressStyle::Square => crate::Icons::PROGRESS_CHARS_SQUARE,
+        }
+    }
+}
+
 pub enum TaskState {
     Loading {
         message: String,
@@ -62,6 +91,7 @@ pub struct TaskWidget {
     pub color: Color,
     pub bar_width: usize,
     pub spinner_type: SpinnerType,
+    pub progress_style: ProgressStyle,
     focused: bool,
 }
 
@@ -85,6 +115,7 @@ impl TaskWidget {
             color,
             bar_width: 25,
             spinner_type: SpinnerType::Dots,
+            progress_style: ProgressStyle::Line,
             focused: false,
         }
     }
@@ -113,13 +144,20 @@ impl TaskWidget {
             color,
             bar_width: 25,
             spinner_type: SpinnerType::Dots,
+            progress_style: ProgressStyle::Line,
             focused: false,
         }
     }
 
-    /// Cho phép cấu hình kiểu animation của spinner (Dots hoặc Pulse)
+    /// Cho phép cấu hình kiểu animation của spinner (Dots, Pulse hoặc Moon)
     pub fn with_spinner_type(mut self, spinner_type: SpinnerType) -> Self {
         self.spinner_type = spinner_type;
+        self
+    }
+
+    /// Cho phép cấu hình phong cách hiển thị thanh tiến trình (Line, Parallelogram, Rectangle, Square)
+    pub fn with_progress_style(mut self, progress_style: ProgressStyle) -> Self {
+        self.progress_style = progress_style;
         self
     }
 
@@ -213,13 +251,14 @@ impl FormWidget for TaskWidget {
                 let right_empty = self.bar_width.saturating_sub(left_empty + active_len);
 
                 // Theo DESIGN.md mục 6: 2-space indent, Accent/Primary cho tiến trình, Muted cho nét trống
+                let (filled_char, empty_char) = self.progress_style.chars();
                 let line1 = Line::from(vec![
                     Span::styled("  ", Style::default()),
                     Span::styled(format!("{} ", spinner_char), Style::default().fg(self.color).add_modifier(Modifier::BOLD)),
                     Span::styled(format!("{}: ", self.label), label_style),
-                    Span::styled("─".repeat(left_empty), Style::default().fg(crate::Theme::MUTED)),
-                    Span::styled("━".repeat(active_len), Style::default().fg(self.color).add_modifier(Modifier::BOLD)),
-                    Span::styled("─".repeat(right_empty), Style::default().fg(crate::Theme::MUTED)),
+                    Span::styled(empty_char.repeat(left_empty), Style::default().fg(crate::Theme::MUTED)),
+                    Span::styled(filled_char.repeat(active_len), Style::default().fg(self.color).add_modifier(Modifier::BOLD)),
+                    Span::styled(empty_char.repeat(right_empty), Style::default().fg(crate::Theme::MUTED)),
                 ]);
 
                 // DESIGN.md: Tránh italic, dùng Muted / Secondary với Icons::BRANCH (thụt lề 2 spaces + 2-cell branch icon)
@@ -245,12 +284,12 @@ impl FormWidget for TaskWidget {
 
                 let metric_text = format!(" [{}/{} {} ({})]", current, total, unit, duration);
 
-                // DESIGN.md mục 8: Progress bar dùng Accent (#0070f3) cho filled '━', empty '─' Muted
+                let (filled_char, empty_char) = self.progress_style.chars();
                 let line1 = Line::from(vec![
                     Span::styled("    ", Style::default()), // Căn lề thụt đầu dòng 4 spaces (2 indent + 2 icon width)
                     Span::styled(format!("{}: ", self.label), label_style),
-                    Span::styled("━".repeat(filled_len), Style::default().fg(crate::Theme::ACCENT).add_modifier(Modifier::BOLD)),
-                    Span::styled("─".repeat(empty_len), Style::default().fg(crate::Theme::MUTED)),
+                    Span::styled(filled_char.repeat(filled_len), Style::default().fg(crate::Theme::ACCENT).add_modifier(Modifier::BOLD)),
+                    Span::styled(empty_char.repeat(empty_len), Style::default().fg(crate::Theme::MUTED)),
                     Span::styled(format!(" {:>3}%", percent), Style::default().fg(crate::Theme::PRIMARY).add_modifier(Modifier::BOLD)),
                     Span::styled(metric_text, Style::default().fg(crate::Theme::SECONDARY)),
                 ]);
@@ -287,6 +326,14 @@ mod tests {
     }
 
     #[test]
+    fn test_progress_style_chars() {
+        assert_eq!(ProgressStyle::Line.chars(), ("━", "─"));
+        assert_eq!(ProgressStyle::Parallelogram.chars(), ("▰", "▱"));
+        assert_eq!(ProgressStyle::Rectangle.chars(), ("▬", "▭"));
+        assert_eq!(ProgressStyle::Square.chars(), ("◼", "◻"));
+    }
+
+    #[test]
     fn test_task_loading_tick_with_pulse() {
         let mut widget = TaskWidget::new_loading("task", "Thinking", "Please wait...", Color::Magenta)
             .with_spinner_type(SpinnerType::Pulse);
@@ -316,5 +363,13 @@ mod tests {
         if let TaskState::Loading { frame_idx, .. } = widget.state {
             assert_eq!(frame_idx, 1);
         }
+    }
+
+    #[test]
+    fn test_task_progress_style_builder() {
+        let widget = TaskWidget::new_progress("task_p", "WASM", 10, 20, "kb", "1s", "Compiling", Color::Green)
+            .with_progress_style(ProgressStyle::Parallelogram);
+
+        assert_eq!(widget.progress_style, ProgressStyle::Parallelogram);
     }
 }

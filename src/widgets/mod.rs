@@ -22,4 +22,4 @@ pub use select::{SelectOption, SelectWidget};
 pub use shimmer::ShimmerWidget;
 pub use status_bar::StatusBarWidget;
 pub use tabs::TabsWidget;
-pub use task::{SpinnerType, TaskState, TaskWidget};
+pub use task::{ProgressStyle, SpinnerType, TaskState, TaskWidget};

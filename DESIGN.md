@@ -328,6 +328,7 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | | `Icons::SQUARE_MEDIUM_FILLED` | `◼ ` | `U+25FC` | `[#]` |
 | | `Icons::SQUARE_MEDIUM_EMPTY` | `◻ ` | `U+25FB` | `[ ]` |
 | | `Icons::SQUARE_SMALL_FILLED` | `▪ ` | `U+25AA` | `*` |
+| | `Icons::SQUARE_DOTTED` / `BOX_DOTTED` | `⬚ ` | `U+2B1A` | `[ ]` |
 | | `Icons::SQUARE_SHADOW` / `BOX_SHADOW` | `❒ ` | `U+2752` | `[#]` |
 | **Circles / Activity States** | `Icons::CIRCLE_FILLED` / `STATE_ACTIVE` | `● ` | `U+25CF` | `(•)` |
 | | `Icons::CIRCLE_EMPTY` / `STATE_INACTIVE` | `○ ` | `U+25CB` | `( )` |

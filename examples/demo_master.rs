@@ -619,6 +619,7 @@ fn main() -> io::Result<()> {
                         (Icons::SQUARE_MEDIUM_FILLED, "Icons::SQUARE_MEDIUM_FILLED", "◼ (U+25FC)", "Theme::PRIMARY (#4589FF)", Theme::PRIMARY),
                         (Icons::SQUARE_MEDIUM_EMPTY, "Icons::SQUARE_MEDIUM_EMPTY", "◻ (U+25FB)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
                         (Icons::SQUARE_SMALL_FILLED, "Icons::SQUARE_SMALL_FILLED", "▪ (U+25AA)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
+                        (Icons::SQUARE_DOTTED, "Icons::SQUARE_DOTTED", "⬚ (U+2B1A)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
                         (Icons::BOX_SHADOW, "Icons::BOX_SHADOW", "❒ (U+2752)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
                         // 2. Circles & Activity States
                         (Icons::CIRCLE_FILLED, "Icons::CIRCLE_FILLED", "● (U+25CF)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),

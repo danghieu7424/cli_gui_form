@@ -130,6 +130,8 @@ impl Icons {
     pub const SQUARE_MEDIUM_FILLED: &'static str = "◼ ";  // U+25FC + space (Black Medium Square)
     pub const SQUARE_MEDIUM_EMPTY: &'static str = "◻ ";   // U+25FB + space (White Medium Square)
     pub const SQUARE_SMALL_FILLED: &'static str = "▪ ";   // U+25AA + space (Black Small Square)
+    pub const SQUARE_DOTTED: &'static str = "⬚ ";         // U+2B1A + space (Dotted Square / Empty Slot / Placeholder Box)
+    pub const BOX_DOTTED: &'static str = "⬚ ";            // Alias cho SQUARE_DOTTED
     pub const SQUARE_SHADOW: &'static str = "❒ ";         // U+2752 + space (Upper Right Drop-Shadowed White Square / 3D Box)
     pub const BOX_SHADOW: &'static str = "❒ ";            // Alias cho SQUARE_SHADOW
     pub const BOX: &'static str = "❒ ";                   // Alias cho SQUARE_SHADOW
@@ -412,6 +414,8 @@ mod tests {
         assert_eq!(Icons::SQUARE_MEDIUM_FILLED, "◼ ");
         assert_eq!(Icons::SQUARE_MEDIUM_EMPTY, "◻ ");
         assert_eq!(Icons::SQUARE_SMALL_FILLED, "▪ ");
+        assert_eq!(Icons::SQUARE_DOTTED, "⬚ ");
+        assert_eq!(Icons::BOX_DOTTED, "⬚ ");
         assert_eq!(Icons::CIRCLE_FILLED, "● ");
         assert_eq!(Icons::CIRCLE_EMPTY, "○ ");
         assert_eq!(Icons::CIRCLE_TARGET, "◉ ");

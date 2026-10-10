@@ -255,14 +255,6 @@ fn main() -> io::Result<()> {
     )
     .with_spinner_type(SpinnerType::Arc);
 
-    let mut radar_task = TaskWidget::new_loading(
-        "task_radar",
-        "Rotating Radar Ellipsis (4-Frame 3-Dots)",
-        "Synchronizing telemetry matrix (U+22EE ─ U+22F1)...",
-        Theme::CYAN,
-    )
-    .with_spinner_type(SpinnerType::Radar);
-
     let progress_parallelogram = TaskWidget::new_progress(
         "task_progress_para",
         "Cyberpunk Parallelogram Bar",
@@ -347,7 +339,6 @@ fn main() -> io::Result<()> {
             braille_task.tick();
             moon_task.tick();
             arc_task.tick();
-            radar_task.tick();
             shimmer_bar.tick();
             last_tick_60fps = Instant::now();
         }
@@ -514,17 +505,9 @@ fn main() -> io::Result<()> {
                     };
                     arc_task.render(card_area_arc, f);
 
-                    let card_area_radar = Rect {
-                        x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 15,
-                        width: main_chunks[1].width.saturating_sub(6),
-                        height: 2,
-                    };
-                    radar_task.render(card_area_radar, f);
-
                     let card_area_para = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 18,
+                        y: main_chunks[1].y + 15,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 2,
                     };
@@ -532,7 +515,7 @@ fn main() -> io::Result<()> {
 
                     let card_area_rect = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 21,
+                        y: main_chunks[1].y + 18,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 2,
                     };
@@ -540,7 +523,7 @@ fn main() -> io::Result<()> {
 
                     let card_area_square = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 24,
+                        y: main_chunks[1].y + 21,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 2,
                     };
@@ -548,7 +531,7 @@ fn main() -> io::Result<()> {
 
                     let card_area_line = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 27,
+                        y: main_chunks[1].y + 24,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 2,
                     };
@@ -556,7 +539,7 @@ fn main() -> io::Result<()> {
 
                     let shimmer_area = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 30,
+                        y: main_chunks[1].y + 27,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 1,
                     };

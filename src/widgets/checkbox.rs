@@ -50,10 +50,16 @@ impl FormWidget for CheckboxWidget {
             Style::default().fg(crate::Theme::FG)
         };
 
-        // Theo DESIGN.md mục 6: 2-space indent
+        // Theo DESIGN.md mục 6: 2-space indent, 1-space padding sau icon
+        let box_str = if box_symbol.ends_with(' ') {
+            box_symbol.to_string()
+        } else {
+            format!("{} ", box_symbol)
+        };
+
         let content = Line::from(vec![
             Span::styled("  ", Style::default()),
-            Span::styled(format!("{} ", box_symbol), Style::default().fg(color).add_modifier(Modifier::BOLD)),
+            Span::styled(box_str, Style::default().fg(color).add_modifier(Modifier::BOLD)),
             Span::styled(&self.label, label_style),
         ]);
 

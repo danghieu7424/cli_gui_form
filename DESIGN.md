@@ -303,8 +303,8 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | Build / Work | `Icons::BUILD` | `⚙ ` | `U+2699` | `*` |
 | Stop | `Icons::STOP` | `■ ` | `U+25A0` | `[#]` |
 | Pause | `Icons::PAUSE` | `॥ ` | `U+0965` | `\|\|` |
-| Checkbox on | `Icons::CHECKBOX_ON` | `▣ ` | `U+25A3` | `[#]` |
-| Checkbox off | `Icons::CHECKBOX_OFF` | `□ ` | `U+25A1` | `[ ]` |
+| Checkbox on | `Icons::CHECKBOX_ON` | `[✓]` | `U+2713` | `[x]` |
+| Checkbox off | `Icons::CHECKBOX_OFF` | `[ ]` | `U+0020` | `[ ]` |
 | Radio on | `Icons::RADIO_ON` | `● ` | `U+25CF` | `(•)` |
 | Radio off | `Icons::RADIO_OFF` | `○ ` | `U+25CB` | `( )` |
 | Sparkle Filled | `Icons::SPARKLE_FILLED` | `✦ ` | `U+2726` | `*` |

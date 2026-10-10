@@ -35,9 +35,9 @@ impl Icons {
     pub const THINKING_FRAMES: &'static [&'static str] = &["·", "•", "●", "•", "·", " "];
 
     // Form Controls (Checkbox & Radio) - Đã bao gồm 1 space chuẩn
-    // Sử dụng cặp hình học lồng chuẩn Monochrome (U+25A3 và U+25A1) triệt tiêu 100% rủi ro font fallback sang Color Emoji
-    pub const CHECKBOX_ON: &'static str = "▣ ";   // U+25A3 + space (White Square Containing Black Small Square)
-    pub const CHECKBOX_OFF: &'static str = "□ ";  // U+25A1 + space (White Square)
+    // Sử dụng kiểu ngoặc vuông dấu tick [✓] / [ ] (Phong cách Unix/CLI chuẩn công nghiệp, 100% không bao giờ dính emoji)
+    pub const CHECKBOX_ON: &'static str = "[✓] ";   // Bracket with checkmark + space
+    pub const CHECKBOX_OFF: &'static str = "[ ] ";  // Empty bracket + space
     pub const RADIO_ON: &'static str = "● ";      // U+25CF + space
     pub const RADIO_OFF: &'static str = "○ ";     // U+25CB + space
     pub const BULLET: &'static str = "▪ ";        // U+25AA + space
@@ -277,8 +277,8 @@ mod tests {
         assert_eq!(Icons::PAUSE, "॥ ");
         assert_eq!(Icons::PAUSE_SIGN, "⏸ ");
         assert_eq!(Icons::STOP, "■ ");
-        assert_eq!(Icons::CHECKBOX_ON, "▣ ");
-        assert_eq!(Icons::CHECKBOX_OFF, "□ ");
+        assert_eq!(Icons::CHECKBOX_ON, "[✓] ");
+        assert_eq!(Icons::CHECKBOX_OFF, "[ ] ");
         assert_eq!(Icons::RADIO_ON, "● ");
         assert_eq!(Icons::RADIO_OFF, "○ ");
         assert_eq!(Icons::BULLET, "▪ ");

@@ -348,7 +348,7 @@ fn main() -> io::Result<()> {
             let main_chunks = Layout::default()
                 .direction(Direction::Vertical)
                 .constraints([
-                    Constraint::Length(3), // Top Header H1
+                    Constraint::Length(2), // Top Header H1
                     Constraint::Min(12),   // Master Tabbed Container
                     Constraint::Length(1), // Bottom Status Bar
                 ])

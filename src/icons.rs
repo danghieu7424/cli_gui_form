@@ -20,9 +20,10 @@ impl Icons {
     pub const ERROR: &'static str = "✗ ";         // U+2716 + space
     pub const WARNING: &'static str = "! ";       // U+0021 + space (Exclamation Mark / Warning)
     pub const WARNING_SIGN: &'static str = "⚠ ";  // U+26A0 + space (Warning Sign legacy)
-    pub const RUN: &'static str = "► ";           // U+25BA + space (Black Right-Pointing Pointer / Play / Run)
-    pub const PLAY: &'static str = "► ";          // Alias cho RUN
-    pub const RUN_TRIANGLE: &'static str = "▶ ";  // U+25B6 + space (Black Right-Pointing Triangle legacy)
+    pub const RUN: &'static str = "▶ ";           // U+25B6 + space (Black Right-Pointing Triangle - Cân đối chuẩn)
+    pub const PLAY: &'static str = "▶ ";          // Alias cho RUN
+    pub const POINTER_RIGHT: &'static str = "► "; // U+25BA + space (Black Right-Pointing Pointer)
+    pub const RUN_TRIANGLE: &'static str = "▶ ";  // Alias cho RUN
     pub const BUILD: &'static str = "⚙ ";         // U+2699 + space
     pub const INFO: &'static str = "i ";          // U+0069 + space (Lower Info / Zero-Noise)
     pub const INFO_SIGN: &'static str = "ℹ ";     // U+2139 + space (Info Sign legacy)
@@ -101,6 +102,9 @@ impl Icons {
 
     // Chuỗi hoạt họa vòng xoay 4 pha bán cầu (Moon Spinner / Clockwise rotating circle)
     pub const SPINNER_MOON_FRAMES: &'static [&'static str] = &["◐", "◒", "◑", "◓"];
+
+    // Chuỗi hoạt họa 8 khung hình Braille kinh điển (8-frame Clockwise Dots Spinner)
+    pub const SPINNER_BRAILLE_8_FRAMES: &'static [&'static str] = &["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"];
 
     // 3. Pointers & Triangles
     pub const TRIANGLE_UP: &'static str = "▲ ";           // U+25B2 + space (Black Up Triangle)
@@ -253,8 +257,9 @@ mod tests {
         assert_eq!(Icons::ERROR, "✗ ");
         assert_eq!(Icons::WARNING, "! ");
         assert_eq!(Icons::WARNING_SIGN, "⚠ ");
-        assert_eq!(Icons::RUN, "► ");
-        assert_eq!(Icons::PLAY, "► ");
+        assert_eq!(Icons::RUN, "▶ ");
+        assert_eq!(Icons::PLAY, "▶ ");
+        assert_eq!(Icons::POINTER_RIGHT, "► ");
         assert_eq!(Icons::RUN_TRIANGLE, "▶ ");
         assert_eq!(Icons::BUILD, "⚙ ");
         assert_eq!(Icons::INFO, "i ");
@@ -315,6 +320,8 @@ mod tests {
         assert_eq!(Icons::CIRCLE_HALF_RIGHT, "◑ ");
         assert_eq!(Icons::CIRCLE_HALF_TOP, "◓ ");
         assert_eq!(Icons::SPINNER_MOON_FRAMES, &["◐", "◒", "◑", "◓"]);
+        assert_eq!(Icons::SPINNER_BRAILLE_8_FRAMES, &["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"]);
+        assert_eq!(Icons::SPINNER_BRAILLE_8_FRAMES.len(), 8);
         assert_eq!(Icons::TRIANGLE_UP, "▲ ");
         assert_eq!(Icons::TRIANGLE_DOWN, "▼ ");
         assert_eq!(Icons::TRIANGLE_RIGHT_SMALL, "▸ ");

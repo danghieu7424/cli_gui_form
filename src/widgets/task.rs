@@ -11,13 +11,15 @@ use ratatui::{
 };
 
 const SPINNER_FRAMES_DOTS: &[&str] = &["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+const SPINNER_FRAMES_BRAILLE_8: &[&str] = crate::icons::Icons::SPINNER_BRAILLE_8_FRAMES;
 const SPINNER_FRAMES_PULSE: &[&str] = &["·", "•", "●", "•", "·", " "];
 const SPINNER_FRAMES_MOON: &[&str] = crate::icons::Icons::SPINNER_MOON_FRAMES;
 
 /****
  * Module: SpinnerType
  * Chức năng: Định nghĩa kiểu hoạt họa spinner trong TaskState::Loading.
- * - Dots: Vòng xoay Braille mặc định ("⠋"..."⠏")
+ * - Dots: Vòng xoay Braille 10 khung hình mặc định ("⠋"..."⠏")
+ * - Braille8: Vòng xoay Braille 8 khung hình kinh điển ("⣾"..."⣷")
  * - Pulse: Hiệu ứng chấm nhịp đập / Thinking ("·", "•", "●", "•", "·", " ")
  * - Moon: Vòng xoay 4 pha bán cầu xuôi chiều kim đồng hồ ("◐", "◒", "◑", "◓")
  ****/
@@ -25,6 +27,7 @@ const SPINNER_FRAMES_MOON: &[&str] = crate::icons::Icons::SPINNER_MOON_FRAMES;
 pub enum SpinnerType {
     #[default]
     Dots,
+    Braille8,
     Pulse,
     Moon,
 }
@@ -33,6 +36,7 @@ impl SpinnerType {
     pub fn frames(&self) -> &'static [&'static str] {
         match self {
             SpinnerType::Dots => SPINNER_FRAMES_DOTS,
+            SpinnerType::Braille8 => SPINNER_FRAMES_BRAILLE_8,
             SpinnerType::Pulse => SPINNER_FRAMES_PULSE,
             SpinnerType::Moon => SPINNER_FRAMES_MOON,
         }
@@ -321,6 +325,8 @@ mod tests {
     #[test]
     fn test_spinner_type_frames() {
         assert_eq!(SpinnerType::Dots.frames()[0], "⠋");
+        assert_eq!(SpinnerType::Braille8.frames().len(), 8);
+        assert_eq!(SpinnerType::Braille8.frames(), &["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"]);
         assert_eq!(SpinnerType::Pulse.frames(), &["·", "•", "●", "•", "·", " "]);
         assert_eq!(SpinnerType::Moon.frames(), &["◐", "◒", "◑", "◓"]);
     }

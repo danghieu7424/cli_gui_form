@@ -298,7 +298,8 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | Error / Fail | `Icons::ERROR` | `✗ ` | `U+2716` | `x` |
 | Warning | `Icons::WARNING` | `! ` | `U+0021` | `!` |
 | Info | `Icons::INFO` | `i ` | `U+0069` | `i` |
-| Running / Play | `Icons::RUN` / `PLAY` | `► ` | `U+25BA` | `>` |
+| Running / Play | `Icons::RUN` / `PLAY` | `▶ ` | `U+25B6` | `>` |
+| Pointer Right | `Icons::POINTER_RIGHT` | `► ` | `U+25BA` | `>` |
 | Build / Work | `Icons::BUILD` | `⚙ ` | `U+2699` | `*` |
 | Stop | `Icons::STOP` | `■ ` | `U+25A0` | `[#]` |
 | Pause | `Icons::PAUSE` | `॥ ` | `U+0965` | `\|\|` |
@@ -439,7 +440,8 @@ Nhằm giải quyết triệt để bài toán **Layout Shift (giật dòng răn
 ### Spinners `[x]` (`TaskWidget`)
 
 - **Pulse Spinner (Thinking/AI)**: Chu kỳ 150ms qua các trạng thái `· ` → `• ` → `● ` → `• ` → `· `.
-- **Braille Spinner (Docker/Build)**: Chu kỳ 80ms qua các khung hình `⠋`, `⠙`, `⠹`, `⠸`, `⠼`, `⠴`, `⠦`, `⠧`, `⠇`, `⠏`.
+- **Braille 8-Frame Spinner (Build/IO)**: Chu kỳ 80ms qua 8 khung hình kinh điển `⣾` → `⣽` → `⣻` → `⢿` → `⡿` → `⣟` → `⣯` → `⣷` (`SpinnerType::Braille8`).
+- **Braille 10-Frame Spinner (Docker)**: Chu kỳ 80ms qua các khung hình `⠋`, `⠙`, `⠹`, `⠸`, `⠼`, `⠴`, `⠦`, `⠧`, `⠇`, `⠏` (`SpinnerType::Dots`).
 - **Moon Spinner (Clockwise Rotating Circle)**: Chu kỳ 120ms qua 4 pha bán cầu xoay tròn `◐` → `◒` → `◑` → `◓` (`SpinnerType::Moon`). Khớp chuẩn 1 cell monospace trên Windows Terminal / Powershell.
 
 ### Progress Bars `[x]` (`TaskWidget`)

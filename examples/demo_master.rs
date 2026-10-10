@@ -233,11 +233,11 @@ fn main() -> io::Result<()> {
 
     let mut braille_task = TaskWidget::new_loading(
         "task_braille",
-        "Docker Layer Builder",
+        "Docker Layer Builder (8-Frame Braille)",
         "Exporting image snapshot sha256:7f8a9...",
         Theme::PRIMARY,
     )
-    .with_spinner_type(SpinnerType::Dots);
+    .with_spinner_type(SpinnerType::Braille8);
 
     let mut moon_task = TaskWidget::new_loading(
         "task_moon",
@@ -480,9 +480,17 @@ fn main() -> io::Result<()> {
                     };
                     moon_task.render(card_area_moon, f);
 
-                    let card_area_para = Rect {
+                    let card_area_braille = Rect {
                         x: main_chunks[1].x + 3,
                         y: main_chunks[1].y + 9,
+                        width: main_chunks[1].width.saturating_sub(6),
+                        height: 2,
+                    };
+                    braille_task.render(card_area_braille, f);
+
+                    let card_area_para = Rect {
+                        x: main_chunks[1].x + 3,
+                        y: main_chunks[1].y + 12,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 2,
                     };
@@ -490,7 +498,7 @@ fn main() -> io::Result<()> {
 
                     let card_area_rect = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 12,
+                        y: main_chunks[1].y + 15,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 2,
                     };
@@ -498,7 +506,7 @@ fn main() -> io::Result<()> {
 
                     let card_area_square = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 15,
+                        y: main_chunks[1].y + 18,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 2,
                     };
@@ -506,7 +514,7 @@ fn main() -> io::Result<()> {
 
                     let card_area_line = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 18,
+                        y: main_chunks[1].y + 21,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 2,
                     };
@@ -514,7 +522,7 @@ fn main() -> io::Result<()> {
 
                     let shimmer_area = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 21,
+                        y: main_chunks[1].y + 24,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 1,
                     };
@@ -539,7 +547,8 @@ fn main() -> io::Result<()> {
                         (Icons::SUCCESS, "Icons::SUCCESS", "✓ (U+2713)", "Theme::SUCCESS (#25A249)", Theme::SUCCESS),
                         (Icons::ERROR, "Icons::ERROR", "✗ (U+2716)", "Theme::ERROR   (#DA1E28)", Theme::ERROR),
                         (Icons::WARNING, "Icons::WARNING", "! (U+0021)", "Theme::WARNING (#F1C21B)", Theme::WARNING),
-                        (Icons::RUN, "Icons::RUN", "► (U+25BA)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
+                        (Icons::RUN, "Icons::RUN", "▶ (U+25B6)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
+                        (Icons::POINTER_RIGHT, "Icons::POINTER_RIGHT", "► (U+25BA)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
                         (Icons::BUILD, "Icons::BUILD", "⚙ (U+2699)", "Theme::PRIMARY (#4589FF)", Theme::PRIMARY),
                         (Icons::INFO, "Icons::INFO", "i (U+0069)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
                         (Icons::PAUSE, "Icons::PAUSE", "॥ (U+0965)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),

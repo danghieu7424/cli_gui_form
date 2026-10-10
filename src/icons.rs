@@ -112,10 +112,6 @@ impl Icons {
     pub const ARROW_DASHED_STEM_RIGHT: &'static str = "⤑ ";  // U+2911 + space (Rightwards Arrow with Dashed Stem)
     pub const ARROW_TO_BAR_TOP: &'static str = "⤒ ";      // U+2912 + space (Upwards Arrow to Bar / Page Top)
     pub const ARROW_TO_BAR_BOTTOM: &'static str = "⤓ ";   // U+2913 + space (Downwards Arrow to Bar / Page Bottom)
-    pub const ARROW_TO_CIRCLE_LEFT: &'static str = "⤝ ";  // U+291D + space (Leftwards Arrow to Black Circle)
-    pub const ARROW_TO_CIRCLE_RIGHT: &'static str = "⤞ "; // U+291E + space (Rightwards Arrow to Black Circle)
-    pub const ARROW_FROM_CIRCLE_LEFT: &'static str = "⤟ ";// U+291F + space (Leftwards Arrow from Black Circle)
-    pub const ARROW_FROM_CIRCLE_RIGHT: &'static str = "⤠ ";// U+2920 + space (Rightwards Arrow from Black Circle)
     pub const ARROW_DIAGONAL_NW_SE: &'static str = "⤡ ";  // U+2921 + space (North West and South East Arrow)
     pub const ARROW_DIAGONAL_NE_SW: &'static str = "⤢ ";  // U+2922 + space (North East and South West Arrow)
     pub const ARROW_CURVE_UP: &'static str = "⤴\u{FE0E} "; // U+2934 + VS15 + space (Curving Upwards Arrow / Protected text)
@@ -382,10 +378,6 @@ mod tests {
         assert_eq!(Icons::ARROW_DASHED_STEM_RIGHT, "⤑ ");
         assert_eq!(Icons::ARROW_TO_BAR_TOP, "⤒ ");
         assert_eq!(Icons::ARROW_TO_BAR_BOTTOM, "⤓ ");
-        assert_eq!(Icons::ARROW_TO_CIRCLE_LEFT, "⤝ ");
-        assert_eq!(Icons::ARROW_TO_CIRCLE_RIGHT, "⤞ ");
-        assert_eq!(Icons::ARROW_FROM_CIRCLE_LEFT, "⤟ ");
-        assert_eq!(Icons::ARROW_FROM_CIRCLE_RIGHT, "⤠ ");
         assert_eq!(Icons::ARROW_DIAGONAL_NW_SE, "⤡ ");
         assert_eq!(Icons::ARROW_DIAGONAL_NE_SW, "⤢ ");
         assert_eq!(Icons::ARROW_CURVE_UP, "⤴\u{FE0E} ");

@@ -14,6 +14,7 @@ const SPINNER_FRAMES_DOTS: &[&str] = &["⠋", "⠙", "⠹", "⠸", "⠼", "⠴",
 const SPINNER_FRAMES_BRAILLE_6: &[&str] = crate::icons::Icons::SPINNER_BRAILLE_6_FRAMES;
 const SPINNER_FRAMES_PULSE: &[&str] = &["·", "•", "●", "•", "·", " "];
 const SPINNER_FRAMES_MOON: &[&str] = crate::icons::Icons::SPINNER_MOON_FRAMES;
+const SPINNER_FRAMES_ARC: &[&str] = crate::icons::Icons::SPINNER_ARC_FRAMES;
 
 /****
  * Module: SpinnerType
@@ -22,6 +23,7 @@ const SPINNER_FRAMES_MOON: &[&str] = crate::icons::Icons::SPINNER_MOON_FRAMES;
  * - Braille6: Vòng xoay Braille 6 khung viền kinh điển ("⠋", "⠙", "⠸", "⠴", "⠦", "⠇")
  * - Pulse: Hiệu ứng chấm nhịp đập / Thinking ("·", "•", "●", "•", "·", " ")
  * - Moon: Vòng xoay 4 pha bán cầu xuôi chiều kim đồng hồ ("◐", "◒", "◑", "◓")
+ * - Arc: Vòng xoay cung phần tư tròn 4 khung hình ("◜", "◝", "◞", "◟")
  ****/
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum SpinnerType {
@@ -30,6 +32,7 @@ pub enum SpinnerType {
     Braille6,
     Pulse,
     Moon,
+    Arc,
 }
 
 impl SpinnerType {
@@ -39,6 +42,7 @@ impl SpinnerType {
             SpinnerType::Braille6 => SPINNER_FRAMES_BRAILLE_6,
             SpinnerType::Pulse => SPINNER_FRAMES_PULSE,
             SpinnerType::Moon => SPINNER_FRAMES_MOON,
+            SpinnerType::Arc => SPINNER_FRAMES_ARC,
         }
     }
 }
@@ -329,6 +333,8 @@ mod tests {
         assert_eq!(SpinnerType::Braille6.frames(), &["⠋", "⠙", "⠸", "⠴", "⠦", "⠇"]);
         assert_eq!(SpinnerType::Pulse.frames(), &["·", "•", "●", "•", "·", " "]);
         assert_eq!(SpinnerType::Moon.frames(), &["◐", "◒", "◑", "◓"]);
+        assert_eq!(SpinnerType::Arc.frames(), &["◜", "◝", "◞", "◟"]);
+        assert_eq!(SpinnerType::Arc.frames().len(), 4);
     }
 
     #[test]

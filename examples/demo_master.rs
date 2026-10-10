@@ -247,6 +247,14 @@ fn main() -> io::Result<()> {
     )
     .with_spinner_type(SpinnerType::Moon);
 
+    let mut arc_task = TaskWidget::new_loading(
+        "task_arc",
+        "Quadrant Arc Radar (4-Frame Arc)",
+        "Scanning quadrant perimeter frequencies (U+25DC ─ U+25DF)...",
+        Theme::EMERALD,
+    )
+    .with_spinner_type(SpinnerType::Arc);
+
     let progress_parallelogram = TaskWidget::new_progress(
         "task_progress_para",
         "Cyberpunk Parallelogram Bar",
@@ -330,6 +338,7 @@ fn main() -> io::Result<()> {
             pulse_task.tick();
             braille_task.tick();
             moon_task.tick();
+            arc_task.tick();
             shimmer_bar.tick();
             last_tick_60fps = Instant::now();
         }
@@ -488,9 +497,17 @@ fn main() -> io::Result<()> {
                     };
                     braille_task.render(card_area_braille, f);
 
-                    let card_area_para = Rect {
+                    let card_area_arc = Rect {
                         x: main_chunks[1].x + 3,
                         y: main_chunks[1].y + 12,
+                        width: main_chunks[1].width.saturating_sub(6),
+                        height: 2,
+                    };
+                    arc_task.render(card_area_arc, f);
+
+                    let card_area_para = Rect {
+                        x: main_chunks[1].x + 3,
+                        y: main_chunks[1].y + 15,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 2,
                     };
@@ -498,7 +515,7 @@ fn main() -> io::Result<()> {
 
                     let card_area_rect = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 15,
+                        y: main_chunks[1].y + 18,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 2,
                     };
@@ -506,7 +523,7 @@ fn main() -> io::Result<()> {
 
                     let card_area_square = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 18,
+                        y: main_chunks[1].y + 21,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 2,
                     };
@@ -514,7 +531,7 @@ fn main() -> io::Result<()> {
 
                     let card_area_line = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 21,
+                        y: main_chunks[1].y + 24,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 2,
                     };
@@ -522,7 +539,7 @@ fn main() -> io::Result<()> {
 
                     let shimmer_area = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 24,
+                        y: main_chunks[1].y + 27,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 1,
                     };
@@ -595,6 +612,11 @@ fn main() -> io::Result<()> {
                         (Icons::CIRCLE_HALF_BOTTOM, "Icons::CIRCLE_HALF_BOTTOM", "◒ (U+25D2)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
                         (Icons::CIRCLE_HALF_RIGHT, "Icons::CIRCLE_HALF_RIGHT", "◑ (U+25D1)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
                         (Icons::CIRCLE_HALF_TOP, "Icons::CIRCLE_HALF_TOP", "◓ (U+25D3)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
+                        // 2b. Quadrant Circular Arcs (4-Frame Arc Spinner)
+                        (Icons::ARC_TOP_LEFT, "Icons::ARC_TOP_LEFT", "◜ (U+25DC)", "Theme::EMERALD (#10B981)", Theme::EMERALD),
+                        (Icons::ARC_TOP_RIGHT, "Icons::ARC_TOP_RIGHT", "◝ (U+25DD)", "Theme::EMERALD (#10B981)", Theme::EMERALD),
+                        (Icons::ARC_BOTTOM_RIGHT, "Icons::ARC_BOTTOM_RIGHT", "◞ (U+25DE)", "Theme::EMERALD (#10B981)", Theme::EMERALD),
+                        (Icons::ARC_BOTTOM_LEFT, "Icons::ARC_BOTTOM_LEFT", "◟ (U+25DF)", "Theme::EMERALD (#10B981)", Theme::EMERALD),
                         // 3. Pointers & Triangles
                         (Icons::TRIANGLE_UP, "Icons::TRIANGLE_UP", "▲ (U+25B2)", "Theme::WARNING (#F1C21B)", Theme::WARNING),
                         (Icons::TRIANGLE_DOWN, "Icons::TRIANGLE_DOWN", "▼ (U+25BC)", "Theme::ERROR   (#DA1E28)", Theme::ERROR),

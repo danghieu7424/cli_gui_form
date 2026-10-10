@@ -337,6 +337,10 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | | `Icons::CIRCLE_HALF_BOTTOM` | `◒ ` | `U+25D2` | `_` |
 | | `Icons::CIRCLE_HALF_RIGHT` | `◑ ` | `U+25D1` | `)` |
 | | `Icons::CIRCLE_HALF_TOP` | `◓ ` | `U+25D3` | `^` |
+| **Quadrant Arcs** | `Icons::ARC_TOP_LEFT` | `◜ ` | `U+25DC` | `(` |
+| | `Icons::ARC_TOP_RIGHT` | `◝ ` | `U+25DD` | `)` |
+| | `Icons::ARC_BOTTOM_RIGHT` | `◞ ` | `U+25DE` | `)` |
+| | `Icons::ARC_BOTTOM_LEFT` | `◟ ` | `U+25DF` | `(` |
 | **Triangles / Pointers** | `Icons::TRIANGLE_UP` | `▲ ` | `U+25B2` | `^` |
 | | `Icons::TRIANGLE_DOWN` | `▼ ` | `U+25BC` | `v` |
 | | `Icons::TRIANGLE_RIGHT_SMALL` / `POINTER_FILLED` | `▸ ` | `U+25B8` | `>` |
@@ -443,6 +447,7 @@ Nhằm giải quyết triệt để bài toán **Layout Shift (giật dòng răn
 - **Braille 6-Frame Spinner (Build/IO)**: Chu kỳ 80ms qua 6 khung viền kinh điển `⠋` → `⠙` → `⠸` → `⠴` → `⠦` → `⠇` (`SpinnerType::Braille6`).
 - **Braille 10-Frame Spinner (Docker)**: Chu kỳ 80ms qua các khung hình `⠋`, `⠙`, `⠹`, `⠸`, `⠼`, `⠴`, `⠦`, `⠧`, `⠇`, `⠏` (`SpinnerType::Dots`).
 - **Moon Spinner (Clockwise Rotating Circle)**: Chu kỳ 120ms qua 4 pha bán cầu xoay tròn `◐` → `◒` → `◑` → `◓` (`SpinnerType::Moon`). Khớp chuẩn 1 cell monospace trên Windows Terminal / Powershell.
+- **Arc Spinner (Quadrant Circular Arc)**: Chu kỳ 100ms qua 4 góc cung tròn `◜` → `◝` → `◞` → `◟` (`SpinnerType::Arc`). Khớp chuẩn 1 cell monospace trên Windows Terminal / Powershell.
 
 ### Progress Bars `[x]` (`TaskWidget`)
 

@@ -35,7 +35,8 @@ impl Icons {
     pub const THINKING_FRAMES: &'static [&'static str] = &["·", "•", "●", "•", "·", " "];
 
     // Form Controls (Checkbox & Radio) - Đã bao gồm 1 space chuẩn
-    pub const CHECKBOX_ON: &'static str = "☑ ";   // U+2611 + space
+    // Gắn thêm \u{FE0E} (Variation Selector-15) để ép DirectWrite/Terminal render dạng text monochrome thay vì Color Emoji
+    pub const CHECKBOX_ON: &'static str = "\u{2611}\u{FE0E} ";   // U+2611 + U+FE0E + space
     pub const CHECKBOX_OFF: &'static str = "☐ ";  // U+2610 + space
     pub const RADIO_ON: &'static str = "● ";      // U+25CF + space
     pub const RADIO_OFF: &'static str = "○ ";     // U+25CB + space
@@ -276,7 +277,7 @@ mod tests {
         assert_eq!(Icons::PAUSE, "॥ ");
         assert_eq!(Icons::PAUSE_SIGN, "⏸ ");
         assert_eq!(Icons::STOP, "■ ");
-        assert_eq!(Icons::CHECKBOX_ON, "☑ ");
+        assert_eq!(Icons::CHECKBOX_ON, "\u{2611}\u{FE0E} ");
         assert_eq!(Icons::CHECKBOX_OFF, "☐ ");
         assert_eq!(Icons::RADIO_ON, "● ");
         assert_eq!(Icons::RADIO_OFF, "○ ");

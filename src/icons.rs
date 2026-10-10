@@ -64,10 +64,21 @@ impl Icons {
     pub const SQUARE_SMALL_FILLED: &'static str = "▪ ";   // U+25AA + space (Black Small Square)
 
     // 2. Circles & Radio Targets
-    pub const CIRCLE_FILLED: &'static str = "● ";         // U+25CF + space (Black Circle)
-    pub const CIRCLE_EMPTY: &'static str = "○ ";          // U+25CB + space (White Circle)
+    pub const CIRCLE_FILLED: &'static str = "● ";         // U+25CF + space (Black Circle / Active)
+    pub const CIRCLE_EMPTY: &'static str = "○ ";          // U+25CB + space (White Circle / Inactive / Off)
     pub const CIRCLE_TARGET: &'static str = "◉ ";         // U+25C9 + space (Fisheye / Bullseye Target)
     pub const RADIO_TARGET: &'static str = "◉ ";          // Alias cho CIRCLE_TARGET
+    pub const CIRCLE_DOTTED: &'static str = "◌ ";         // U+25CC + space (Dotted Circle / Idle)
+    pub const STATE_IDLE: &'static str = "◌ ";            // Alias cho CIRCLE_DOTTED (Trạng thái chờ / Idle)
+    pub const STATE_INACTIVE: &'static str = "○ ";        // Alias cho CIRCLE_EMPTY (Trạng thái tắt / Inactive)
+    pub const STATE_ACTIVE: &'static str = "● ";          // Alias cho CIRCLE_FILLED (Trạng thái bật / Active)
+    pub const CIRCLE_HALF_LEFT: &'static str = "◐ ";      // U+25D0 + space (Circle Left Half Black)
+    pub const CIRCLE_HALF_BOTTOM: &'static str = "◒ ";    // U+25D2 + space (Circle Lower Half Black)
+    pub const CIRCLE_HALF_RIGHT: &'static str = "◑ ";     // U+25D1 + space (Circle Right Half Black)
+    pub const CIRCLE_HALF_TOP: &'static str = "◓ ";       // U+25D3 + space (Circle Upper Half Black)
+
+    // Chuỗi hoạt họa vòng xoay 4 pha bán cầu (Moon Spinner / Clockwise rotating circle)
+    pub const SPINNER_MOON_FRAMES: &'static [&'static str] = &["◐", "◒", "◑", "◓"];
 
     // 3. Pointers & Triangles
     pub const TRIANGLE_UP: &'static str = "▲ ";           // U+25B2 + space (Black Up Triangle)
@@ -237,6 +248,15 @@ mod tests {
         assert_eq!(Icons::CIRCLE_EMPTY, "○ ");
         assert_eq!(Icons::CIRCLE_TARGET, "◉ ");
         assert_eq!(Icons::RADIO_TARGET, "◉ ");
+        assert_eq!(Icons::CIRCLE_DOTTED, "◌ ");
+        assert_eq!(Icons::STATE_IDLE, "◌ ");
+        assert_eq!(Icons::STATE_INACTIVE, "○ ");
+        assert_eq!(Icons::STATE_ACTIVE, "● ");
+        assert_eq!(Icons::CIRCLE_HALF_LEFT, "◐ ");
+        assert_eq!(Icons::CIRCLE_HALF_BOTTOM, "◒ ");
+        assert_eq!(Icons::CIRCLE_HALF_RIGHT, "◑ ");
+        assert_eq!(Icons::CIRCLE_HALF_TOP, "◓ ");
+        assert_eq!(Icons::SPINNER_MOON_FRAMES, &["◐", "◒", "◑", "◓"]);
         assert_eq!(Icons::TRIANGLE_UP, "▲ ");
         assert_eq!(Icons::TRIANGLE_DOWN, "▼ ");
         assert_eq!(Icons::TRIANGLE_RIGHT_SMALL, "▸ ");

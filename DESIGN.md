@@ -322,9 +322,14 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | | `Icons::SQUARE_MEDIUM_FILLED` | `◼ ` | `U+25FC` | `[#]` |
 | | `Icons::SQUARE_MEDIUM_EMPTY` | `◻ ` | `U+25FB` | `[ ]` |
 | | `Icons::SQUARE_SMALL_FILLED` | `▪ ` | `U+25AA` | `*` |
-| **Circles / Target** | `Icons::CIRCLE_FILLED` | `● ` | `U+25CF` | `(•)` |
-| | `Icons::CIRCLE_EMPTY` | `○ ` | `U+25CB` | `( )` |
+| **Circles / Activity States** | `Icons::CIRCLE_FILLED` / `STATE_ACTIVE` | `● ` | `U+25CF` | `(•)` |
+| | `Icons::CIRCLE_EMPTY` / `STATE_INACTIVE` | `○ ` | `U+25CB` | `( )` |
+| | `Icons::CIRCLE_DOTTED` / `STATE_IDLE` | `◌ ` | `U+25CC` | `( )` |
 | | `Icons::CIRCLE_TARGET` / `RADIO_TARGET` | `◉ ` | `U+25C9` | `(@)` |
+| | `Icons::CIRCLE_HALF_LEFT` | `◐ ` | `U+25D0` | `(` |
+| | `Icons::CIRCLE_HALF_BOTTOM` | `◒ ` | `U+25D2` | `_` |
+| | `Icons::CIRCLE_HALF_RIGHT` | `◑ ` | `U+25D1` | `)` |
+| | `Icons::CIRCLE_HALF_TOP` | `◓ ` | `U+25D3` | `^` |
 | **Triangles / Pointers** | `Icons::TRIANGLE_UP` | `▲ ` | `U+25B2` | `^` |
 | | `Icons::TRIANGLE_DOWN` | `▼ ` | `U+25BC` | `v` |
 | | `Icons::TRIANGLE_RIGHT_SMALL` / `POINTER_FILLED` | `▸ ` | `U+25B8` | `>` |
@@ -426,6 +431,7 @@ Nhằm giải quyết triệt để bài toán **Layout Shift (giật dòng răn
 
 - **Pulse Spinner (Thinking/AI)**: Chu kỳ 150ms qua các trạng thái `· ` → `• ` → `● ` → `• ` → `· `.
 - **Braille Spinner (Docker/Build)**: Chu kỳ 80ms qua các khung hình `⠋`, `⠙`, `⠹`, `⠸`, `⠼`, `⠴`, `⠦`, `⠧`, `⠇`, `⠏`.
+- **Moon Spinner (Clockwise Rotating Circle)**: Chu kỳ 120ms qua 4 pha bán cầu xoay tròn `◐` → `◒` → `◑` → `◓` (`SpinnerType::Moon`). Khớp chuẩn 1 cell monospace trên Windows Terminal / Powershell.
 
 ### Progress Bars `[x]` (`TaskWidget`)
 

@@ -12,18 +12,21 @@ use ratatui::{
 
 const SPINNER_FRAMES_DOTS: &[&str] = &["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
 const SPINNER_FRAMES_PULSE: &[&str] = &["·", "•", "●", "•", "·", " "];
+const SPINNER_FRAMES_MOON: &[&str] = crate::icons::Icons::SPINNER_MOON_FRAMES;
 
 /****
  * Module: SpinnerType
  * Chức năng: Định nghĩa kiểu hoạt họa spinner trong TaskState::Loading.
  * - Dots: Vòng xoay Braille mặc định ("⠋"..."⠏")
  * - Pulse: Hiệu ứng chấm nhịp đập / Thinking ("·", "•", "●", "•", "·", " ")
+ * - Moon: Vòng xoay 4 pha bán cầu xuôi chiều kim đồng hồ ("◐", "◒", "◑", "◓")
  ****/
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum SpinnerType {
     #[default]
     Dots,
     Pulse,
+    Moon,
 }
 
 impl SpinnerType {
@@ -31,6 +34,7 @@ impl SpinnerType {
         match self {
             SpinnerType::Dots => SPINNER_FRAMES_DOTS,
             SpinnerType::Pulse => SPINNER_FRAMES_PULSE,
+            SpinnerType::Moon => SPINNER_FRAMES_MOON,
         }
     }
 }
@@ -279,6 +283,7 @@ mod tests {
     fn test_spinner_type_frames() {
         assert_eq!(SpinnerType::Dots.frames()[0], "⠋");
         assert_eq!(SpinnerType::Pulse.frames(), &["·", "•", "●", "•", "·", " "]);
+        assert_eq!(SpinnerType::Moon.frames(), &["◐", "◒", "◑", "◓"]);
     }
 
     #[test]
@@ -287,6 +292,22 @@ mod tests {
             .with_spinner_type(SpinnerType::Pulse);
 
         assert_eq!(widget.spinner_type, SpinnerType::Pulse);
+        if let TaskState::Loading { frame_idx, .. } = widget.state {
+            assert_eq!(frame_idx, 0);
+        }
+
+        widget.tick();
+        if let TaskState::Loading { frame_idx, .. } = widget.state {
+            assert_eq!(frame_idx, 1);
+        }
+    }
+
+    #[test]
+    fn test_task_loading_tick_with_moon() {
+        let mut widget = TaskWidget::new_loading("task_moon", "Syncing", "Moon spinner...", Color::Cyan)
+            .with_spinner_type(SpinnerType::Moon);
+
+        assert_eq!(widget.spinner_type, SpinnerType::Moon);
         if let TaskState::Loading { frame_idx, .. } = widget.state {
             assert_eq!(frame_idx, 0);
         }

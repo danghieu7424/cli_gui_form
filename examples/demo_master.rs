@@ -239,6 +239,14 @@ fn main() -> io::Result<()> {
     )
     .with_spinner_type(SpinnerType::Dots);
 
+    let mut moon_task = TaskWidget::new_loading(
+        "task_moon",
+        "Cluster Orbit Synchronizer",
+        "Rebalancing distributed partitions across nodes...",
+        Theme::CYAN,
+    )
+    .with_spinner_type(SpinnerType::Moon);
+
     let progress_task = TaskWidget::new_progress(
         "task_progress",
         "WASM Optimization",
@@ -284,6 +292,7 @@ fn main() -> io::Result<()> {
         if last_tick_60fps.elapsed() >= Duration::from_millis(16) {
             pulse_task.tick();
             braille_task.tick();
+            moon_task.tick();
             shimmer_bar.tick();
             last_tick_60fps = Instant::now();
         }
@@ -433,9 +442,17 @@ fn main() -> io::Result<()> {
                     };
                     braille_task.render(card_area2, f);
 
-                    let card_area3 = Rect {
+                    let card_area_moon = Rect {
                         x: main_chunks[1].x + 3,
                         y: main_chunks[1].y + 12,
+                        width: main_chunks[1].width.saturating_sub(6),
+                        height: 3,
+                    };
+                    moon_task.render(card_area_moon, f);
+
+                    let card_area3 = Rect {
+                        x: main_chunks[1].x + 3,
+                        y: main_chunks[1].y + 16,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 3,
                     };
@@ -443,7 +460,7 @@ fn main() -> io::Result<()> {
 
                     let shimmer_area = Rect {
                         x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 16,
+                        y: main_chunks[1].y + 20,
                         width: main_chunks[1].width.saturating_sub(6),
                         height: 1,
                     };
@@ -505,10 +522,15 @@ fn main() -> io::Result<()> {
                         (Icons::SQUARE_MEDIUM_FILLED, "Icons::SQUARE_MEDIUM_FILLED", "◼ (U+25FC)", "Theme::PRIMARY (#4589FF)", Theme::PRIMARY),
                         (Icons::SQUARE_MEDIUM_EMPTY, "Icons::SQUARE_MEDIUM_EMPTY", "◻ (U+25FB)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
                         (Icons::SQUARE_SMALL_FILLED, "Icons::SQUARE_SMALL_FILLED", "▪ (U+25AA)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
-                        // 2. Circles & Radio Targets
+                        // 2. Circles & Activity States
                         (Icons::CIRCLE_FILLED, "Icons::CIRCLE_FILLED", "● (U+25CF)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
                         (Icons::CIRCLE_EMPTY, "Icons::CIRCLE_EMPTY", "○ (U+25CB)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
+                        (Icons::CIRCLE_DOTTED, "Icons::CIRCLE_DOTTED", "◌ (U+25CC)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
                         (Icons::CIRCLE_TARGET, "Icons::CIRCLE_TARGET", "◉ (U+25C9)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
+                        (Icons::CIRCLE_HALF_LEFT, "Icons::CIRCLE_HALF_LEFT", "◐ (U+25D0)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
+                        (Icons::CIRCLE_HALF_BOTTOM, "Icons::CIRCLE_HALF_BOTTOM", "◒ (U+25D2)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
+                        (Icons::CIRCLE_HALF_RIGHT, "Icons::CIRCLE_HALF_RIGHT", "◑ (U+25D1)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
+                        (Icons::CIRCLE_HALF_TOP, "Icons::CIRCLE_HALF_TOP", "◓ (U+25D3)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
                         // 3. Pointers & Triangles
                         (Icons::TRIANGLE_UP, "Icons::TRIANGLE_UP", "▲ (U+25B2)", "Theme::WARNING (#F1C21B)", Theme::WARNING),
                         (Icons::TRIANGLE_DOWN, "Icons::TRIANGLE_DOWN", "▼ (U+25BC)", "Theme::ERROR   (#DA1E28)", Theme::ERROR),
@@ -570,6 +592,21 @@ fn main() -> io::Result<()> {
                         Span::styled("  ─────────────────────────────────────────────────────────────────────────────", Style::default().fg(Theme::NEUTRAL_100)),
                     ]));
                     lines.push(Line::from(""));
+
+                    lines.push(Line::from(vec![
+                        Span::styled("    [States/Orbit] ", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(format!(" {}", Icons::STATE_IDLE), Style::default().fg(Theme::SECONDARY)),
+                        Span::styled("Idle  ", Style::default().fg(Theme::MUTED)),
+                        Span::styled(Icons::STATE_INACTIVE, Style::default().fg(Theme::MUTED)),
+                        Span::styled("Off  ", Style::default().fg(Theme::MUTED)),
+                        Span::styled(Icons::STATE_ACTIVE, Style::default().fg(Theme::EMERALD)),
+                        Span::styled("Active │ ", Style::default().fg(Theme::EMERALD)),
+                        Span::styled("4-Phase Orbit: ", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(Icons::CIRCLE_HALF_LEFT, Style::default().fg(Theme::CYAN)),
+                        Span::styled(Icons::CIRCLE_HALF_BOTTOM, Style::default().fg(Theme::CYAN)),
+                        Span::styled(Icons::CIRCLE_HALF_RIGHT, Style::default().fg(Theme::CYAN)),
+                        Span::styled(Icons::CIRCLE_HALF_TOP, Style::default().fg(Theme::CYAN)),
+                    ]));
 
                     lines.push(Line::from(vec![
                         Span::styled("    [Stars/Sun]  ", Style::default().fg(Theme::SECONDARY)),

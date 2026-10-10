@@ -296,12 +296,12 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | Success | `Icons::SUCCESS` | `✓ ` | `U+2713` | `+` |
 | Success Heavy | `Icons::SUCCESS_HEAVY` | `✔ ` | `U+2714` | `+` |
 | Error / Fail | `Icons::ERROR` | `✗ ` | `U+2716` | `x` |
-| Warning | `Icons::WARNING` | `⚠ ` | `U+26A0` | `!` |
-| Info | `Icons::INFO` | `ℹ ` | `U+2139` | `i` |
-| Running / Exec | `Icons::RUN` | `▶ ` | `U+25B6` | `>` |
+| Warning | `Icons::WARNING` | `! ` | `U+0021` | `!` |
+| Info | `Icons::INFO` | `i ` | `U+0069` | `i` |
+| Running / Play | `Icons::RUN` / `PLAY` | `► ` | `U+25BA` | `>` |
 | Build / Work | `Icons::BUILD` | `⚙ ` | `U+2699` | `*` |
 | Stop | `Icons::STOP` | `■ ` | `U+25A0` | `[#]` |
-| Pause | `Icons::PAUSE` | `⏸ ` | `U+23F8` | `\|\|` |
+| Pause | `Icons::PAUSE` | `॥ ` | `U+0965` | `\|\|` |
 | Checkbox on | `Icons::CHECKBOX_ON` | `☑ ` | `U+2611` | `[x]` |
 | Checkbox off | `Icons::CHECKBOX_OFF` | `☐ ` | `U+2610` | `[ ]` |
 | Radio on | `Icons::RADIO_ON` | `● ` | `U+25CF` | `(•)` |

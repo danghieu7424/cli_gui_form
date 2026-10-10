@@ -18,11 +18,16 @@ impl Icons {
     pub const SUCCESS_HEAVY: &'static str = "✔ "; // U+2714 + space (Heavy Check Mark)
     pub const CHECK: &'static str = "✓ ";         // Alias cho SUCCESS
     pub const ERROR: &'static str = "✗ ";         // U+2716 + space
-    pub const WARNING: &'static str = "⚠ ";       // U+25B2 / U+26A0 + space
-    pub const RUN: &'static str = "▶ ";           // U+25B6 (Black Right-Pointing Triangle) + space
+    pub const WARNING: &'static str = "! ";       // U+0021 + space (Exclamation Mark / Warning)
+    pub const WARNING_SIGN: &'static str = "⚠ ";  // U+26A0 + space (Warning Sign legacy)
+    pub const RUN: &'static str = "► ";           // U+25BA + space (Black Right-Pointing Pointer / Play / Run)
+    pub const PLAY: &'static str = "► ";          // Alias cho RUN
+    pub const RUN_TRIANGLE: &'static str = "▶ ";  // U+25B6 + space (Black Right-Pointing Triangle legacy)
     pub const BUILD: &'static str = "⚙ ";         // U+2699 + space
-    pub const INFO: &'static str = "ℹ ";          // U+2139 + space
-    pub const PAUSE: &'static str = "⏸ ";         // U+23F8 + space
+    pub const INFO: &'static str = "i ";          // U+0069 + space (Lower Info / Zero-Noise)
+    pub const INFO_SIGN: &'static str = "ℹ ";     // U+2139 + space (Info Sign legacy)
+    pub const PAUSE: &'static str = "॥ ";         // U+0965 + space (Double Danda / Pause Bar)
+    pub const PAUSE_SIGN: &'static str = "⏸ ";    // U+23F8 + space (Double Vertical Bar legacy)
     pub const STOP: &'static str = "■ ";          // U+25A0 + space
 
     // Chuỗi nhịp đập Thinking / Loading (Giữ nguyên không space để ghép nhịp)
@@ -246,11 +251,16 @@ mod tests {
         assert_eq!(Icons::SUCCESS_HEAVY, "✔ ");
         assert_eq!(Icons::CHECK, "✓ ");
         assert_eq!(Icons::ERROR, "✗ ");
-        assert_eq!(Icons::WARNING, "⚠ ");
-        assert_eq!(Icons::RUN, "▶ ");
+        assert_eq!(Icons::WARNING, "! ");
+        assert_eq!(Icons::WARNING_SIGN, "⚠ ");
+        assert_eq!(Icons::RUN, "► ");
+        assert_eq!(Icons::PLAY, "► ");
+        assert_eq!(Icons::RUN_TRIANGLE, "▶ ");
         assert_eq!(Icons::BUILD, "⚙ ");
-        assert_eq!(Icons::INFO, "ℹ ");
-        assert_eq!(Icons::PAUSE, "⏸ ");
+        assert_eq!(Icons::INFO, "i ");
+        assert_eq!(Icons::INFO_SIGN, "ℹ ");
+        assert_eq!(Icons::PAUSE, "॥ ");
+        assert_eq!(Icons::PAUSE_SIGN, "⏸ ");
         assert_eq!(Icons::STOP, "■ ");
         assert_eq!(Icons::CHECKBOX_ON, "☑ ");
         assert_eq!(Icons::CHECKBOX_OFF, "☐ ");

@@ -390,11 +390,6 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | | `Icons::HARPOON_RIGHT_LEFT` / `HARPOON_EXCHANGE` | `⇌ ` | `U+21CC` | `<->` |
 | **Supplemental Arrows-B** | `Icons::HARPOON_UP_DOWN` | `⥮ ` | `U+296E` | `^v` |
 | | `Icons::HARPOON_DOWN_UP` | `⥯ ` | `U+296F` | `v^` |
-| | `Icons::ARROW_DASHED_DOUBLE_LEFT` | `⤌ ` | `U+290C` | `<--` |
-| | `Icons::ARROW_DASHED_DOUBLE_RIGHT` | `⤍ ` | `U+290D` | `-->` |
-| | `Icons::ARROW_DASHED_TRIPLE_LEFT` | `⤎ ` | `U+290E` | `<---` |
-| | `Icons::ARROW_DASHED_TRIPLE_RIGHT` | `⤏ ` | `U+290F` | `--->` |
-| | `Icons::ARROW_DASHED_STEM_RIGHT` | `⤑ ` | `U+2911` | `-->` |
 | | `Icons::ARROW_TO_BAR_TOP` | `⤒ ` | `U+2912` | `\|^` |
 | | `Icons::ARROW_TO_BAR_BOTTOM` | `⤓ ` | `U+2913` | `\|v` |
 | | `Icons::ARROW_DIAGONAL_NW_SE` | `⤡ ` | `U+2921` | `\` |

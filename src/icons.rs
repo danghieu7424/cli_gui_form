@@ -105,11 +105,6 @@ impl Icons {
     // 7. Mũi tên bổ sung Supplemental Arrows-B (Block U+2900..U+297F)
     pub const HARPOON_UP_DOWN: &'static str = "⥮ ";       // U+296E + space (Upwards Harpoon Beside Downwards Harpoon)
     pub const HARPOON_DOWN_UP: &'static str = "⥯ ";       // U+296F + space (Downwards Harpoon Beside Upwards Harpoon)
-    pub const ARROW_DASHED_DOUBLE_LEFT: &'static str = "⤌ "; // U+290C + space (Leftwards Double Dash Arrow)
-    pub const ARROW_DASHED_DOUBLE_RIGHT: &'static str = "⤍ ";// U+290D + space (Rightwards Double Dash Arrow)
-    pub const ARROW_DASHED_TRIPLE_LEFT: &'static str = "⤎ "; // U+290E + space (Leftwards Triple Dash Arrow)
-    pub const ARROW_DASHED_TRIPLE_RIGHT: &'static str = "⤏ ";// U+290F + space (Rightwards Triple Dash Arrow)
-    pub const ARROW_DASHED_STEM_RIGHT: &'static str = "⤑ ";  // U+2911 + space (Rightwards Arrow with Dashed Stem)
     pub const ARROW_TO_BAR_TOP: &'static str = "⤒ ";      // U+2912 + space (Upwards Arrow to Bar / Page Top)
     pub const ARROW_TO_BAR_BOTTOM: &'static str = "⤓ ";   // U+2913 + space (Downwards Arrow to Bar / Page Bottom)
     pub const ARROW_DIAGONAL_NW_SE: &'static str = "⤡ ";  // U+2921 + space (North West and South East Arrow)
@@ -371,11 +366,6 @@ mod tests {
         assert_eq!(Icons::HARPOON_EXCHANGE, "⇌ ");
         assert_eq!(Icons::HARPOON_UP_DOWN, "⥮ ");
         assert_eq!(Icons::HARPOON_DOWN_UP, "⥯ ");
-        assert_eq!(Icons::ARROW_DASHED_DOUBLE_LEFT, "⤌ ");
-        assert_eq!(Icons::ARROW_DASHED_DOUBLE_RIGHT, "⤍ ");
-        assert_eq!(Icons::ARROW_DASHED_TRIPLE_LEFT, "⤎ ");
-        assert_eq!(Icons::ARROW_DASHED_TRIPLE_RIGHT, "⤏ ");
-        assert_eq!(Icons::ARROW_DASHED_STEM_RIGHT, "⤑ ");
         assert_eq!(Icons::ARROW_TO_BAR_TOP, "⤒ ");
         assert_eq!(Icons::ARROW_TO_BAR_BOTTOM, "⤓ ");
         assert_eq!(Icons::ARROW_DIAGONAL_NW_SE, "⤡ ");

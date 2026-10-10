@@ -14,7 +14,9 @@ pub struct Icons;
 
 impl Icons {
     // Trạng thái (Status Icons) - Đã bao gồm 1 space chuẩn 2 ô
-    pub const SUCCESS: &'static str = "✔ ";       // U+2714 + space
+    pub const SUCCESS: &'static str = "✓ ";       // U+2713 + space (Check Mark / Success)
+    pub const SUCCESS_HEAVY: &'static str = "✔ "; // U+2714 + space (Heavy Check Mark)
+    pub const CHECK: &'static str = "✓ ";         // Alias cho SUCCESS
     pub const ERROR: &'static str = "✗ ";         // U+2716 + space
     pub const WARNING: &'static str = "⚠ ";       // U+25B2 / U+26A0 + space
     pub const RUN: &'static str = "▶ ";           // U+25B6 (Black Right-Pointing Triangle) + space
@@ -74,6 +76,9 @@ impl Icons {
     pub const SQUARE_MEDIUM_FILLED: &'static str = "◼ ";  // U+25FC + space (Black Medium Square)
     pub const SQUARE_MEDIUM_EMPTY: &'static str = "◻ ";   // U+25FB + space (White Medium Square)
     pub const SQUARE_SMALL_FILLED: &'static str = "▪ ";   // U+25AA + space (Black Small Square)
+    pub const SQUARE_SHADOW: &'static str = "❒ ";         // U+2752 + space (Upper Right Drop-Shadowed White Square / 3D Box)
+    pub const BOX_SHADOW: &'static str = "❒ ";            // Alias cho SQUARE_SHADOW
+    pub const BOX: &'static str = "❒ ";                   // Alias cho SQUARE_SHADOW
 
     // 2. Circles & Radio Targets
     pub const CIRCLE_FILLED: &'static str = "● ";         // U+25CF + space (Black Circle / Active)
@@ -129,6 +134,25 @@ impl Icons {
     pub const LIGHTNING: &'static str = "☇ ";             // U+2607 + space (Lightning / Quick Action / Flash)
     pub const NODE_LINK: &'static str = "☌ ";             // U+260C + space (Conjunction / Node Link / Socket)
     pub const PEER_LINK: &'static str = "☍ ";             // U+260D + space (Opposition / Peer Link / Bridge)
+
+    // 9. Ornaments & Angle Brackets (Cặp ngoặc nhọn, chevron, trích dẫn chuẩn Unicode)
+    pub const BRACKET_HEAVY_LEFT: &'static str = "❰ ";     // U+2770 + space (Heavy Left-Pointing Angle Bracket Ornament)
+    pub const BRACKET_HEAVY_RIGHT: &'static str = "❱ ";    // U+2771 + space (Heavy Right-Pointing Angle Bracket Ornament)
+    pub const BRACKET_MEDIUM_LEFT: &'static str = "❬ ";    // U+276C + space (Medium Left-Pointing Angle Bracket Ornament)
+    pub const BRACKET_MEDIUM_RIGHT: &'static str = "❭ ";   // U+276D + space (Medium Right-Pointing Angle Bracket Ornament)
+    pub const QUOTE_ANGLE_LEFT: &'static str = "❮ ";       // U+276E + space (Heavy Left-Pointing Angle Quotation Mark Ornament)
+    pub const QUOTE_ANGLE_RIGHT: &'static str = "❯ ";      // U+276F + space (Heavy Right-Pointing Angle Quotation Mark Ornament)
+
+    // Aliases cho Chevron & Angles
+    pub const CHEVRON_HEAVY_LEFT: &'static str = "❰ ";
+    pub const CHEVRON_HEAVY_RIGHT: &'static str = "❱ ";
+    pub const CHEVRON_MEDIUM_LEFT: &'static str = "❬ ";
+    pub const CHEVRON_MEDIUM_RIGHT: &'static str = "❭ ";
+
+    // Cặp ký tự bao quanh (Không khoảng trắng, dùng bọc thẻ hoặc span)
+    pub const PAIR_BRACKET_HEAVY: (&'static str, &'static str) = ("❰", "❱");
+    pub const PAIR_BRACKET_MEDIUM: (&'static str, &'static str) = ("❬", "❭");
+    pub const PAIR_QUOTE_ANGLE: (&'static str, &'static str) = ("❮", "❯");
 
     /// Trả về chuỗi icon chuẩn ghép cùng text (Zero-overhead logic)
     #[inline]
@@ -218,7 +242,9 @@ mod tests {
 
     #[test]
     fn test_icons_constants() {
-        assert_eq!(Icons::SUCCESS, "✔ ");
+        assert_eq!(Icons::SUCCESS, "✓ ");
+        assert_eq!(Icons::SUCCESS_HEAVY, "✔ ");
+        assert_eq!(Icons::CHECK, "✓ ");
         assert_eq!(Icons::ERROR, "✗ ");
         assert_eq!(Icons::WARNING, "⚠ ");
         assert_eq!(Icons::RUN, "▶ ");
@@ -313,6 +339,24 @@ mod tests {
         assert_eq!(Icons::LIGHTNING, "☇ ");
         assert_eq!(Icons::NODE_LINK, "☌ ");
         assert_eq!(Icons::PEER_LINK, "☍ ");
+
+        // Box Shadow & Ornaments
+        assert_eq!(Icons::SQUARE_SHADOW, "❒ ");
+        assert_eq!(Icons::BOX_SHADOW, "❒ ");
+        assert_eq!(Icons::BOX, "❒ ");
+        assert_eq!(Icons::BRACKET_HEAVY_LEFT, "❰ ");
+        assert_eq!(Icons::BRACKET_HEAVY_RIGHT, "❱ ");
+        assert_eq!(Icons::BRACKET_MEDIUM_LEFT, "❬ ");
+        assert_eq!(Icons::BRACKET_MEDIUM_RIGHT, "❭ ");
+        assert_eq!(Icons::QUOTE_ANGLE_LEFT, "❮ ");
+        assert_eq!(Icons::QUOTE_ANGLE_RIGHT, "❯ ");
+        assert_eq!(Icons::CHEVRON_HEAVY_LEFT, "❰ ");
+        assert_eq!(Icons::CHEVRON_HEAVY_RIGHT, "❱ ");
+        assert_eq!(Icons::CHEVRON_MEDIUM_LEFT, "❬ ");
+        assert_eq!(Icons::CHEVRON_MEDIUM_RIGHT, "❭ ");
+        assert_eq!(Icons::PAIR_BRACKET_HEAVY, ("❰", "❱"));
+        assert_eq!(Icons::PAIR_BRACKET_MEDIUM, ("❬", "❭"));
+        assert_eq!(Icons::PAIR_QUOTE_ANGLE, ("❮", "❯"));
     }
 
     #[test]

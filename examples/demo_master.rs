@@ -536,7 +536,7 @@ fn main() -> io::Result<()> {
                     lines.push(Line::from(""));
 
                     let status_icons = [
-                        (Icons::SUCCESS, "Icons::SUCCESS", "✔ (U+2714)", "Theme::SUCCESS (#25A249)", Theme::SUCCESS),
+                        (Icons::SUCCESS, "Icons::SUCCESS", "✓ (U+2713)", "Theme::SUCCESS (#25A249)", Theme::SUCCESS),
                         (Icons::ERROR, "Icons::ERROR", "✗ (U+2716)", "Theme::ERROR   (#DA1E28)", Theme::ERROR),
                         (Icons::WARNING, "Icons::WARNING", "⚠ (U+26A0)", "Theme::WARNING (#F1C21B)", Theme::WARNING),
                         (Icons::RUN, "Icons::RUN", "▶ (U+25B6)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
@@ -576,6 +576,7 @@ fn main() -> io::Result<()> {
                         (Icons::SQUARE_MEDIUM_FILLED, "Icons::SQUARE_MEDIUM_FILLED", "◼ (U+25FC)", "Theme::PRIMARY (#4589FF)", Theme::PRIMARY),
                         (Icons::SQUARE_MEDIUM_EMPTY, "Icons::SQUARE_MEDIUM_EMPTY", "◻ (U+25FB)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
                         (Icons::SQUARE_SMALL_FILLED, "Icons::SQUARE_SMALL_FILLED", "▪ (U+25AA)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
+                        (Icons::BOX_SHADOW, "Icons::BOX_SHADOW", "❒ (U+2752)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
                         // 2. Circles & Activity States
                         (Icons::CIRCLE_FILLED, "Icons::CIRCLE_FILLED", "● (U+25CF)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
                         (Icons::CIRCLE_EMPTY, "Icons::CIRCLE_EMPTY", "○ (U+25CB)", "Theme::MUTED   (#8D8D8D)", Theme::MUTED),
@@ -626,6 +627,13 @@ fn main() -> io::Result<()> {
                         (Icons::LIGHTNING, "Icons::LIGHTNING", "☇ (U+2607)", "Theme::CYAN    (#50E3C2)", Theme::CYAN),
                         (Icons::NODE_LINK, "Icons::NODE_LINK", "☌ (U+260C)", "Theme::PRIMARY (#4589FF)", Theme::PRIMARY),
                         (Icons::PEER_LINK, "Icons::PEER_LINK", "☍ (U+260D)", "Theme::PURPLE  (#7928CA)", Theme::PURPLE),
+                        // 10. Ornaments & Angle Brackets
+                        (Icons::BRACKET_HEAVY_LEFT, "Icons::BRACKET_HEAVY_L", "❰ (U+2770)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
+                        (Icons::BRACKET_HEAVY_RIGHT, "Icons::BRACKET_HEAVY_R", "❱ (U+2771)", "Theme::ACCENT  (#0070F3)", Theme::ACCENT),
+                        (Icons::BRACKET_MEDIUM_LEFT, "Icons::BRACKET_MEDIUM_L", "❬ (U+276C)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
+                        (Icons::BRACKET_MEDIUM_RIGHT, "Icons::BRACKET_MEDIUM_R", "❭ (U+276D)", "Theme::SECONDARY (#A8A8A8)", Theme::SECONDARY),
+                        (Icons::QUOTE_ANGLE_LEFT, "Icons::QUOTE_ANGLE_L", "❮ (U+276E)", "Theme::WARNING (#F1C21B)", Theme::WARNING),
+                        (Icons::QUOTE_ANGLE_RIGHT, "Icons::QUOTE_ANGLE_R", "❯ (U+276F)", "Theme::WARNING (#F1C21B)", Theme::WARNING),
                     ];
 
                     for (glyph, const_name, unicode_char, color_name, color) in geometric_icons {
@@ -672,6 +680,21 @@ fn main() -> io::Result<()> {
                         Span::styled("Square │ ", Style::default().fg(Theme::MUTED)),
                         Span::styled("━━━── ", Style::default().fg(Theme::EMERALD)),
                         Span::styled("Line", Style::default().fg(Theme::MUTED)),
+                    ]));
+
+                    lines.push(Line::from(vec![
+                        Span::styled("    [Box/Angles]   ", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(format!(" {}", Icons::BOX_SHADOW), Style::default().fg(Theme::CYAN)),
+                        Span::styled("Box Container   ", Style::default().fg(Theme::FG)),
+                        Span::styled(Icons::BRACKET_HEAVY_LEFT, Style::default().fg(Theme::ACCENT)),
+                        Span::styled("HEAVY", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                        Span::styled(format!("{}  ", Icons::BRACKET_HEAVY_RIGHT), Style::default().fg(Theme::ACCENT)),
+                        Span::styled(Icons::BRACKET_MEDIUM_LEFT, Style::default().fg(Theme::SECONDARY)),
+                        Span::styled("MEDIUM", Style::default().fg(Theme::FG)),
+                        Span::styled(format!("{}  ", Icons::BRACKET_MEDIUM_RIGHT), Style::default().fg(Theme::SECONDARY)),
+                        Span::styled(Icons::QUOTE_ANGLE_LEFT, Style::default().fg(Theme::WARNING)),
+                        Span::styled("QUOTE", Style::default().fg(Theme::WARNING)),
+                        Span::styled(Icons::QUOTE_ANGLE_RIGHT, Style::default().fg(Theme::WARNING)),
                     ]));
 
                     lines.push(Line::from(vec![

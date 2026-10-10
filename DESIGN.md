@@ -293,7 +293,8 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 
 | Purpose | Constant | Glyph | Unicode | Fallback |
 | :--- | :--- | :---: | :---: | :---: |
-| Success | `Icons::SUCCESS` | `✔ ` | `U+2714` | `+` |
+| Success | `Icons::SUCCESS` | `✓ ` | `U+2713` | `+` |
+| Success Heavy | `Icons::SUCCESS_HEAVY` | `✔ ` | `U+2714` | `+` |
 | Error / Fail | `Icons::ERROR` | `✗ ` | `U+2716` | `x` |
 | Warning | `Icons::WARNING` | `⚠ ` | `U+26A0` | `!` |
 | Info | `Icons::INFO` | `ℹ ` | `U+2139` | `i` |
@@ -326,6 +327,7 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | | `Icons::SQUARE_MEDIUM_FILLED` | `◼ ` | `U+25FC` | `[#]` |
 | | `Icons::SQUARE_MEDIUM_EMPTY` | `◻ ` | `U+25FB` | `[ ]` |
 | | `Icons::SQUARE_SMALL_FILLED` | `▪ ` | `U+25AA` | `*` |
+| | `Icons::SQUARE_SHADOW` / `BOX_SHADOW` | `❒ ` | `U+2752` | `[#]` |
 | **Circles / Activity States** | `Icons::CIRCLE_FILLED` / `STATE_ACTIVE` | `● ` | `U+25CF` | `(•)` |
 | | `Icons::CIRCLE_EMPTY` / `STATE_INACTIVE` | `○ ` | `U+25CB` | `( )` |
 | | `Icons::CIRCLE_DOTTED` / `STATE_IDLE` | `◌ ` | `U+25CC` | `( )` |
@@ -367,6 +369,9 @@ Hỗ trợ điều hướng danh mục phẳng và cây phân cấp (Sub-items):
 | | `Icons::LIGHTNING` | `☇ ` | `U+2607` | `/` |
 | **Topology & Links** | `Icons::NODE_LINK` | `☌ ` | `U+260C` | `o-` |
 | | `Icons::PEER_LINK` | `☍ ` | `U+260D` | `o-o` |
+| **Ornaments & Angles** | `Icons::BRACKET_HEAVY_LEFT` / `RIGHT` | `❰ ` / `❱ ` | `U+2770` / `U+2771` | `<` / `>` |
+| | `Icons::BRACKET_MEDIUM_LEFT` / `RIGHT` | `❬ ` / `❭ ` | `U+276C` / `U+276D` | `<` / `>` |
+| | `Icons::QUOTE_ANGLE_LEFT` / `RIGHT` | `❮ ` / `❯ ` | `U+276E` / `U+276F` | `<` / `>` |
 
 > **Bảo vệ thị giác (Visual Protection)**:
 > 1. Toàn bộ icon được chuẩn hóa đúng 2 cell hiển thị (1 ký tự glyph + 1 khoảng trắng đệm) để tránh phân mảnh heap và thẳng hàng tuyệt đối.

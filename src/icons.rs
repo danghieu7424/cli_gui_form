@@ -35,9 +35,9 @@ impl Icons {
     pub const THINKING_FRAMES: &'static [&'static str] = &["·", "•", "●", "•", "·", " "];
 
     // Form Controls (Checkbox & Radio) - Đã bao gồm 1 space chuẩn
-    // Gắn thêm \u{FE0E} (Variation Selector-15) để ép DirectWrite/Terminal render dạng text monochrome thay vì Color Emoji
-    pub const CHECKBOX_ON: &'static str = "\u{2611}\u{FE0E} ";   // U+2611 + U+FE0E + space
-    pub const CHECKBOX_OFF: &'static str = "☐ ";  // U+2610 + space
+    // Sử dụng cặp hình học lồng chuẩn Monochrome (U+25A3 và U+25A1) triệt tiêu 100% rủi ro font fallback sang Color Emoji
+    pub const CHECKBOX_ON: &'static str = "▣ ";   // U+25A3 + space (White Square Containing Black Small Square)
+    pub const CHECKBOX_OFF: &'static str = "□ ";  // U+25A1 + space (White Square)
     pub const RADIO_ON: &'static str = "● ";      // U+25CF + space
     pub const RADIO_OFF: &'static str = "○ ";     // U+25CB + space
     pub const BULLET: &'static str = "▪ ";        // U+25AA + space
@@ -277,8 +277,8 @@ mod tests {
         assert_eq!(Icons::PAUSE, "॥ ");
         assert_eq!(Icons::PAUSE_SIGN, "⏸ ");
         assert_eq!(Icons::STOP, "■ ");
-        assert_eq!(Icons::CHECKBOX_ON, "\u{2611}\u{FE0E} ");
-        assert_eq!(Icons::CHECKBOX_OFF, "☐ ");
+        assert_eq!(Icons::CHECKBOX_ON, "▣ ");
+        assert_eq!(Icons::CHECKBOX_OFF, "□ ");
         assert_eq!(Icons::RADIO_ON, "● ");
         assert_eq!(Icons::RADIO_OFF, "○ ");
         assert_eq!(Icons::BULLET, "▪ ");

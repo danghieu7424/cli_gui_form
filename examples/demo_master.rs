@@ -444,13 +444,16 @@ fn main() -> io::Result<()> {
                     if main_chunks[1].height >= 24 {
                         let card_w = (main_chunks[1].width.saturating_sub(8) / 2).min(38);
                         if card_w > 20 {
+                            let max_safe_y = (main_chunks[1].y + main_chunks[1].height).saturating_sub(1).min(f.area().height.saturating_sub(2));
                             let card_deploy_area = Rect {
                                 x: main_chunks[1].x + 3,
                                 y: main_chunks[1].y + 15,
                                 width: card_w,
                                 height: 7,
                             };
-                            deploy_card.render(card_deploy_area, f);
+                            if card_deploy_area.y + card_deploy_area.height <= max_safe_y {
+                                deploy_card.render(card_deploy_area, f);
+                            }
 
                             let card_infra_area = Rect {
                                 x: main_chunks[1].x + 3 + card_w + 2,
@@ -458,92 +461,96 @@ fn main() -> io::Result<()> {
                                 width: card_w,
                                 height: 7,
                             };
-                            infra_card.render(card_infra_area, f);
+                            if card_infra_area.y + card_infra_area.height <= max_safe_y {
+                                infra_card.render(card_infra_area, f);
+                            }
                         }
                     }
                 }
                 2 => {
-                    // TAB 3: TASKS, PROGRESS & SHIMMER
+                    // TAB 3: TASKS, PROGRESS & SHIMMER (Bố cục 2 cột công nghiệp chuẩn Vercel/Linear)
                     let mut lines = Vec::new();
                     lines.push(Line::from(vec![
                         Span::styled("  Background Task Lifecycle & Animation Engine", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                        Span::styled(" (Dual-Column Layout ─ Spinners & Metrics)", Style::default().fg(Theme::MUTED)),
                     ]));
                     lines.push(Line::from(""));
                     tabs.render_container(main_chunks[1], lines, f);
 
-                    // Render các Tasks lồng nhau trong panel
+                    // Bố cục 2 cột an toàn (Dual-Column Guardrail) triệt tiêu hoàn toàn tràn biên buffer
+                    let full_h = f.area().height;
+                    let full_w = f.area().width;
+                    let max_safe_y = (main_chunks[1].y + main_chunks[1].height).saturating_sub(1).min(full_h.saturating_sub(2));
 
-                    let card_area = Rect {
-                        x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 3,
-                        width: main_chunks[1].width.saturating_sub(6),
-                        height: 2,
+                    let render_guard = |rect: Rect| -> bool {
+                        rect.y + rect.height <= max_safe_y && rect.x + rect.width <= full_w
                     };
-                    pulse_task.render(card_area, f);
 
-                    let card_area_moon = Rect {
-                        x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 6,
-                        width: main_chunks[1].width.saturating_sub(6),
-                        height: 2,
-                    };
-                    moon_task.render(card_area_moon, f);
+                    let panel_w = main_chunks[1].width.saturating_sub(6);
+                    if panel_w >= 60 {
+                        // Màn hình rộng >= 60: Chia 2 cột song song (Trái: Spinners, Phải: Progress Bars)
+                        let col_w = (panel_w.saturating_sub(3)) / 2;
+                        let left_x = main_chunks[1].x + 3;
+                        let right_x = main_chunks[1].x + 3 + col_w + 3;
 
-                    let card_area_braille = Rect {
-                        x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 9,
-                        width: main_chunks[1].width.saturating_sub(6),
-                        height: 2,
-                    };
-                    braille_task.render(card_area_braille, f);
+                        // Cột 1: 4 Spinners
+                        let area_pulse = Rect { x: left_x, y: main_chunks[1].y + 3, width: col_w, height: 2 };
+                        if render_guard(area_pulse) { pulse_task.render(area_pulse, f); }
 
-                    let card_area_arc = Rect {
-                        x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 12,
-                        width: main_chunks[1].width.saturating_sub(6),
-                        height: 2,
-                    };
-                    arc_task.render(card_area_arc, f);
+                        let area_moon = Rect { x: left_x, y: main_chunks[1].y + 6, width: col_w, height: 2 };
+                        if render_guard(area_moon) { moon_task.render(area_moon, f); }
 
-                    let card_area_para = Rect {
-                        x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 15,
-                        width: main_chunks[1].width.saturating_sub(6),
-                        height: 2,
-                    };
-                    progress_parallelogram.render(card_area_para, f);
+                        let area_braille = Rect { x: left_x, y: main_chunks[1].y + 9, width: col_w, height: 2 };
+                        if render_guard(area_braille) { braille_task.render(area_braille, f); }
 
-                    let card_area_rect = Rect {
-                        x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 18,
-                        width: main_chunks[1].width.saturating_sub(6),
-                        height: 2,
-                    };
-                    progress_rect.render(card_area_rect, f);
+                        let area_arc = Rect { x: left_x, y: main_chunks[1].y + 12, width: col_w, height: 2 };
+                        if render_guard(area_arc) { arc_task.render(area_arc, f); }
 
-                    let card_area_square = Rect {
-                        x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 21,
-                        width: main_chunks[1].width.saturating_sub(6),
-                        height: 2,
-                    };
-                    progress_square.render(card_area_square, f);
+                        // Cột 2: 4 Progress Bars
+                        let area_line = Rect { x: right_x, y: main_chunks[1].y + 3, width: col_w, height: 2 };
+                        if render_guard(area_line) { progress_line.render(area_line, f); }
 
-                    let card_area_line = Rect {
-                        x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 24,
-                        width: main_chunks[1].width.saturating_sub(6),
-                        height: 2,
-                    };
-                    progress_line.render(card_area_line, f);
+                        let area_para = Rect { x: right_x, y: main_chunks[1].y + 6, width: col_w, height: 2 };
+                        if render_guard(area_para) { progress_parallelogram.render(area_para, f); }
 
-                    let shimmer_area = Rect {
-                        x: main_chunks[1].x + 3,
-                        y: main_chunks[1].y + 27,
-                        width: main_chunks[1].width.saturating_sub(6),
-                        height: 1,
-                    };
-                    shimmer_bar.render(shimmer_area, f);
+                        let area_rect = Rect { x: right_x, y: main_chunks[1].y + 9, width: col_w, height: 2 };
+                        if render_guard(area_rect) { progress_rect.render(area_rect, f); }
+
+                        let area_square = Rect { x: right_x, y: main_chunks[1].y + 12, width: col_w, height: 2 };
+                        if render_guard(area_square) { progress_square.render(area_square, f); }
+
+                        // Dưới cùng: Shimmer Bar trải dài
+                        let area_shimmer = Rect { x: left_x, y: main_chunks[1].y + 16, width: panel_w, height: 1 };
+                        if render_guard(area_shimmer) { shimmer_bar.render(area_shimmer, f); }
+                    } else {
+                        // Màn hình hẹp: Xếp 1 cột đơn, chỉ render các widget còn trong vùng an toàn
+                        let mut curr_y = main_chunks[1].y + 3;
+                        let single_tasks: [&dyn FormWidget; 8] = [
+                            &pulse_task,
+                            &moon_task,
+                            &braille_task,
+                            &arc_task,
+                            &progress_line,
+                            &progress_parallelogram,
+                            &progress_rect,
+                            &progress_square,
+                        ];
+
+                        for t in single_tasks {
+                            let area = Rect { x: main_chunks[1].x + 3, y: curr_y, width: panel_w, height: 2 };
+                            if render_guard(area) {
+                                t.render(area, f);
+                                curr_y += 3;
+                            } else {
+                                break;
+                            }
+                        }
+
+                        let area_shimmer = Rect { x: main_chunks[1].x + 3, y: curr_y, width: panel_w, height: 1 };
+                        if render_guard(area_shimmer) {
+                            shimmer_bar.render(area_shimmer, f);
+                        }
+                    }
                 }
                 3 => {
                     // TAB 4: LIVE LOGS (SMART STICKY FOLLOW & SCROLLBAR)

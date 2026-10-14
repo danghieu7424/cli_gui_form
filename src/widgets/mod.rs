@@ -10,6 +10,7 @@ pub mod shimmer;
 pub mod status_bar;
 pub mod tabs;
 pub mod task;
+pub mod popup;
 
 pub use button::ButtonWidget;
 pub use card::{CardItem, CardWidget};
@@ -17,6 +18,7 @@ pub use checkbox::CheckboxWidget;
 pub use editable_list::{EditMode, EditableListWidget};
 pub use input::{InputMode, InputWidget};
 pub use list::{ListItem, ListWidget};
+pub use popup::{PopupStyle, PopupWidget};
 pub use radio::RadioWidget;
 pub use select::{SelectOption, SelectWidget};
 pub use shimmer::ShimmerWidget;

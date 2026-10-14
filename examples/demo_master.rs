@@ -2,7 +2,7 @@
 
 use cli_gui_form::{
     ButtonWidget, CardWidget, CheckboxWidget, EditableListWidget, EventResult, FormManager, FormWidget, Icons,
-    InputMode, InputWidget, ListWidget, ProgressStyle, RadioWidget, SelectWidget, ShimmerWidget, SpinnerType, StatusBarWidget, TabsWidget,
+    InputMode, InputWidget, ListWidget, PopupStyle, PopupWidget, ProgressStyle, RadioWidget, SelectWidget, ShimmerWidget, SpinnerType, StatusBarWidget, TabsWidget,
     Tags, TaskWidget, Theme,
 };
 use crossterm::{
@@ -284,6 +284,9 @@ fn main() -> io::Result<()> {
         "Linear Sync Engine ─ Background Delta Syncing...",
     )
     .with_colors((69, 137, 255), (220, 240, 255));
+
+    // Trạng thái modal popup nổi demo (0 = None, 1 = PipelineCard, 2 = MicroBadge, 3 = HudBracket)
+    let mut popup_mode: u8 = 0;
 
     // 5. LIVE LOGS (TAB 4)
     let mut live_logs: Vec<Line<'static>> = vec![
@@ -981,6 +984,27 @@ fn main() -> io::Result<()> {
                         ]));
                     }
 
+                    // Giới thiệu 3 dạng Floating Popup & Node Cards
+                    lines.push(Line::from(""));
+                    lines.push(Line::from(vec![
+                        Span::styled("  Floating Node & Popup Component System (Press [P] to trigger modal overlay)", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                    ]));
+                    lines.push(Line::from(vec![
+                        Span::styled("  ─────────────────────────────────────────────────────────────────────────────", Style::default().fg(Theme::NEUTRAL_100)),
+                    ]));
+                    lines.push(Line::from(vec![
+                        Span::styled("    [1. Pipeline Node Card] ", Style::default().fg(Theme::ORANGE).add_modifier(Modifier::BOLD)),
+                        Span::styled("Bo tròn viền, Header lồng viền (✻ fable-4), Tree execution, Copper baseline", Style::default().fg(Theme::SECONDARY)),
+                    ]));
+                    lines.push(Line::from(vec![
+                        Span::styled("    [2. Micro Node Badge]   ", Style::default().fg(Theme::ACCENT).add_modifier(Modifier::BOLD)),
+                        Span::styled("Khung compact lồng tag ở cả viền trên (🔹 astra) và viền dưới (● leading)", Style::default().fg(Theme::SECONDARY)),
+                    ]));
+                    lines.push(Line::from(vec![
+                        Span::styled("    [3. Cyber HUD Bracket]  ", Style::default().fg(Theme::INDIGO).add_modifier(Modifier::BOLD)),
+                        Span::styled("Khung 4 góc rời [┌ ┐ / └ ┘] chuyên hiển thị telemetry & sensor metrics (IMU -4.92 deg)", Style::default().fg(Theme::SECONDARY)),
+                    ]));
+
                     tabs.render_container(main_chunks[1], lines, f);
                 }
             }
@@ -991,10 +1015,80 @@ fn main() -> io::Result<()> {
             status_bar.add_left(Span::styled("3 files changed", Style::default().fg(Theme::SECONDARY)));
             status_bar.add_left(Span::styled("✔ Ready", Style::default().fg(Theme::SUCCESS)));
 
+            // Trạng thái Popup trong Status Bar
+            let popup_hint = match popup_mode {
+                1 => "[P: 1/3 Pipeline Card]",
+                2 => "[P: 2/3 Micro Badge]",
+                3 => "[P: 3/3 HUD Bracket]",
+                _ => "[P: Toggle Popup]",
+            };
+            let popup_color = if popup_mode > 0 { Theme::WARNING } else { Theme::CYAN };
+            status_bar.add_left(Span::styled(popup_hint, Style::default().fg(popup_color)));
+
             status_bar.add_right(Span::styled(format!("Tab [{}/5]", tabs.selected() + 1), Style::default().fg(Theme::ACCENT)));
-            status_bar.add_right(Span::styled("Esc: Exit", Style::default().fg(Theme::MUTED)));
+            if popup_mode > 0 {
+                status_bar.add_right(Span::styled("Esc: Close Popup", Style::default().fg(Theme::WARNING)));
+            } else {
+                status_bar.add_right(Span::styled("Esc: Exit", Style::default().fg(Theme::MUTED)));
+            }
 
             status_bar.render(main_chunks[2], f);
+
+            // 4. FLOATING POPUP OVERLAY (Hiển thị đè nổi khi bấm phím P)
+            match popup_mode {
+                1 => {
+                    let popup = PopupWidget::new(PopupStyle::PipelineCard, "fable-4")
+                        .with_icon("✻")
+                        .with_title_color(Theme::ORANGE)
+                        .with_border_color(Theme::NEUTRAL_100)
+                        .with_line(Line::from(vec![
+                            Span::styled("pipes ", Style::default().fg(Theme::FG)),
+                            Span::styled(" 🌗 91%", Style::default().fg(Theme::ORANGE)),
+                        ]))
+                        .with_line(Line::from(vec![
+                            Span::styled("▸ run migrate", Style::default().fg(Theme::PRIMARY)),
+                        ]))
+                        .with_line(Line::from(vec![
+                            Span::styled("  └ 4 tables ", Style::default().fg(Theme::SECONDARY)),
+                            Span::styled("✓", Style::default().fg(Theme::SUCCESS)),
+                        ]))
+                        .with_line(Line::from(vec![
+                            Span::styled("▸ write pipes.ts", Style::default().fg(Theme::PRIMARY)),
+                        ]))
+                        .with_line(Line::from(vec![
+                            Span::styled("+ gap = H * 0.36", Style::default().fg(Theme::EMERALD)),
+                        ]))
+                        .with_line(Line::from(vec![
+                            Span::styled("  └ 9 lines", Style::default().fg(Theme::SECONDARY)),
+                        ]));
+                    let area = PopupWidget::fixed_rect(34, 9, full_area);
+                    popup.render(area, f);
+                }
+                2 => {
+                    let popup = PopupWidget::new(PopupStyle::MicroBadge, "astra")
+                        .with_icon("🔹")
+                        .with_title_color(Theme::ACCENT)
+                        .with_border_color(Theme::NEUTRAL_100)
+                        .with_bottom_tag("● leading", Theme::SECONDARY)
+                        .with_line(Line::from(vec![
+                            Span::styled("orchestrator · 4", Style::default().fg(Theme::FG)),
+                        ]));
+                    let area = PopupWidget::fixed_rect(24, 4, full_area);
+                    popup.render(area, f);
+                }
+                3 => {
+                    let popup = PopupWidget::new(PopupStyle::HudBracket, "IMU")
+                        .with_title_color(Theme::MUTED)
+                        .with_border_color(Theme::INDIGO)
+                        .with_line(Line::from(vec![
+                            Span::styled("-4.92", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                            Span::styled(" deg", Style::default().fg(Theme::MUTED)),
+                        ]));
+                    let area = PopupWidget::fixed_rect(18, 4, full_area);
+                    popup.render(area, f);
+                }
+                _ => {}
+            }
         })?;
 
         // Polling sự kiện phím và chuột
@@ -1056,6 +1150,18 @@ fn main() -> io::Result<()> {
                             if form.handle_event(key) == EventResult::Consumed {
                                 continue;
                             }
+                        }
+
+                        // Phím P/p để chuyển đổi qua lại 3 dạng Popup floating
+                        if key.code == KeyCode::Char('p') || key.code == KeyCode::Char('P') {
+                            popup_mode = (popup_mode + 1) % 4;
+                            continue;
+                        }
+
+                        // Nếu đang mở popup, phím Esc sẽ đóng popup thay vì thoát ứng dụng
+                        if popup_mode > 0 && key.code == KeyCode::Esc {
+                            popup_mode = 0;
+                            continue;
                         }
 
                         // 3. Thoát chương trình khi nhấn Esc hoặc q (chỉ khi không có overlay nào tiêu thụ)

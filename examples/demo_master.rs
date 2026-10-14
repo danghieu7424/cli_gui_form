@@ -1045,7 +1045,7 @@ fn main() -> io::Result<()> {
                     let popup = PopupWidget::new(PopupStyle::PipelineCard, "fable-4")
                         .with_icon(Icons::SPARKLE_FILLED.trim())
                         .with_title_color(Theme::ORANGE)
-                        .with_border_color(Theme::NEUTRAL_100)
+                        .with_border_color(Theme::GRAY_44)
                         .with_line(Line::from(vec![
                             Span::styled("pipes ", Style::default().fg(Theme::FG)),
                             Span::styled(format!(" {}91%", Icons::CIRCLE_HALF_LEFT.trim()), Style::default().fg(Theme::ORANGE)),
@@ -1073,7 +1073,7 @@ fn main() -> io::Result<()> {
                     let popup = PopupWidget::new(PopupStyle::MicroBadge, "astra")
                         .with_icon(Icons::DIAMOND_FILLED.trim())
                         .with_title_color(Theme::ACCENT)
-                        .with_border_color(Theme::NEUTRAL_100)
+                        .with_border_color(Theme::GRAY_44)
                         .with_bottom_tag(format!("{}leading", Icons::CIRCLE_FILLED), Theme::SECONDARY)
                         .with_line(Line::from(vec![
                             Span::styled("orchestrator · 4", Style::default().fg(Theme::FG)),
@@ -1097,7 +1097,7 @@ fn main() -> io::Result<()> {
                         .with_icon(Icons::DIAMOND_FILLED.trim())
                         .with_title_color(Theme::CYAN)
                         .with_top_right_tag("callkit", Theme::SECONDARY)
-                        .with_border_color(Theme::NEUTRAL_100)
+                        .with_border_color(Theme::CYAN)
                         .with_line(Line::from(vec![
                             Span::styled("   wrote 249 lines", Style::default().fg(Theme::SECONDARY)),
                         ]))

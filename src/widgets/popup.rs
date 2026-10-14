@@ -184,21 +184,24 @@ impl PopupWidget {
         let w = area.width as usize;
         let mut rendered_lines: Vec<Line<'static>> = Vec::new();
 
-        // 1. Dòng đỉnh: ╭─ [icon ]title ──────╮
+        // 1. Dòng đỉnh: ╭── [icon ]title ──────╮ (Đảm bảo độ dài chính xác bằng w)
         let mut top_spans = Vec::new();
-        top_spans.push(Span::styled("╭─ ", Style::default().fg(self.border_color)));
+        top_spans.push(Span::styled("╭── ", Style::default().fg(self.border_color)));
+        let mut left_len = 4;
         if let Some(ref icon) = self.title_icon {
             top_spans.push(Span::styled(format!("{} ", icon), Style::default().fg(self.title_color)));
+            left_len += icon.chars().count() + 1;
         }
         top_spans.push(Span::styled(
             self.title.clone(),
             Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD),
         ));
+        left_len += self.title.chars().count();
+        top_spans.push(Span::styled(" ", Style::default().fg(self.border_color)));
+        left_len += 1;
 
-        let prefix_len = 3 + self.title_icon.as_ref().map(|i| i.chars().count() + 1).unwrap_or(0) + self.title.chars().count();
-        let remaining = w.saturating_sub(prefix_len + 1); // chừa đúng 1 ô cho ký tự '╮'
-        let fill = "─".repeat(remaining.saturating_sub(1));
-        top_spans.push(Span::styled(format!(" {}╮", fill), Style::default().fg(self.border_color)));
+        let fill_len = w.saturating_sub(left_len + 3);
+        top_spans.push(Span::styled(format!("{}──╮", "─".repeat(fill_len)), Style::default().fg(self.border_color)));
         rendered_lines.push(Line::from(top_spans));
 
         // 2. Thân card
@@ -257,21 +260,24 @@ impl PopupWidget {
         let w = area.width as usize;
         let mut rendered_lines: Vec<Line<'static>> = Vec::new();
 
-        // 1. Dòng đỉnh: ╭─ [icon ]title ──────╮
+        // 1. Dòng đỉnh: ╭── [icon ]title ──────╮
         let mut top_spans = Vec::new();
-        top_spans.push(Span::styled("╭─ ", Style::default().fg(self.border_color)));
+        top_spans.push(Span::styled("╭── ", Style::default().fg(self.border_color)));
+        let mut left_len = 4;
         if let Some(ref icon) = self.title_icon {
             top_spans.push(Span::styled(format!("{} ", icon), Style::default().fg(self.title_color)));
+            left_len += icon.chars().count() + 1;
         }
         top_spans.push(Span::styled(
             self.title.clone(),
             Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD),
         ));
+        left_len += self.title.chars().count();
+        top_spans.push(Span::styled(" ", Style::default().fg(self.border_color)));
+        left_len += 1;
 
-        let prefix_len = 3 + self.title_icon.as_ref().map(|i| i.chars().count() + 1).unwrap_or(0) + self.title.chars().count();
-        let remaining = w.saturating_sub(prefix_len + 1);
-        let fill = "─".repeat(remaining.saturating_sub(1));
-        top_spans.push(Span::styled(format!(" {}╮", fill), Style::default().fg(self.border_color)));
+        let fill_len = w.saturating_sub(left_len + 3);
+        top_spans.push(Span::styled(format!("{}──╮", "─".repeat(fill_len)), Style::default().fg(self.border_color)));
         rendered_lines.push(Line::from(top_spans));
 
         // 2. Thân nội dung
@@ -317,11 +323,14 @@ impl PopupWidget {
         if let Some(ref bot_tag) = self.bottom_tag {
             let mut bot_spans = Vec::new();
             bot_spans.push(Span::styled("╰── ", Style::default().fg(self.border_color)));
+            let mut bot_left = 4;
             bot_spans.push(Span::styled(bot_tag.clone(), Style::default().fg(self.bottom_tag_color)));
-            let bot_len = 4 + bot_tag.chars().count();
-            let bot_rem = w.saturating_sub(bot_len + 1);
-            let bot_fill = "─".repeat(bot_rem.saturating_sub(1));
-            bot_spans.push(Span::styled(format!(" {}╯", bot_fill), Style::default().fg(self.border_color)));
+            bot_left += bot_tag.chars().count();
+            bot_spans.push(Span::styled(" ", Style::default().fg(self.border_color)));
+            bot_left += 1;
+
+            let bot_fill = w.saturating_sub(bot_left + 3);
+            bot_spans.push(Span::styled(format!("{}──╯", "─".repeat(bot_fill)), Style::default().fg(self.border_color)));
             rendered_lines.push(Line::from(bot_spans));
         } else {
             let bot_fill = "─".repeat(w.saturating_sub(2));
@@ -424,36 +433,43 @@ impl PopupWidget {
         let w = area.width as usize;
         let mut rendered_lines: Vec<Line<'static>> = Vec::new();
 
-        // 1. Dòng đỉnh: ╭─ [icon ]title ──────── callkit ─╮
+        // 1. DÒNG ĐỈNH: ╭── [icon ]title ──────── callkit ──╮
+        // Đảm bảo tổng độ dài dòng đỉnh luôn chính xác bằng w
         let mut top_spans = Vec::new();
-        top_spans.push(Span::styled("╭─ ", Style::default().fg(self.border_color)));
+        top_spans.push(Span::styled("╭── ", Style::default().fg(self.border_color)));
+        let mut left_len = 4;
         if let Some(ref icon) = self.title_icon {
             top_spans.push(Span::styled(format!("{} ", icon), Style::default().fg(self.title_color)));
+            left_len += icon.chars().count() + 1;
         }
         top_spans.push(Span::styled(
             self.title.clone(),
             Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD),
         ));
+        left_len += self.title.chars().count();
+        top_spans.push(Span::styled(" ", Style::default().fg(self.border_color)));
+        left_len += 1;
 
-        let prefix_len = 3 + self.title_icon.as_ref().map(|i| i.chars().count() + 1).unwrap_or(0) + self.title.chars().count();
         if let Some(ref right_tag) = self.top_right_tag {
-            let right_len = right_tag.chars().count() + 3; // " tag ─╮"
-            if w > prefix_len + right_len + 2 {
-                let fill_len = w.saturating_sub(prefix_len + right_len + 1);
-                top_spans.push(Span::styled(format!(" {} ", "─".repeat(fill_len)), Style::default().fg(self.border_color)));
+            // Đuôi phải: " " (1) + tag + " ──╮" (4) -> tổng độ rộng = 1 + tag.len() + 4
+            let right_len = 1 + right_tag.chars().count() + 4;
+            if w >= left_len + right_len {
+                let fill_len = w - left_len - right_len;
+                top_spans.push(Span::styled("─".repeat(fill_len), Style::default().fg(self.border_color)));
+                top_spans.push(Span::styled(" ", Style::default().fg(self.border_color)));
                 top_spans.push(Span::styled(right_tag.clone(), Style::default().fg(self.top_right_tag_color)));
-                top_spans.push(Span::styled(" ─╮", Style::default().fg(self.border_color)));
+                top_spans.push(Span::styled(" ──╮", Style::default().fg(self.border_color)));
             } else {
-                top_spans.push(Span::styled(" ─╮", Style::default().fg(self.border_color)));
+                let fill_len = w.saturating_sub(left_len + 3);
+                top_spans.push(Span::styled(format!("{}──╮", "─".repeat(fill_len)), Style::default().fg(self.border_color)));
             }
         } else {
-            let remaining = w.saturating_sub(prefix_len + 1);
-            let fill = "─".repeat(remaining.saturating_sub(1));
-            top_spans.push(Span::styled(format!(" {}╮", fill), Style::default().fg(self.border_color)));
+            let fill_len = w.saturating_sub(left_len + 3);
+            top_spans.push(Span::styled(format!("{}──╮", "─".repeat(fill_len)), Style::default().fg(self.border_color)));
         }
         rendered_lines.push(Line::from(top_spans));
 
-        // 2. Thân nội dung với hỗ trợ kéo dài màu nền diff block
+        // 2. Thân nội dung với hỗ trợ kéo dài màu nền diff block ra hết biên
         let inner_height = area.height.saturating_sub(2) as usize;
         let inner_width = area.width.saturating_sub(2) as usize;
 
@@ -499,7 +515,7 @@ impl PopupWidget {
             }
         }
 
-        // 3. Dòng đáy: ╰────────────────────────╮
+        // 3. Dòng đáy: ╰────────────────────────╯
         let bot_fill = "─".repeat(w.saturating_sub(2));
         rendered_lines.push(Line::from(vec![
             Span::styled("╰", Style::default().fg(self.border_color)),

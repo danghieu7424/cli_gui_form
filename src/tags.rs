@@ -39,11 +39,12 @@ impl Tags {
     pub const CORE: &'static str = "CORE"; // Luồng nhân lõi / Engine
     pub const TOOL: &'static str = "TOOL"; // Công cụ bảo trì / Tiện ích
     pub const DEVS: &'static str = "DEVS"; // Thiết bị phần cứng / Môi trường Dev
+    pub const DVCE: &'static str = "DVCE"; // Thiết bị ngoại vi / Cổng phần cứng (Device)
     pub const TEST: &'static str = "TEST"; // Kiểm thử tự động / Benchmark
     pub const INIT: &'static str = "INIT"; // Khởi tạo ban đầu
     pub const EXIT: &'static str = "EXIT"; // Thoát ứng dụng / Shutdown
     pub const KILL: &'static str = "KILL"; // Buộc dừng tiến trình
-    pub const LOCK: &'static str = "LOCK"; // Buộc dừng tiến trình
+    pub const LOCK: &'static str = "LOCK"; // Khóa tài nguyên / Đồng bộ Mutex Lock
 
     // Tệp tin & Lưu trữ (File & Storage)
     pub const DIR : &'static str = "DIR "; // Thư mục tập tin
@@ -55,10 +56,13 @@ impl Tags {
 
     // Media & Âm thanh (Media & Audio)
     pub const MEDA: &'static str = "MEDA"; // Tệp đa phương tiện chung
+    pub const MDIA: &'static str = "MDIA"; // Tệp tin đa phương tiện tổng hợp (Container Media)
     pub const AUDI: &'static str = "AUDI"; // Luồng âm thanh / Nhạc
+    pub const AUDO: &'static str = "AUDO"; // Luồng dữ liệu âm thanh (Audio stream)
     pub const REC : &'static str = "REC "; // Thu âm / Micro mở
     pub const IMG : &'static str = "IMG "; // Hình ảnh / Đồ họa
     pub const SONG: &'static str = "SONG"; // Bài hát / Track nhạc
+    pub const TRCK: &'static str = "TRCK"; // Rãnh phát / Bản ghi âm thanh (Audio track)
     pub const VOIC: &'static str = "VOIC"; // Giọng nói AI / Dubbing
 
     // Điều khiển & Tiến trình (Execution & Control)
@@ -74,6 +78,8 @@ impl Tags {
     // Mạng & Bảo mật (Network & Security)
     pub const NET : &'static str = "NET "; // Kết nối mạng / Socket
     pub const APIS: &'static str = "APIS"; // Endpoint API / HTTP
+    pub const HTTP: &'static str = "HTTP"; // Giao thức Web / Endpoint HTTP
+    pub const REST: &'static str = "REST"; // Dịch vụ RESTful API
     pub const LINK: &'static str = "LINK"; // Đường dẫn URL ngoài
     pub const USER: &'static str = "USER"; // Tài khoản người dùng
     pub const AUTH: &'static str = "AUTH"; // Xác thực quyền / Token
@@ -149,18 +155,30 @@ impl Tags {
         ])
     }
 
-    /// Trả về màu sắc Theme mặc định tương ứng với mức độ nghiêm trọng (Zero-cost matching)
+    /****
+     * Hàm: color_for
+     * Chức năng: Ánh xạ mã màu Theme tối ưu theo từng nhóm từ loại (Zero-cost matching).
+     * Ranh giới: Phân tầng ngữ nghĩa rõ ràng:
+     *            - ACCENT: Thông tin, Web Navigation, API & Endpoints (HTTP, REST, APIS, INFO, USER)
+     *            - MAGENTA: Bảo mật, Xác thực & Chứng chỉ (AUTH, CERT)
+     *            - CYAN: Âm thanh & Media (AUDI, AUDO, SONG, TRCK, MEDA, MDIA, VOIC)
+     *            - PURPLE: Thiết bị phần cứng, Cluster & Lưu trữ (DEVS, DVCE, NODE, PACK, ARCH)
+     *            - WARNING: Cảnh báo, Khóa tài nguyên (WARN, TIME, LOCK)
+     *            - ERROR: Thất bại, Hủy tiến trình (FAIL, ERR, KILL)
+     *            - SUCCESS: Thành công, Xác nhận (PASS, DONE, OK, CHECKED)
+     ****/
     #[inline]
     pub fn color_for(tag: &str) -> Color {
         match tag {
-            Self::INFO | Self::INFO_CHAR | Self::LINK | Self::APIS | Self::USER => crate::Theme::ACCENT,
+            Self::INFO | Self::INFO_CHAR | Self::LINK | Self::USER | Self::APIS | Self::HTTP | Self::REST => crate::Theme::ACCENT,
             Self::WARN | Self::ALERT_CHAR | Self::TIME | Self::LOCK => crate::Theme::WARNING,
-            Self::FAIL | Self::ERROR_CHAR | Self::KILL | Self::ERR  => crate::Theme::ERROR,
+            Self::FAIL | Self::ERROR_CHAR | Self::KILL | Self::ERR => crate::Theme::ERROR,
             Self::PASS | Self::DONE | Self::CHECKED | Self::OK => crate::Theme::SUCCESS,
             Self::CONF | Self::CORE | Self::EXEC | Self::POINTER | Self::INIT => crate::Theme::PRIMARY,
             Self::WAIT | Self::PAUS | Self::PAUSE_CHAR => crate::Theme::ORANGE,
-            Self::AUDI | Self::SONG | Self::VOIC | Self::SYNC => crate::Theme::CYAN,
-            Self::DEVS | Self::NODE | Self::CERT | Self::PACK | Self::ARCH | Self::NET => crate::Theme::PURPLE,
+            Self::AUDI | Self::AUDO | Self::SONG | Self::TRCK | Self::MEDA | Self::MDIA | Self::VOIC | Self::SYNC => crate::Theme::CYAN,
+            Self::AUTH | Self::CERT => crate::Theme::MAGENTA,
+            Self::DEVS | Self::DVCE | Self::NODE | Self::PACK | Self::ARCH | Self::NET => crate::Theme::PURPLE,
             Self::PROC | Self::PIPE => crate::Theme::INDIGO,
             Self::SKIP => crate::Theme::MUTED,
             _ => crate::Theme::SECONDARY,
@@ -174,26 +192,25 @@ mod tests {
 
     #[test]
     fn test_tag4_exact_length_guard() {
-        // Guardrail: Toàn bộ Tag 4 ký tự BẮT BUỘC phải có độ dài chính xác 6 ký tự
+        // Guardrail: Toàn bộ Tag 4 ký tự BẮT BUỘC phải có độ dài chính xác 4 ký tự (zero jitter)
         let all_tag4 = [
-            Tags::INFO, Tags::WARN, Tags::FAIL, Tags::PASS, Tags::DONE, Tags::WAIT, Tags::IDLE, Tags::BUSY,
-            Tags::PING, Tags::TIME, Tags::PROC, Tags::CONF, Tags::CORE, Tags::TOOL, Tags::DEVS, Tags::TEST,
-            Tags::INIT, Tags::EXIT, Tags::KILL, Tags::DIRS, Tags::FILE, Tags::DOCS, Tags::PACK, Tags::ARCH,
-            Tags::ROOT, Tags::MEDA, Tags::AUDI, Tags::RECD, Tags::IMAG, Tags::SONG, Tags::VOIC, Tags::EXEC,
-            Tags::PLAY, Tags::PAUS, Tags::STOP, Tags::NEXT, Tags::PREV, Tags::STEP, Tags::SYNC, Tags::NETW,
-            Tags::APIS, Tags::LINK, Tags::USER, Tags::AUTH, Tags::CERT, Tags::NODE, Tags::HOST, Tags::PORT,
-            Tags::PIPE,
+            Tags::INFO, Tags::WARN, Tags::FAIL, Tags::ERR, Tags::PASS, Tags::DONE, Tags::OK, Tags::WAIT,
+            Tags::IDLE, Tags::BUSY, Tags::PING, Tags::TIME, Tags::PROC, Tags::SKIP, Tags::CONF, Tags::CORE,
+            Tags::TOOL, Tags::DEVS, Tags::DVCE, Tags::TEST, Tags::INIT, Tags::EXIT, Tags::KILL, Tags::LOCK,
+            Tags::DIR, Tags::FILE, Tags::DOCS, Tags::PACK, Tags::ARCH, Tags::ROOT, Tags::MEDA, Tags::MDIA,
+            Tags::AUDI, Tags::AUDO, Tags::REC, Tags::IMG, Tags::SONG, Tags::TRCK, Tags::VOIC, Tags::EXEC,
+            Tags::PLAY, Tags::PAUS, Tags::STOP, Tags::NEXT, Tags::PREV, Tags::STEP, Tags::SYNC, Tags::NET,
+            Tags::APIS, Tags::HTTP, Tags::REST, Tags::LINK, Tags::USER, Tags::AUTH, Tags::CERT, Tags::NODE,
+            Tags::HOST, Tags::PORT, Tags::PIPE,
         ];
 
         for tag in all_tag4 {
             assert_eq!(
                 tag.chars().count(),
-                6,
-                "Tag '{}' vi phạm ranh giới độ dài: phải đúng 6 ký tự!",
+                4,
+                "Tag '{}' vi phạm ranh giới độ dài: phải đúng 4 ký tự!",
                 tag
             );
-            assert!(tag.starts_with('['), "Tag '{}' phải bắt đầu bằng '['", tag);
-            assert!(tag.ends_with(']'), "Tag '{}' phải kết thúc bằng ']'", tag);
         }
     }
 
@@ -222,9 +239,9 @@ mod tests {
 
     #[test]
     fn test_tags_format_and_span() {
-        assert_eq!(Tags::format(Tags::INFO, "System ready"), "[INFO] System ready");
+        assert_eq!(Tags::format(Tags::INFO, "System ready"), "INFO System ready");
         let span = Tags::span(Tags::PASS, Style::default().fg(Color::Green).add_modifier(Modifier::BOLD));
         assert!(!span.style.add_modifier.contains(Modifier::BOLD));
-        assert_eq!(span.content, "[PASS]");
+        assert_eq!(span.content, "PASS");
     }
 }

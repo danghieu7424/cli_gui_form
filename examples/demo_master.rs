@@ -984,7 +984,7 @@ fn main() -> io::Result<()> {
                         ]));
                     }
 
-                    // Giới thiệu 3 dạng Floating Popup & Node Cards
+                    // Giới thiệu 4 dạng Floating Popup & Node Cards
                     lines.push(Line::from(""));
                     lines.push(Line::from(vec![
                         Span::styled("  Floating Node & Popup Component System (Press [P] to trigger modal overlay)", Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
@@ -994,15 +994,19 @@ fn main() -> io::Result<()> {
                     ]));
                     lines.push(Line::from(vec![
                         Span::styled("    [1. Pipeline Node Card] ", Style::default().fg(Theme::ORANGE).add_modifier(Modifier::BOLD)),
-                        Span::styled("Bo tròn viền, Header lồng viền (✻ fable-4), Tree execution, Copper baseline", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled("Bo tròn viền, Header lồng viền (✦ fable-4), Tree execution, Copper baseline", Style::default().fg(Theme::SECONDARY)),
                     ]));
                     lines.push(Line::from(vec![
                         Span::styled("    [2. Micro Node Badge]   ", Style::default().fg(Theme::ACCENT).add_modifier(Modifier::BOLD)),
-                        Span::styled("Khung compact lồng tag ở cả viền trên (🔹 astra) và viền dưới (● leading)", Style::default().fg(Theme::SECONDARY)),
+                        Span::styled("Khung compact lồng tag ở cả viền trên (◆ astra) và viền dưới (● leading)", Style::default().fg(Theme::SECONDARY)),
                     ]));
                     lines.push(Line::from(vec![
                         Span::styled("    [3. Cyber HUD Bracket]  ", Style::default().fg(Theme::INDIGO).add_modifier(Modifier::BOLD)),
                         Span::styled("Khung 4 góc rời [┌ ┐ / └ ┘] chuyên hiển thị telemetry & sensor metrics (IMU -4.92 deg)", Style::default().fg(Theme::SECONDARY)),
+                    ]));
+                    lines.push(Line::from(vec![
+                        Span::styled("    [4. Code Diff Node Card]", Style::default().fg(Theme::CYAN).add_modifier(Modifier::BOLD)),
+                        Span::styled("Khung kỹ thuật bo tròn (◆ astra-1), Top Right Tag (callkit), khối diff nền màu đỏ/xanh", Style::default().fg(Theme::SECONDARY)),
                     ]));
 
                     tabs.render_container(main_chunks[1], lines, f);
@@ -1017,9 +1021,10 @@ fn main() -> io::Result<()> {
 
             // Trạng thái Popup trong Status Bar
             let popup_hint = match popup_mode {
-                1 => "[P: 1/3 Pipeline Card]",
-                2 => "[P: 2/3 Micro Badge]",
-                3 => "[P: 3/3 HUD Bracket]",
+                1 => "[P: 1/4 Pipeline Card]",
+                2 => "[P: 2/4 Micro Badge]",
+                3 => "[P: 3/4 HUD Bracket]",
+                4 => "[P: 4/4 Code Diff Card]",
                 _ => "[P: Toggle Popup]",
             };
             let popup_color = if popup_mode > 0 { Theme::WARNING } else { Theme::CYAN };
@@ -1034,26 +1039,26 @@ fn main() -> io::Result<()> {
 
             status_bar.render(main_chunks[2], f);
 
-            // 4. FLOATING POPUP OVERLAY (Hiển thị đè nổi khi bấm phím P)
+            // 4. FLOATING POPUP OVERLAY (Hiển thị đè nổi khi bấm phím P - 100% Zero-Emoji)
             match popup_mode {
                 1 => {
                     let popup = PopupWidget::new(PopupStyle::PipelineCard, "fable-4")
-                        .with_icon("✻")
+                        .with_icon(Icons::SPARKLE_FILLED.trim())
                         .with_title_color(Theme::ORANGE)
                         .with_border_color(Theme::NEUTRAL_100)
                         .with_line(Line::from(vec![
                             Span::styled("pipes ", Style::default().fg(Theme::FG)),
-                            Span::styled(" 🌗 91%", Style::default().fg(Theme::ORANGE)),
+                            Span::styled(format!(" {}91%", Icons::CIRCLE_HALF_LEFT.trim()), Style::default().fg(Theme::ORANGE)),
                         ]))
                         .with_line(Line::from(vec![
-                            Span::styled("▸ run migrate", Style::default().fg(Theme::PRIMARY)),
+                            Span::styled(format!("{}run migrate", Icons::POINTER_FILLED), Style::default().fg(Theme::PRIMARY)),
                         ]))
                         .with_line(Line::from(vec![
                             Span::styled("  └ 4 tables ", Style::default().fg(Theme::SECONDARY)),
-                            Span::styled("✓", Style::default().fg(Theme::SUCCESS)),
+                            Span::styled(Icons::SUCCESS.trim(), Style::default().fg(Theme::SUCCESS)),
                         ]))
                         .with_line(Line::from(vec![
-                            Span::styled("▸ write pipes.ts", Style::default().fg(Theme::PRIMARY)),
+                            Span::styled(format!("{}write pipes.ts", Icons::POINTER_FILLED), Style::default().fg(Theme::PRIMARY)),
                         ]))
                         .with_line(Line::from(vec![
                             Span::styled("+ gap = H * 0.36", Style::default().fg(Theme::EMERALD)),
@@ -1066,10 +1071,10 @@ fn main() -> io::Result<()> {
                 }
                 2 => {
                     let popup = PopupWidget::new(PopupStyle::MicroBadge, "astra")
-                        .with_icon("🔹")
+                        .with_icon(Icons::DIAMOND_FILLED.trim())
                         .with_title_color(Theme::ACCENT)
                         .with_border_color(Theme::NEUTRAL_100)
-                        .with_bottom_tag("● leading", Theme::SECONDARY)
+                        .with_bottom_tag(format!("{}leading", Icons::CIRCLE_FILLED), Theme::SECONDARY)
                         .with_line(Line::from(vec![
                             Span::styled("orchestrator · 4", Style::default().fg(Theme::FG)),
                         ]));
@@ -1085,6 +1090,41 @@ fn main() -> io::Result<()> {
                             Span::styled(" deg", Style::default().fg(Theme::MUTED)),
                         ]));
                     let area = PopupWidget::fixed_rect(18, 4, full_area);
+                    popup.render(area, f);
+                }
+                4 => {
+                    let popup = PopupWidget::new(PopupStyle::DiffCard, "astra-1")
+                        .with_icon(Icons::DIAMOND_FILLED.trim())
+                        .with_title_color(Theme::CYAN)
+                        .with_top_right_tag("callkit", Theme::SECONDARY)
+                        .with_border_color(Theme::NEUTRAL_100)
+                        .with_line(Line::from(vec![
+                            Span::styled("   wrote 249 lines", Style::default().fg(Theme::SECONDARY)),
+                        ]))
+                        .with_line(Line::from(vec![
+                            Span::styled(format!(" {}edit ", Icons::POINTER_FILLED), Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                            Span::styled("Push.swift", Style::default().fg(Theme::FG)),
+                        ]))
+                        .with_line(Line::from(vec![
+                            Span::styled(" 105 - .alert", Style::default().fg(Theme::PRIMARY).bg(Color::Rgb(128, 16, 24))),
+                        ]))
+                        .with_line(Line::from(vec![
+                            Span::styled(" 169 + .voIP", Style::default().fg(Theme::PRIMARY).bg(Color::Rgb(16, 118, 32))),
+                        ]))
+                        .with_line(Line::from(vec![
+                            Span::styled("   2 lines changed", Style::default().fg(Theme::SECONDARY)),
+                        ]))
+                        .with_line(Line::from(vec![
+                            Span::styled(format!(" {}run ", Icons::POINTER_FILLED), Style::default().fg(Theme::PRIMARY).add_modifier(Modifier::BOLD)),
+                            Span::styled("xcodebuild", Style::default().fg(Theme::FG)),
+                        ]))
+                        .with_line(Line::from(vec![
+                            Span::styled(format!("   {}built in 30s", Icons::SUCCESS), Style::default().fg(Theme::SUCCESS)),
+                        ]))
+                        .with_line(Line::from(vec![
+                            Span::styled(format!(" {}16m 37s · {}85.9k", Icons::SPARKLE_FILLED.trim(), Icons::ARROW_DOWN.trim()), Style::default().fg(Theme::SECONDARY)),
+                        ]));
+                    let area = PopupWidget::fixed_rect(38, 11, full_area);
                     popup.render(area, f);
                 }
                 _ => {}
@@ -1152,9 +1192,9 @@ fn main() -> io::Result<()> {
                             }
                         }
 
-                        // Phím P/p để chuyển đổi qua lại 3 dạng Popup floating
+                        // Phím P/p để chuyển đổi qua lại 4 dạng Popup floating (0 -> 1 -> 2 -> 3 -> 4 -> 0)
                         if key.code == KeyCode::Char('p') || key.code == KeyCode::Char('P') {
-                            popup_mode = (popup_mode + 1) % 4;
+                            popup_mode = (popup_mode + 1) % 5;
                             continue;
                         }
 

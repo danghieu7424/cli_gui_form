@@ -15,69 +15,70 @@ pub struct Tags;
 
 impl Tags {
     // =========================================================================
-    // 1. CHUẨN TEXT-BASED 4 KÝ TỰ: [XXXX] (TỔNG ĐỘ RỘNG CỐ ĐỊNH: 6 CELL)
+    // 1. CHUẨN TEXT-BASED 4 KÝ TỰ: XXXX (TỔNG ĐỘ RỘNG CỐ ĐỊNH: 6 CELL)
     // =========================================================================
 
     // Trạng thái & Sự kiện (Status & Severity)
-    pub const INFO: &'static str = "[INFO]"; // Thông tin điều hướng chung
-    pub const WARN: &'static str = "[WARN]"; // Cảnh báo nghiệp vụ / tài nguyên
-    pub const FAIL: &'static str = "[FAIL]"; // Thất bại / Lỗi ngoại lệ
-    pub const PASS: &'static str = "[PASS]"; // Hợp lệ / Kiểm thử thành công
-    pub const DONE: &'static str = "[DONE]"; // Hoàn tất công việc / tác vụ
-    pub const WAIT: &'static str = "[WAIT]"; // Đang xếp hàng / Chờ tài nguyên
-    pub const IDLE: &'static str = "[IDLE]"; // Trạng thái nghỉ / Sẵn sàng
-    pub const BUSY: &'static str = "[BUSY]"; // Đang bận xử lý dữ liệu lớn
-    pub const PING: &'static str = "[PING]"; // Nhịp tim kiểm tra sức khỏe mạng
-    pub const TIME: &'static str = "[TIME]"; // Bộ đếm thời gian / Timestamp
-    pub const PROC: &'static str = "[PROC]"; // Tiến trình tính toán / CPU
+    pub const INFO: &'static str = "INFO"; // Thông tin điều hướng chung
+    pub const WARN: &'static str = "WARN"; // Cảnh báo nghiệp vụ / tài nguyên
+    pub const FAIL: &'static str = "FAIL"; // Thất bại / Lỗi ngoại lệ
+    pub const PASS: &'static str = "PASS"; // Hợp lệ / Kiểm thử thành công
+    pub const DONE: &'static str = "DONE"; // Hoàn tất công việc / tác vụ
+    pub const OK  : &'static str = "OK  "; // Hoàn tất công việc / tác vụ
+    pub const WAIT: &'static str = "WAIT"; // Đang xếp hàng / Chờ tài nguyên
+    pub const IDLE: &'static str = "IDLE"; // Trạng thái nghỉ / Sẵn sàng
+    pub const BUSY: &'static str = "BUSY"; // Đang bận xử lý dữ liệu lớn
+    pub const PING: &'static str = "PING"; // Nhịp tim kiểm tra sức khỏe mạng
+    pub const TIME: &'static str = "TIME"; // Bộ đếm thời gian / Timestamp
+    pub const PROC: &'static str = "PROC"; // Tiến trình tính toán / CPU
 
     // Cấu hình & Hệ thống (System & Configuration)
-    pub const CONF: &'static str = "[CONF]"; // Tệp cấu hình / Cài đặt
-    pub const CORE: &'static str = "[CORE]"; // Luồng nhân lõi / Engine
-    pub const TOOL: &'static str = "[TOOL]"; // Công cụ bảo trì / Tiện ích
-    pub const DEVS: &'static str = "[DEVS]"; // Thiết bị phần cứng / Môi trường Dev
-    pub const TEST: &'static str = "[TEST]"; // Kiểm thử tự động / Benchmark
-    pub const INIT: &'static str = "[INIT]"; // Khởi tạo ban đầu
-    pub const EXIT: &'static str = "[EXIT]"; // Thoát ứng dụng / Shutdown
-    pub const KILL: &'static str = "[KILL]"; // Buộc dừng tiến trình
+    pub const CONF: &'static str = "CONF"; // Tệp cấu hình / Cài đặt
+    pub const CORE: &'static str = "CORE"; // Luồng nhân lõi / Engine
+    pub const TOOL: &'static str = "TOOL"; // Công cụ bảo trì / Tiện ích
+    pub const DEVS: &'static str = "DEVS"; // Thiết bị phần cứng / Môi trường Dev
+    pub const TEST: &'static str = "TEST"; // Kiểm thử tự động / Benchmark
+    pub const INIT: &'static str = "INIT"; // Khởi tạo ban đầu
+    pub const EXIT: &'static str = "EXIT"; // Thoát ứng dụng / Shutdown
+    pub const KILL: &'static str = "KILL"; // Buộc dừng tiến trình
 
     // Tệp tin & Lưu trữ (File & Storage)
-    pub const DIRS: &'static str = "[DIRS]"; // Thư mục tập tin
-    pub const FILE: &'static str = "[FILE]"; // Tệp dữ liệu đơn
-    pub const DOCS: &'static str = "[DOCS]"; // Tài liệu / Văn bản hướng dẫn
-    pub const PACK: &'static str = "[PACK]"; // Gói cài đặt / Dependencies
-    pub const ARCH: &'static str = "[ARCH]"; // Tệp nén / Kho lưu trữ
-    pub const ROOT: &'static str = "[ROOT]"; // Thư mục gốc dự án
+    pub const DIR : &'static str = "DIR "; // Thư mục tập tin
+    pub const FILE: &'static str = "FILE"; // Tệp dữ liệu đơn
+    pub const DOCS: &'static str = "DOCS"; // Tài liệu / Văn bản hướng dẫn
+    pub const PACK: &'static str = "PACK"; // Gói cài đặt / Dependencies
+    pub const ARCH: &'static str = "ARCH"; // Tệp nén / Kho lưu trữ
+    pub const ROOT: &'static str = "ROOT"; // Thư mục gốc dự án
 
     // Media & Âm thanh (Media & Audio)
-    pub const MEDA: &'static str = "[MEDA]"; // Tệp đa phương tiện chung
-    pub const AUDI: &'static str = "[AUDI]"; // Luồng âm thanh / Nhạc
-    pub const RECD: &'static str = "[RECD]"; // Thu âm / Micro mở
-    pub const IMAG: &'static str = "[IMAG]"; // Hình ảnh / Đồ họa
-    pub const SONG: &'static str = "[SONG]"; // Bài hát / Track nhạc
-    pub const VOIC: &'static str = "[VOIC]"; // Giọng nói AI / Dubbing
+    pub const MEDA: &'static str = "MEDA"; // Tệp đa phương tiện chung
+    pub const AUDI: &'static str = "AUDI"; // Luồng âm thanh / Nhạc
+    pub const REC : &'static str = "REC "; // Thu âm / Micro mở
+    pub const IMG : &'static str = "IMG "; // Hình ảnh / Đồ họa
+    pub const SONG: &'static str = "SONG"; // Bài hát / Track nhạc
+    pub const VOIC: &'static str = "VOIC"; // Giọng nói AI / Dubbing
 
     // Điều khiển & Tiến trình (Execution & Control)
-    pub const EXEC: &'static str = "[EXEC]"; // Khởi chạy lệnh thực thi
-    pub const PLAY: &'static str = "[PLAY]"; // Đang phát media
-    pub const PAUS: &'static str = "[PAUS]"; // Tạm dừng phát
-    pub const STOP: &'static str = "[STOP]"; // Dừng phát hẳn
-    pub const NEXT: &'static str = "[NEXT]"; // Chuyển mục tiếp theo
-    pub const PREV: &'static str = "[PREV]"; // Quay lại mục trước
-    pub const STEP: &'static str = "[STEP]"; // Bước kế tiếp
-    pub const SYNC: &'static str = "[SYNC]"; // Đồng bộ dữ liệu nền
+    pub const EXEC: &'static str = "EXEC"; // Khởi chạy lệnh thực thi
+    pub const PLAY: &'static str = "PLAY"; // Đang phát media
+    pub const PAUS: &'static str = "PAUS"; // Tạm dừng phát
+    pub const STOP: &'static str = "STOP"; // Dừng phát hẳn
+    pub const NEXT: &'static str = "NEXT"; // Chuyển mục tiếp theo
+    pub const PREV: &'static str = "PREV"; // Quay lại mục trước
+    pub const STEP: &'static str = "STEP"; // Bước kế tiếp
+    pub const SYNC: &'static str = "SYNC"; // Đồng bộ dữ liệu nền
 
     // Mạng & Bảo mật (Network & Security)
-    pub const NETW: &'static str = "[NETW]"; // Kết nối mạng / Socket
-    pub const APIS: &'static str = "[APIS]"; // Endpoint API / HTTP
-    pub const LINK: &'static str = "[LINK]"; // Đường dẫn URL ngoài
-    pub const USER: &'static str = "[USER]"; // Tài khoản người dùng
-    pub const AUTH: &'static str = "[AUTH]"; // Xác thực quyền / Token
-    pub const CERT: &'static str = "[CERT]"; // Chứng chỉ SSL / TLS
-    pub const NODE: &'static str = "[NODE]"; // Node máy chủ / Cluster
-    pub const HOST: &'static str = "[HOST]"; // Máy chủ đích
-    pub const PORT: &'static str = "[PORT]"; // Cổng dịch vụ
-    pub const PIPE: &'static str = "[PIPE]"; // Đường ống luồng IPC
+    pub const NET : &'static str = "NET "; // Kết nối mạng / Socket
+    pub const APIS: &'static str = "APIS"; // Endpoint API / HTTP
+    pub const LINK: &'static str = "LINK"; // Đường dẫn URL ngoài
+    pub const USER: &'static str = "USER"; // Tài khoản người dùng
+    pub const AUTH: &'static str = "AUTH"; // Xác thực quyền / Token
+    pub const CERT: &'static str = "CERT"; // Chứng chỉ SSL / TLS
+    pub const NODE: &'static str = "NODE"; // Node máy chủ / Cluster
+    pub const HOST: &'static str = "HOST"; // Máy chủ đích
+    pub const PORT: &'static str = "PORT"; // Cổng dịch vụ
+    pub const PIPE: &'static str = "PIPE"; // Đường ống luồng IPC
 
     // =========================================================================
     // 2. CHUẨN SYMBOL-BASED 1 KÝ TỰ: [X] (TỔNG ĐỘ RỘNG CỐ ĐỊNH: 3 CELL)

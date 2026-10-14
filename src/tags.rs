@@ -31,6 +31,7 @@ impl Tags {
     pub const PING: &'static str = "PING"; // Nhịp tim kiểm tra sức khỏe mạng
     pub const TIME: &'static str = "TIME"; // Bộ đếm thời gian / Timestamp
     pub const PROC: &'static str = "PROC"; // Tiến trình tính toán / CPU
+    pub const SKIP: &'static str = "SKIP"; // Bỏ qua tác vụ
 
     // Cấu hình & Hệ thống (System & Configuration)
     pub const CONF: &'static str = "CONF"; // Tệp cấu hình / Cài đặt
@@ -153,13 +154,13 @@ impl Tags {
             Self::INFO | Self::INFO_CHAR | Self::LINK | Self::APIS | Self::USER => crate::Theme::ACCENT,
             Self::WARN | Self::ALERT_CHAR | Self::TIME | "[LOCK]" => crate::Theme::WARNING,
             Self::FAIL | Self::ERROR_CHAR | Self::KILL => crate::Theme::ERROR,
-            Self::PASS | Self::DONE | Self::CHECKED => crate::Theme::SUCCESS,
+            Self::PASS | Self::DONE | Self::CHECKED | Self::OK => crate::Theme::SUCCESS,
             Self::CONF | Self::CORE | Self::EXEC | Self::POINTER | Self::INIT => crate::Theme::PRIMARY,
             Self::WAIT | Self::PAUS | Self::PAUSE_CHAR => crate::Theme::ORANGE,
             Self::AUDI | Self::SONG | Self::VOIC | Self::SYNC => crate::Theme::CYAN,
-            Self::DEVS | Self::NODE | Self::CERT | Self::PACK | Self::ARCH | Self::NETW => crate::Theme::PURPLE,
+            Self::DEVS | Self::NODE | Self::CERT | Self::PACK | Self::ARCH | Self::NET => crate::Theme::PURPLE,
             Self::PROC | Self::PIPE => crate::Theme::INDIGO,
-            "[SKIP]" => crate::Theme::MUTED,
+            Self::SKIP => crate::Theme::MUTED,
             _ => crate::Theme::SECONDARY,
         }
     }

@@ -22,6 +22,7 @@ impl Tags {
     pub const INFO: &'static str = "INFO"; // Thông tin điều hướng chung
     pub const WARN: &'static str = "WARN"; // Cảnh báo nghiệp vụ / tài nguyên
     pub const FAIL: &'static str = "FAIL"; // Thất bại / Lỗi ngoại lệ
+    pub const ERR : &'static str = "ERR "; // Thất bại / Lỗi ngoại lệ
     pub const PASS: &'static str = "PASS"; // Hợp lệ / Kiểm thử thành công
     pub const DONE: &'static str = "DONE"; // Hoàn tất công việc / tác vụ
     pub const OK  : &'static str = "OK  "; // Hoàn tất công việc / tác vụ
@@ -42,6 +43,7 @@ impl Tags {
     pub const INIT: &'static str = "INIT"; // Khởi tạo ban đầu
     pub const EXIT: &'static str = "EXIT"; // Thoát ứng dụng / Shutdown
     pub const KILL: &'static str = "KILL"; // Buộc dừng tiến trình
+    pub const LOCK: &'static str = "LOCK"; // Buộc dừng tiến trình
 
     // Tệp tin & Lưu trữ (File & Storage)
     pub const DIR : &'static str = "DIR "; // Thư mục tập tin
@@ -152,8 +154,8 @@ impl Tags {
     pub fn color_for(tag: &str) -> Color {
         match tag {
             Self::INFO | Self::INFO_CHAR | Self::LINK | Self::APIS | Self::USER => crate::Theme::ACCENT,
-            Self::WARN | Self::ALERT_CHAR | Self::TIME | "[LOCK]" => crate::Theme::WARNING,
-            Self::FAIL | Self::ERROR_CHAR | Self::KILL => crate::Theme::ERROR,
+            Self::WARN | Self::ALERT_CHAR | Self::TIME | Self::LOCK => crate::Theme::WARNING,
+            Self::FAIL | Self::ERROR_CHAR | Self::KILL | Self::ERR  => crate::Theme::ERROR,
             Self::PASS | Self::DONE | Self::CHECKED | Self::OK => crate::Theme::SUCCESS,
             Self::CONF | Self::CORE | Self::EXEC | Self::POINTER | Self::INIT => crate::Theme::PRIMARY,
             Self::WAIT | Self::PAUS | Self::PAUSE_CHAR => crate::Theme::ORANGE,

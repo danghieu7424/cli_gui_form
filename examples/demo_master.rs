@@ -885,7 +885,7 @@ fn main() -> io::Result<()> {
                         (Tags::EXEC, "Tags::EXEC", "Process execution", Tags::color_for(Tags::EXEC)),
                         (Tags::CONF, "Tags::CONF", "Config file parsed", Tags::color_for(Tags::CONF)),
                         (Tags::DEVS, "Tags::DEVS", "Hardware / Dev env", Tags::color_for(Tags::DEVS)),
-                        (Tags::NETW, "Tags::NETW", "Socket connection", Tags::color_for(Tags::NETW)),
+                        (Tags::NET, "Tags::NET", "Socket connection", Tags::color_for(Tags::NET)),
                         (Tags::AUDI, "Tags::AUDI", "Audio stream dubbing", Tags::color_for(Tags::AUDI)),
                     ];
 
